@@ -1,22 +1,18 @@
 package com.zhongli.happycity.model.user;
 
 import java.io.Serializable;
-import java.util.Collection;
 
-
-public class Privilege implements Serializable{
+public class Privilege implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private int id;
 
 	private String name;
 	private String description;
-
-	private Collection<Role> roles;
 
 	public Privilege() {
 		super();
@@ -29,11 +25,11 @@ public class Privilege implements Serializable{
 
 	//
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(final Long id) {
+	public void setId(final int id) {
 		this.id = id;
 	}
 
@@ -43,14 +39,6 @@ public class Privilege implements Serializable{
 
 	public void setName(final String name) {
 		this.name = name;
-	}
-
-	public Collection<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(final Collection<Role> roles) {
-		this.roles = roles;
 	}
 
 	@Override
@@ -89,7 +77,8 @@ public class Privilege implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Privilege [id=" + id + ", name=" + name + ", description=" + description + "]";
+		return "Privilege [id=" + id + ", name=" + name + ", description="
+				+ description + "]";
 	}
 
 }

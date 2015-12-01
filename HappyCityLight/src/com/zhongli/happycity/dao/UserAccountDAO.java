@@ -2,7 +2,8 @@ package com.zhongli.happycity.dao;
 
 import java.util.ArrayList;
 
-import com.zhongli.happycity.model.user.User;
+import com.zhongli.happycity.model.user.Role;
+import com.zhongli.happycity.model.user.UserAccount;
 import com.zhongli.happycity.model.user.UserDetail;
 
 /**
@@ -39,20 +40,20 @@ public interface UserAccountDAO {
 	public long getUserIDbyEmail(String email);
 
 	/**
-	 * 根据邮件找到用户账户信息
-	 * 
-	 * @param email
-	 * @return
-	 */
-	public User getUserAccountByEmail(String email);
-
-	/**
 	 * 根据用户编号获得用户账户信息
 	 * 
 	 * @param userID
 	 * @return
 	 */
-	public User getUserAccountByUserID(long userID);
+	public UserAccount getUserAccountByUserID(long userID);
+
+	/**
+	 * 根据用户编号获取用户角色
+	 * 
+	 * @param userID
+	 * @return
+	 */
+	public ArrayList<Role> getUserRolesByUserId(long userID);
 
 	/**
 	 * 更改用户密码

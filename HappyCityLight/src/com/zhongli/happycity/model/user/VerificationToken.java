@@ -11,7 +11,7 @@ public class VerificationToken {
 
 	private String token;
 
-	private User user;
+	private UserAccount user;
 
 	private Date expiryDate;
 
@@ -26,7 +26,7 @@ public class VerificationToken {
 		this.expiryDate = calculateExpiryDate(EXPIRATION);
 	}
 
-	public VerificationToken(final String token, final User user) {
+	public VerificationToken(final String token, final UserAccount user) {
 		super();
 
 		this.token = token;
@@ -42,11 +42,11 @@ public class VerificationToken {
 		this.token = token;
 	}
 
-	public User getUser() {
+	public UserAccount getUser() {
 		return user;
 	}
 
-	public void setUser(final User user) {
+	public void setUser(final UserAccount user) {
 		this.user = user;
 	}
 
