@@ -23,13 +23,39 @@ public interface UserAccountDAO {
 	public boolean createUser(String email, String password);
 
 	/**
-	 * 设置用户角色
+	 * 重设用户角色
 	 * 
 	 * @param userID
 	 * @param roles
 	 * @return
 	 */
-	public boolean setUserRoles(long userID, ArrayList<Integer> roles);
+	public boolean setUserRoles(long userID, ArrayList<Role> roles);
+
+	/**
+	 * 新增角色
+	 * 
+	 * @param userID
+	 * @param role
+	 * @return
+	 */
+	public boolean addUserRole(long userID, Role role);
+
+	/**
+	 * 删除角色
+	 * 
+	 * @param userID
+	 * @param role
+	 * @return
+	 */
+	public boolean delUserRole(long userID, Role role);
+
+	/**
+	 * 根据角色名称找到角色ID
+	 * 
+	 * @param roleName
+	 * @return
+	 */
+	public int getRoleIdByRoleName(String roleName);
 
 	/**
 	 * 根据邮件找到用户编号
@@ -46,6 +72,20 @@ public interface UserAccountDAO {
 	 * @return
 	 */
 	public UserAccount getUserAccountByUserID(long userID);
+
+	/**
+	 * 创建或更新用户登录Token
+	 * 
+	 * @return
+	 */
+	public String updateUserLoginToken();
+
+	/**
+	 * 取得用户登录Token
+	 * 
+	 * @return
+	 */
+	public String getUserLoginToken();
 
 	/**
 	 * 根据用户编号获取用户角色
@@ -85,6 +125,7 @@ public interface UserAccountDAO {
 	 * 启用用户
 	 * 
 	 * @param userID
+	 * @return
 	 */
-	public void setUserAvailable(long userID);
+	public boolean userActive(long userID);
 }

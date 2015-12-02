@@ -16,6 +16,12 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import com.zhongli.happycity.mail.mailSender;
 
+/**
+ * 工具类，包括加密解密以及邮件操作
+ * 
+ * @author zhonglili
+ *
+ */
 public class Tools {
 	private static final String MAC_NAME = "HmacSHA256";
 	private static final String ENCODING = "UTF-8";

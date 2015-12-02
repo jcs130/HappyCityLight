@@ -14,16 +14,15 @@ public class Role implements Serializable {
 	private String name;
 	private ArrayList<Privilege> privileges;
 
-	public Role() {
+	public Role(final int role_id) {
 		super();
+		this.id = role_id;
 	}
 
 	public Role(final String name) {
 		super();
 		this.name = name;
 	}
-
-	//
 
 	public int getId() {
 		return id;

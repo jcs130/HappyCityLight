@@ -3,7 +3,6 @@ package com.zhongli.happycity.model.user;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 public class UserAccount {
 
@@ -13,12 +12,11 @@ public class UserAccount {
 	private boolean enabled;
 	private Date created_on;
 	private ArrayList<Role> roles;
-	private String token;
-	private boolean tokenExpired;
+	private String login_token;
+	private long token_expire_date;
 
 	public UserAccount() {
 		this.enabled = false;
-		this.tokenExpired = false;
 	}
 
 	public UserAccount(String email, String password) {
@@ -30,15 +28,6 @@ public class UserAccount {
 		this.email = email;
 		this.password = password;
 		this.enabled = false;
-		this.tokenExpired = false;
-	}
-
-	public Long getUserId() {
-		return user_id;
-	}
-
-	public void setUserId(final Long user_id) {
-		this.user_id = user_id;
 	}
 
 	public String getEmail() {
@@ -73,14 +62,6 @@ public class UserAccount {
 		this.enabled = enabled;
 	}
 
-	public boolean isTokenExpired() {
-		return tokenExpired;
-	}
-
-	public void setTokenExpired(final boolean expired) {
-		this.tokenExpired = expired;
-	}
-
 	public String getUsername() {
 		return email;
 	}
@@ -95,6 +76,30 @@ public class UserAccount {
 
 	public void setCreated_on(Date created_on) {
 		this.created_on = created_on;
+	}
+
+	public Long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getLogin_token() {
+		return login_token;
+	}
+
+	public void setLogin_token(String login_token) {
+		this.login_token = login_token;
+	}
+
+	public long getToken_expire_date() {
+		return token_expire_date;
+	}
+
+	public void setToken_expire_date(long token_expire_date) {
+		this.token_expire_date = token_expire_date;
 	}
 
 	@Override
@@ -128,17 +133,11 @@ public class UserAccount {
 
 	@Override
 	public String toString() {
-		return "User [user_id=" + user_id + ", email=" + email + ", password="
-				+ password + ", enabled=" + enabled + ", created_on="
-				+ created_on + ", roles=" + roles + ", token=" + token
-				+ ", tokenExpired=" + tokenExpired + "]";
+		return "UserAccount [user_id=" + user_id + ", email=" + email
+				+ ", password=" + password + ", enabled=" + enabled
+				+ ", created_on=" + created_on + ", roles=" + roles
+				+ ", login_token=" + login_token + ", token_expire_date="
+				+ token_expire_date + "]";
 	}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 }
