@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Date;
 
 public class UserAccount {
-
 	private Long user_id;
 	private String email;
 	private String password;

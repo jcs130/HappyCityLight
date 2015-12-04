@@ -18,6 +18,7 @@ import com.zhongli.happycity.tool.Tools;
 public class userAccountDAOimpl implements UserAccountDAO {
 	private MySQLHelper_User userDB;
 	private HashMap<Integer, Role> role_map;
+	private long EXPIRE_TIME = 3000000;
 
 	public userAccountDAOimpl() {
 		this.userDB = new MySQLHelper_User();
@@ -190,7 +191,49 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			}
 		}
 		return res;
+	}
 
+	@Override
+	public UserAccount getUserAccountByEmail(String email) {
+		UserAccount res = new UserAccount();
+		PreparedStatement ps = null;
+		Connection conn = null;
+		try {
+			conn = userDB.getConnection();
+
+			String sqlString = "SELECT * FROM user_account WHERE email = ?;";
+			ps = conn.prepareStatement(sqlString);
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				res.setUser_id(rs.getLong("user_id"));
+				res.setEmail(rs.getString("email"));
+				res.setCreated_on(new Date(rs.getLong("create_on")));
+				res.setPassword(rs.getString("password"));
+				res.setEnabled(rs.getBoolean("enable"));
+				res.setLogin_token(rs.getString("login_token"));
+				res.setToken_expire_date(rs.getLong("token_expire_date"));
+				ArrayList<Role> roles = getUserRolesByUserId(res.getUser_id());
+				res.setRoles(roles);
+				return res;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return res;
 	}
 
 	@Override
@@ -475,7 +518,6 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			try {
 				conn.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		} finally {
@@ -488,7 +530,6 @@ public class userAccountDAOimpl implements UserAccountDAO {
 					conn.close();
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -592,15 +633,54 @@ public class userAccountDAOimpl implements UserAccountDAO {
 	}
 
 	@Override
-	public String updateUserLoginToken() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean updateToken(long userID) {
+		String token = "";
+		try {
+			token = Tools.HmacSHA256Encrypt(java.util.UUID.randomUUID()
+					.toString(), "authword");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		PreparedStatement ps = null;
+		String sqlString = "UPDATE user_accounts SET login_token = ? , token_expire_date= ? WHERE user_id = ?;";
+		Connection conn = null;
+		try {
+			conn = userDB.getConnection();
+			ps = conn.prepareStatement(sqlString);
+			ps.setString(1, token);
+			// 过期时间为一个月
+			ps.setLong(2, (new Date().getTime() + EXPIRE_TIME));
+			ps.setLong(3, userID);
+			ps.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
 	}
 
 	@Override
-	public String getUserLoginToken() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean tokenCheck(long userID, String token) {
+		long time = new Date().getTime();
+		UserAccount user = getUserAccountByUserID(userID);
+		if (user.getLogin_token().equals(token)
+				&& user.getToken_expire_date() > time) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-
 }

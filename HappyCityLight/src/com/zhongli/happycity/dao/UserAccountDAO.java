@@ -74,18 +74,29 @@ public interface UserAccountDAO {
 	public UserAccount getUserAccountByUserID(long userID);
 
 	/**
-	 * 创建或更新用户登录Token
+	 * 根据账户获取用户信息
 	 * 
+	 * @param email
 	 * @return
 	 */
-	public String updateUserLoginToken();
+	public UserAccount getUserAccountByEmail(String email);
 
 	/**
-	 * 取得用户登录Token
+	 * 更新登录Token
 	 * 
+	 * @param userID
 	 * @return
 	 */
-	public String getUserLoginToken();
+	public boolean updateToken(long userID);
+
+	/**
+	 * 使用Token登陆
+	 * 
+	 * @param userID
+	 * @param token
+	 * @return
+	 */
+	public boolean tokenCheck(long userID, String token);
 
 	/**
 	 * 根据用户编号获取用户角色
