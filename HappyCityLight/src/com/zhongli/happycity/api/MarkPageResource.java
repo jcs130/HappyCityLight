@@ -35,38 +35,46 @@ public class MarkPageResource {
 			@QueryParam("lang") @DefaultValue("en") String languages,
 			@QueryParam("annotate_part") @DefaultValue("word_and_media") String annotate_part) {
 		ResMsg res = new ResMsg();
-		if (!userAccountDao.tokenCheck(userID, token)) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Token expaired. Please login again.");
-			return res;
-		}
-		// 检察权限,若权限不足则返回错误信息
-		if (!userAccountDao.getUserRolesByUserId(userID).contains(
-				new Role(RequreRole))) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Primition decline.");
-			return res;
-		}
-		// System.out.println(user);
-		// System.out.println("我要获得"+num+"条数据");
-		ArrayList<String> lang = new ArrayList<>();
-		String[] tmp = languages.split(",");
-		for (int i = 0; i < tmp.length; i++) {
-			lang.add(tmp[i]);
-		}
-		System.out.println("user:" + user_email + "lang:" + lang
-				+ "annotate_part" + annotate_part);
+		try {
+			if (!userAccountDao.tokenCheck(userID, token)) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			// 检察权限,若权限不足则返回错误信息
+			if (!userAccountDao.getUserRolesByUserId(userID).contains(
+					new Role(RequreRole))) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			// System.out.println(user);
+			// System.out.println("我要获得"+num+"条数据");
+			ArrayList<String> lang = new ArrayList<>();
+			String[] tmp = languages.split(",");
+			for (int i = 0; i < tmp.length; i++) {
+				lang.add(tmp[i]);
+			}
+			System.out.println("user:" + user_email + "lang:" + lang
+					+ "annotate_part" + annotate_part);
 
-		// 连接数据库获得数据
-		MarkMsg2Web ma = msgDAO.getOneNewMsg();
-		System.out.println("return:" + ma);
-		res.setCode(200);
-		res.setType("success");
-		res.setMessage("Get new unmarked message success.");
-		res.setObj(ma);
-		return res;
+			// 连接数据库获得数据
+			MarkMsg2Web ma = msgDAO.getOneNewMsg();
+			System.out.println("return:" + ma);
+			res.setCode(200);
+			res.setType("success");
+			res.setMessage("Get new unmarked message success.");
+			res.setObj(ma);
+			return res;
+
+		} catch (Exception e) {
+			res.setCode(500);
+			res.setType("error");
+			res.setMessage(e.getLocalizedMessage());
+			return res;
+		}
 	}
 
 	// 向标注记录表更新数据
@@ -77,39 +85,46 @@ public class MarkPageResource {
 			@QueryParam("userID") long userID,
 			@QueryParam("token") String token,
 			@QueryParam("user_email") @DefaultValue("null") String user_email,
-			@QueryParam("msg_id") @DefaultValue("null") long msg_id,
+			@QueryParam("msg_id") @DefaultValue("0") long msg_id,
 			@QueryParam("text_emotion") @DefaultValue("null") String text_emotion,
 			@QueryParam("media_emotions") @DefaultValue("null") String media_emotions) {
 		ResMsg res = new ResMsg();
-		if (!userAccountDao.tokenCheck(userID, token)) {
-			res.setCode(401);
+		try {
+			if (!userAccountDao.tokenCheck(userID, token)) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			// 检察权限,若权限不足则返回错误信息
+			if (!userAccountDao.getUserRolesByUserId(userID).contains(
+					new Role(RequreRole))) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			// System.out.println(user);
+			// System.out.println("我要获得"+num+"条数据");
+			ArrayList<String> medias = new ArrayList<>();
+			String[] tmp = media_emotions.split(",");
+			for (int i = 0; i < tmp.length; i++) {
+				medias.add(tmp[i]);
+			}
+			msgDAO.recordForMessage(userID, msg_id, text_emotion, medias);
+			// 连接数据库更新数据，将标注记录加入到标注记录数据库
+			StatusMsg status = new StatusMsg(200, "Success");
+			res.setCode(200);
+			res.setType("success");
+			res.setMessage("Mark success");
+			res.setObj(status);
+			return res;
+		} catch (Exception e) {
+			res.setCode(500);
 			res.setType("error");
-			res.setMessage("Token expaired. Please login again.");
+			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
-		// 检察权限,若权限不足则返回错误信息
-		if (!userAccountDao.getUserRolesByUserId(userID).contains(
-				new Role(RequreRole))) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Primition decline.");
-			return res;
-		}
-		// System.out.println(user);
-		// System.out.println("我要获得"+num+"条数据");
-		ArrayList<String> medias = new ArrayList<>();
-		String[] tmp = media_emotions.split(",");
-		for (int i = 0; i < tmp.length; i++) {
-			medias.add(tmp[i]);
-		}
-		msgDAO.recordForMessage(userID, msg_id, text_emotion, medias);
-		// 连接数据库更新数据，将标注记录加入到标注记录数据库
-		StatusMsg status = new StatusMsg(200, "Success");
-		res.setCode(200);
-		res.setType("success");
-		res.setMessage("Mark success");
-		res.setObj(status);
-		return res;
 	}
 
 	@GET
@@ -118,27 +133,35 @@ public class MarkPageResource {
 	public ResMsg getRecentMarkedMsg(@QueryParam("userID") long userID,
 			@QueryParam("token") String token) {
 		ResMsg res = new ResMsg();
-		if (!userAccountDao.tokenCheck(userID, token)) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Token expaired. Please login again.");
-			return res;
-		}
-		// 检察权限,若权限不足则返回错误信息
-		if (!userAccountDao.getUserRolesByUserId(userID).contains(
-				new Role(RequreRole))) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Primition decline.");
-			return res;
-		}
+		try {
+			if (!userAccountDao.tokenCheck(userID, token)) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			// 检察权限,若权限不足则返回错误信息
+			if (!userAccountDao.getUserRolesByUserId(userID).contains(
+					new Role(RequreRole))) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Primition decline.");
+				return res;
+			}
 
-		ArrayList<MarkRecordObj> recent = msgDAO.getRecentRecords(4, userID);
-		res.setCode(200);
-		res.setType("success");
-		res.setMessage("Get recent mark success.");
-		res.setObj(recent);
-		return res;
+			ArrayList<MarkRecordObj> recent = msgDAO
+					.getRecentRecords(4, userID);
+			res.setCode(200);
+			res.setType("success");
+			res.setMessage("Get recent mark success.");
+			res.setObj(recent);
+			return res;
+		} catch (Exception e) {
+			res.setCode(500);
+			res.setType("error");
+			res.setMessage(e.getLocalizedMessage());
+			return res;
+		}
 	}
 
 	@GET
@@ -147,25 +170,32 @@ public class MarkPageResource {
 	public ResMsg getMarkedMsgNumber(@QueryParam("userID") long userID,
 			@QueryParam("token") String token) {
 		ResMsg res = new ResMsg();
-		if (!userAccountDao.tokenCheck(userID, token)) {
-			res.setCode(401);
+		try {
+			if (!userAccountDao.tokenCheck(userID, token)) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			// 检察权限,若权限不足则返回错误信息
+			if (!userAccountDao.getUserRolesByUserId(userID).contains(
+					new Role(RequreRole))) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			int count = msgDAO.getRecordCount(userID);
+			res.setCode(200);
+			res.setType("success");
+			res.setObj(count);
+			return res;
+		} catch (Exception e) {
+			res.setCode(500);
 			res.setType("error");
-			res.setMessage("Token expaired. Please login again.");
+			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
-		// 检察权限,若权限不足则返回错误信息
-		if (!userAccountDao.getUserRolesByUserId(userID).contains(
-				new Role(RequreRole))) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Primition decline.");
-			return res;
-		}
-		int count = msgDAO.getRecordCount(userID);
-		res.setCode(200);
-		res.setType("success");
-		res.setObj(count);
-		return res;
 	}
 
 	@GET
@@ -174,25 +204,32 @@ public class MarkPageResource {
 	public ResMsg getAllMarkedMsg(@QueryParam("userID") long userID,
 			@QueryParam("token") String token) {
 		ResMsg res = new ResMsg();
-		if (!userAccountDao.tokenCheck(userID, token)) {
-			res.setCode(401);
+		try {
+			if (!userAccountDao.tokenCheck(userID, token)) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			// 检察权限,若权限不足则返回错误信息
+			if (!userAccountDao.getUserRolesByUserId(userID).contains(
+					new Role(RequreRole))) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			ArrayList<MarkRecordObj> all = msgDAO.getRecentRecords(0, userID);
+			res.setCode(200);
+			res.setType("success");
+			res.setObj(all);
+			return res;
+		} catch (Exception e) {
+			res.setCode(500);
 			res.setType("error");
-			res.setMessage("Token expaired. Please login again.");
+			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
-		// 检察权限,若权限不足则返回错误信息
-		if (!userAccountDao.getUserRolesByUserId(userID).contains(
-				new Role(RequreRole))) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Primition decline.");
-			return res;
-		}
-		ArrayList<MarkRecordObj> all = msgDAO.getRecentRecords(0, userID);
-		res.setCode(200);
-		res.setType("success");
-		res.setObj(all);
-		return res;
 	}
 
 	@GET
@@ -202,31 +239,38 @@ public class MarkPageResource {
 			@QueryParam("token") String token,
 			@QueryParam(value = "number") @DefaultValue("20") int number) {
 		ResMsg res = new ResMsg();
-		if (!userAccountDao.tokenCheck(userID, token)) {
-			res.setCode(401);
+		try {
+			if (!userAccountDao.tokenCheck(userID, token)) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			// 检察权限,若权限不足则返回错误信息
+			if (!userAccountDao.getUserRolesByUserId(userID).contains(
+					new Role(RequreRole))) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			// System.out.println(user);
+			// 连接数据库获得数据
+			ArrayList<MarkMsg2Web> ma = new ArrayList<>();
+			for (int i = 0; i < number; i++) {
+				ma.add(msgDAO.getOneNewMsg());
+				System.out.println("return:" + msgDAO.getOneNewMsg());
+			}
+			res.setCode(200);
+			res.setType("success");
+			res.setObj(ma);
+			return res;
+		} catch (Exception e) {
+			res.setCode(500);
 			res.setType("error");
-			res.setMessage("Token expaired. Please login again.");
+			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
-		// 检察权限,若权限不足则返回错误信息
-		if (!userAccountDao.getUserRolesByUserId(userID).contains(
-				new Role(RequreRole))) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Primition decline.");
-			return res;
-		}
-		// System.out.println(user);
-		// 连接数据库获得数据
-		ArrayList<MarkMsg2Web> ma = new ArrayList<>();
-		for (int i = 0; i < number; i++) {
-			ma.add(msgDAO.getOneNewMsg());
-			System.out.println("return:" + msgDAO.getOneNewMsg());
-		}
-		res.setCode(200);
-		res.setType("success");
-		res.setObj(ma);
-		return res;
 	}
 
 	@GET
@@ -239,36 +283,43 @@ public class MarkPageResource {
 			@QueryParam(value = "emotions") @DefaultValue("null") String emotions) {
 		// System.out.println(user);
 		ResMsg res = new ResMsg();
-		if (!userAccountDao.tokenCheck(userID, token)) {
-			res.setCode(401);
+		try {
+			if (!userAccountDao.tokenCheck(userID, token)) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			// 检察权限,若权限不足则返回错误信息
+			if (!userAccountDao.getUserRolesByUserId(userID).contains(
+					new Role(RequreRole))) {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			// System.out.println("我要获得"+num+"条数据");
+			ArrayList<String> id = new ArrayList<>();
+			ArrayList<String> emotion = new ArrayList<>();
+			String[] tmpids = ids.split(",");
+			String[] tmpemo = emotions.split(",");
+			for (int i = 0; i < tmpids.length; i++) {
+				id.add(tmpids[i]);
+				emotion.add(tmpemo[i]);
+				System.out.println("【id】" + tmpids[i] + " 【emotion】"
+						+ tmpemo[i]);
+			}
+			// 连接数据库更新数据，将标注记录加入到标注记录数据库
+			StatusMsg status = new StatusMsg(200, "Success");
+			res.setCode(200);
+			res.setType("success");
+			res.setObj(status);
+			return res;
+		} catch (Exception e) {
+			res.setCode(500);
 			res.setType("error");
-			res.setMessage("Token expaired. Please login again.");
+			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
-		// 检察权限,若权限不足则返回错误信息
-		if (!userAccountDao.getUserRolesByUserId(userID).contains(
-				new Role(RequreRole))) {
-			res.setCode(401);
-			res.setType("error");
-			res.setMessage("Primition decline.");
-			return res;
-		}
-		// System.out.println("我要获得"+num+"条数据");
-		ArrayList<String> id = new ArrayList<>();
-		ArrayList<String> emotion = new ArrayList<>();
-		String[] tmpids = ids.split(",");
-		String[] tmpemo = emotions.split(",");
-		for (int i = 0; i < tmpids.length; i++) {
-			id.add(tmpids[i]);
-			emotion.add(tmpemo[i]);
-			System.out.println("【id】" + tmpids[i] + " 【emotion】" + tmpemo[i]);
-		}
-		// 连接数据库更新数据，将标注记录加入到标注记录数据库
-		StatusMsg status = new StatusMsg(200, "Success");
-		res.setCode(200);
-		res.setType("success");
-		res.setObj(status);
-		return res;
 	}
-
 }
