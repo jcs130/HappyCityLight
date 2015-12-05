@@ -139,4 +139,12 @@ public interface UserAccountDAO {
 	 * @return
 	 */
 	public boolean userActive(long userID);
+
+	/**
+	 * 根据用户ID得到用户详细信息
+	 * 
+	 * @param user_id
+	 * @return
+	 */
+	public UserDetail getUserDetailByUserId(long userID);
 }

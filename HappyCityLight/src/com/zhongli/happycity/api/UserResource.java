@@ -1,5 +1,7 @@
 package com.zhongli.happycity.api;
 
+import java.util.Date;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
@@ -7,26 +9,33 @@ import com.zhongli.happycity.dao.UserAccountDAO;
 import com.zhongli.happycity.dao.impl.userAccountDAOimpl;
 import com.zhongli.happycity.model.message.ResMsg;
 import com.zhongli.happycity.model.user.UserAccount;
+import com.zhongli.happycity.model.user.UserDetail;
 import com.zhongli.happycity.tool.Tools;
 
+/**
+ * 用于用户注册登陆以及验证
+ * 
+ * @author zhonglili
+ *
+ */
 @Path("/user")
 public class UserResource {
 	@Context
 	private UriInfo urlInfo;
 	private UserAccountDAO userAccountDAO = new userAccountDAOimpl();
-	private final String secureKey_verification = "digitalcityverif";
-	private final String secureKey_resetpassword = "digitalcityreset";
-	private final String secureKey_savepassword = "digitalcitysavep";
+	private String baseURL = urlInfo.getBaseUri().toString();
+	private String serverURL = baseURL.substring(0, baseURL.indexOf("api/"));
 
 	// 用户注册
 	@GET
 	@Path("/test")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResMsg userRegister(@QueryParam("email") String email,
-			@QueryParam("password") String password) {
+	public ResMsg test() {
 		ResMsg res = new ResMsg();
+
 		res.setCode(200);
-		res.setMessage("email:" + email + " password:" + password);
+		res.setMessage("Hello  " + urlInfo.getPath() + " <> " + baseURL
+				+ " <> " + serverURL);
 		return res;
 
 	}
@@ -40,7 +49,7 @@ public class UserResource {
 		try {
 			// Save data to ds;
 			String encriptPassword = Tools.HmacSHA256Encrypt(
-					Tools.MD5(password), secureKey_savepassword);
+					Tools.MD5(password), ConfigValues.secureKey_savepassword);
 			if (Tools.emailFormat(email)) {
 				if (userAccountDAO.getUserIDbyEmail(email) != -1) {
 					res.setCode(500);
@@ -81,7 +90,8 @@ public class UserResource {
 		ResMsg res = new ResMsg();
 		try {
 			System.out.println(token);
-			String email = Tools.DESdecrypt(token, secureKey_verification);
+			String email = Tools.DESdecrypt(token,
+					ConfigValues.secureKey_verification);
 			System.out.println(email);
 			UserAccount user = userAccountDAO.getUserAccountByEmail(email);
 			if (user == null) {
@@ -141,8 +151,10 @@ public class UserResource {
 		String hostURL = urlInfo.getBaseUri().toASCIIString();
 		String url;
 		try {
-			url = hostURL + "/user/regitrationConfirm?token="
-					+ Tools.DESencrypt(email, secureKey_verification);
+			url = hostURL
+					+ "user/regitrationConfirm?token="
+					+ Tools.DESencrypt(email,
+							ConfigValues.secureKey_verification);
 			System.out.println(url);
 			Tools.sendVerificationEmail(email, url);
 			res.setType("success");
@@ -167,10 +179,11 @@ public class UserResource {
 	public ResMsg userLogin(@QueryParam("email") String email,
 			@QueryParam("password") String password) {
 		ResMsg res = new ResMsg();
+		UserDetail ud = new UserDetail();
 		String encriptPassword;
 		try {
 			encriptPassword = Tools.HmacSHA256Encrypt(Tools.MD5(password),
-					secureKey_savepassword);
+					ConfigValues.secureKey_savepassword);
 			UserAccount user = userAccountDAO.getUserAccountByEmail(email);
 			if (user == null) {
 				// 没有此用户
@@ -194,9 +207,11 @@ public class UserResource {
 			}
 			// 更新用户的Token和Token过期时间
 			if (userAccountDAO.updateToken(user.getUser_id())) {
+				ud = userAccountDAO.getUserDetailByUserId(user.getUser_id());
 				res.setCode(200);
 				res.setType("success");
 				res.setMessage("Login seccess.");
+				res.setObj(ud);
 				return res;
 			} else {
 				res.setCode(500);
@@ -212,25 +227,111 @@ public class UserResource {
 			return res;
 		}
 	}
-	
+
 	// 更改密码
-	// 更改密码确认链接
+	@POST
+	@Path("/resetPassword")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ResMsg changePassword(@QueryParam("token") String token,
+			@QueryParam("newpassword") String newPassword) {
+		ResMsg res = new ResMsg();
+		try {
+			String[] info = Tools.DESdecrypt(token,
+					ConfigValues.secureKey_resetpassword).split(",");
+			String user_GUID = info[0];
+			Long resetTime = Long.parseLong(info[1]);
+			long userID = Long.parseLong(user_GUID);
+			// 5分钟后过期
+			if ((new Date().getTime() - resetTime) < 300000) {
+				UserAccount user = userAccountDAO
+						.getUserAccountByUserID(userID);
+				if (user == null) {
+					res.setCode(400);
+					res.setType("error");
+					res.setMessage("Can not fine the user.");
+					return res;
+				}
+				if (!user.isEnabled()) {
+					res.setCode(401);
+					res.setType("error");
+					res.setMessage("Please active your account first.");
+					return res;
+				}
+				String encriptPassword = Tools.HmacSHA256Encrypt(
+						Tools.MD5(newPassword),
+						ConfigValues.secureKey_savepassword);
+				// 存入数据库
+				if (userAccountDAO.changePassword(userID, encriptPassword)) {
+					res.setCode(200);
+					res.setType("success");
+					res.setMessage("Reset password successed. Please login.");
+					res.setObj(urlInfo.getBaseUri().toString() + "login.html");
+					return res;
+				} else {
+					res.setCode(500);
+					res.setType("error");
+					res.setMessage("Server busy. Please try again.");
+					return res;
+				}
+			} else {
+				res.setCode(401);
+				res.setType("error");
+				res.setMessage("Reset url out of date, please reset again.");
+				return res;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			res.setCode(500);
+			res.setType("error");
+			res.setMessage(e.getLocalizedMessage());
+			return res;
+		}
+	}
+
+	// 发送更改密码确认链接
+	@POST
+	@Path("/sendresetpwdmail")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ResMsg sendPasswordResetMail(@QueryParam("email") String email) {
+		ResMsg res = new ResMsg();
+		String token;
+		String baseURL = urlInfo.getBaseUri().toASCIIString();
+		try {
+			// 首先先检查邮件地址是否为已注册用户
+			UserAccount user = userAccountDAO.getUserAccountByEmail(email);
+			if (user == null) {
+				res.setCode(400);
+				res.setType("error");
+				res.setMessage("Can not fine the user.");
+				return res;
+			}
+			if (!user.isEnabled()) {
+				res.setCode(401);
+				res.setMessage("Please verify your email and login again.");
+				res.setType("error");
+				return res;
+			}
+			token = Tools.DESencrypt(
+					"" + user.getUser_id() + "," + new Date().getTime(),
+					ConfigValues.secureKey_resetpassword);
+			System.out.println(token + " <> " + baseURL);
+			Tools.sendResetPasswordEmail(email, token, baseURL);
+			System.out.println(token);
+			res.setType("success");
+			res.setCode(200);
+			res.setMessage("Send reset mail success.");
+			return res;
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			res.setType("error");
+			res.setCode(500);
+			res.setMessage(e.getMessage());
+			return res;
+		}
+	}
+
 	// 用户资料修改
 
-	// Reset password
-
-	// @RequestMapping(value = "/user/resetPassword", method =
-	// RequestMethod.POST)
-
-	// @RequestMapping(value = "/user/changePassword", method =
-	// RequestMethod.GET)
-	// return "redirect:/updatePassword.html?lang=" + locale.getLanguage();
-
-	// @RequestMapping(value = "/user/savePassword", method =
-	// RequestMethod.POST)
-
-	// change user password
-
-	// @RequestMapping(value = "/user/updatePassword", method =
-	// RequestMethod.POST)
 }

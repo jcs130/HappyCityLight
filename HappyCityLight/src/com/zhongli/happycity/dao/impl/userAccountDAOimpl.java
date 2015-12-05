@@ -13,6 +13,7 @@ import com.zhongli.happycity.dao.UserAccountDAO;
 import com.zhongli.happycity.model.user.Privilege;
 import com.zhongli.happycity.model.user.Role;
 import com.zhongli.happycity.model.user.UserAccount;
+import com.zhongli.happycity.model.user.UserDetail;
 import com.zhongli.happycity.tool.Tools;
 
 public class userAccountDAOimpl implements UserAccountDAO {
@@ -683,4 +684,49 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			return false;
 		}
 	}
+
+	@Override
+	public UserDetail getUserDetailByUserId(long userID) {
+		// 1. 在用户-角色表里面找到用户对应的角色编号
+		PreparedStatement ps = null;
+		Connection conn = null;
+		UserDetail res = null;
+		try {
+			conn = userDB.getConnection();
+			String sqlString = "SELECT * FROM user_detail WHERE user_id = ?;";
+			ps = conn.prepareStatement(sqlString);
+			ps.setLong(1, userID);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				res = new UserDetail();
+				res.setAge(rs.getInt("age"));
+				res.setFirstname(rs.getString("firstname"));
+				res.setMidlename("midlename");
+				res.setLastname(rs.getString("lastname"));
+				res.setGender(rs.getInt("gender"));
+				res.setEmail(rs.getString("email"));
+				res.setNickname(rs.getString("nickname"));
+				res.setUser_id(userID);
+				res.setUser_picture(rs.getString("user_picture"));
+				return res;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return res;
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return res;
+	}
+
 }

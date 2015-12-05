@@ -255,7 +255,8 @@ public class Tools {
 				"Last Step. Verify your email address.", verifyUrl);
 	}
 
-	public static void sendResetPasswordEmail(String email, String token) {
+	public static void sendResetPasswordEmail(String email, String token,
+			String baseURL) {
 		mailSender
 				.sendMail(
 						"jibespot-test@appspot.gserviceaccount.com",
@@ -263,7 +264,9 @@ public class Tools {
 						email,
 						email,
 						"Please reset your password.",
-						"Please copy the token and use the changepassword API to change your Password. \n Token: "
-								+ token);
+						"Please copy the token and use the changepassword API to change your Password. \n "
+								+ baseURL.substring(0,baseURL.indexOf("api/"))
+								+ "/resetpassword.html?token="
+								+ token + "\n token: " + token);
 	}
 }
