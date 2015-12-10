@@ -42,8 +42,8 @@ public class UserResource {
 	@POST
 	@Path("/registration")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResMsg registerUserAccount(@QueryParam("email") String email,
-			@QueryParam("password") String password) {
+	public ResMsg registerUserAccount(@FormParam("email") String email,
+			@FormParam("password") String password) {
 		ResMsg res = new ResMsg();
 		try {
 			// Save data to ds;

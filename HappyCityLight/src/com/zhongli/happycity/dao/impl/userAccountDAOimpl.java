@@ -436,8 +436,8 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			statement = conn.createStatement();
 			// 1.添加新的用户信息数据
 			statement.executeUpdate("INSERT INTO user_detail "
-					+ "(user_id,email) VALUES" + "(" + userID + ", " + email
-					+ ");");
+					+ "(user_id,email) VALUES" + "(" + userID + ", '" + email
+					+ "');");
 			// 2.设置账户为启用
 			statement
 					.executeUpdate("UPDATE user_account SET enable = 1 WHERE user_id = "

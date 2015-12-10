@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -22,7 +23,7 @@ import com.zhongli.happycity.model.message.MediaObject;
 
 public class MessageDAOimpl implements MessageDAO {
 	private MySQLHelper_Mark markDB;
-	private SimpleDateFormat sdf;
+	// private SimpleDateFormat sdf;
 	// 缓存区
 	private static ArrayList<MarkMessageObj> cacheMessage = new ArrayList<MarkMessageObj>();
 	private static int index = 0;
@@ -34,8 +35,8 @@ public class MessageDAOimpl implements MessageDAO {
 		this.cacheSize = cacheSize;
 		this.markMaxTime = markMaxTime;
 
-		sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US);
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		// sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US);
+		// sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 
 	@Override
@@ -149,17 +150,18 @@ public class MessageDAOimpl implements MessageDAO {
 
 			String sqlString = "INSERT INTO mark_records "
 					+ "(msg_id, user_id, mark_at, text, emotion_text, media_types, media_urls, media_urls_local, emotion_medias) VALUES"
-					+ "(?, ?, NOW(), ?, ?, ?, ?, ?, ?);";
+					+ "(?, ?, ?, ?, ?, ?, ?, ?, ?);";
 			ps = conn.prepareStatement(sqlString);
 			ps.setLong(1, message_id);
 			ps.setLong(2, user_id);
-			ps.setString(3, message.getText());
-			ps.setString(4, text_emotion);
+			ps.setLong(3, new Date().getTime());
+			ps.setString(4, message.getText());
+			ps.setString(5, text_emotion);
 
-			ps.setString(5, message.getMedia_types().toString());
-			ps.setString(6, message.getMedia_urls().toString());
-			ps.setString(7, message.getMedia_urls_local().toString());
-			ps.setString(8, media_emotion.toString());
+			ps.setString(6, message.getMedia_types().toString());
+			ps.setString(7, message.getMedia_urls().toString());
+			ps.setString(8, message.getMedia_urls_local().toString());
+			ps.setString(9, media_emotion.toString());
 
 			ps.execute();
 		} catch (SQLException e) {
@@ -337,13 +339,15 @@ public class MessageDAOimpl implements MessageDAO {
 				ps.setInt(2, count);
 			}
 			ResultSet rs = ps.executeQuery();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			// SimpleDateFormat sdf = new
+			// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			while (rs.next()) {
 				record = new MarkRecordObj();
 				record.setEmotion_medias(getListFromString(rs
 						.getString("emotion_medias")));
 				record.setEmotion_text(rs.getString("emotion_text"));
-				record.setMark_at(sdf.parse(rs.getString("mark_at")));
+				// record.setMark_at(sdf.parse(rs.getString("mark_at")));
+				record.setMark_at(new Date(rs.getLong("mark_at")));
 				record.setMedia_types(getListFromString(rs
 						.getString("media_types")));
 				record.setMedia_urls(getListFromString(rs
@@ -355,9 +359,6 @@ public class MessageDAOimpl implements MessageDAO {
 				records.add(record);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
