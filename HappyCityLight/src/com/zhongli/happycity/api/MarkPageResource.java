@@ -82,12 +82,12 @@ public class MarkPageResource {
 	@Path("/sendannotatedmessage")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResMsg getMarkedMessage(
-			@QueryParam("userID") long userID,
-			@QueryParam("token") String token,
-			@QueryParam("user_email") @DefaultValue("null") String user_email,
-			@QueryParam("msg_id") @DefaultValue("0") long msg_id,
-			@QueryParam("text_emotion") @DefaultValue("null") String text_emotion,
-			@QueryParam("media_emotions") @DefaultValue("null") String media_emotions) {
+			@FormParam("userID") long userID,
+			@FormParam("token") String token,
+			@FormParam("user_email") @DefaultValue("null") String user_email,
+			@FormParam("msg_id") @DefaultValue("0") long msg_id,
+			@FormParam("text_emotion") @DefaultValue("null") String text_emotion,
+			@FormParam("media_emotions") @DefaultValue("null") String media_emotions) {
 		ResMsg res = new ResMsg();
 		try {
 			if (!userAccountDao.tokenCheck(userID, token)) {

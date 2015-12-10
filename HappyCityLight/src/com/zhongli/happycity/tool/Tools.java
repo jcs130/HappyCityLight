@@ -1,5 +1,6 @@
 package com.zhongli.happycity.tool;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.mail.MessagingException;
+
 import com.zhongli.happycity.mail.mailSender;
 
 /**
@@ -249,24 +252,26 @@ public class Tools {
 		return arrOut;
 	}
 
-	public static void sendVerificationEmail(String userEmail, String verifyUrl) {
-		mailSender.sendMail("jibespot-test@appspot.gserviceaccount.com",
-				"JibeSpot Admin", userEmail, userEmail,
-				"Last Step. Verify your email address.", verifyUrl);
+	public static void sendVerificationEmail(String userEmail, String verifyUrl)
+			throws UnsupportedEncodingException, MessagingException {
+		mailSender.sendMail("lzl19920403@163.com", "Digital City", userEmail,
+				userEmail, "Last Step. Verify your email address.", verifyUrl);
 	}
 
 	public static void sendResetPasswordEmail(String email, String token,
-			String baseURL) {
+			String baseURL) throws UnsupportedEncodingException,
+			MessagingException {
 		mailSender
 				.sendMail(
-						"jibespot-test@appspot.gserviceaccount.com",
-						"JibeSpot Admin",
+						"lzl19920403@163.com",
+						"Digital City",
 						email,
 						email,
 						"Please reset your password.",
 						"Please copy the token and use the changepassword API to change your Password. \n "
-								+ baseURL.substring(0,baseURL.indexOf("api/"))
+								+ baseURL.substring(0, baseURL.indexOf("api/"))
 								+ "/resetpassword.html?token="
-								+ token + "\n token: " + token);
+								+ token
+								+ "\n token: " + token);
 	}
 }

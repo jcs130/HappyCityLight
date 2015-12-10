@@ -23,16 +23,15 @@ public class UserResource {
 	@Context
 	private UriInfo urlInfo;
 	private UserAccountDAO userAccountDAO = new userAccountDAOimpl();
-	private String baseURL = urlInfo.getBaseUri().toString();
-	private String serverURL = baseURL.substring(0, baseURL.indexOf("api/"));
 
-	// 用户注册
+	// 测试方法
 	@GET
 	@Path("/test")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResMsg test() {
 		ResMsg res = new ResMsg();
-
+		String baseURL = urlInfo.getBaseUri().toString();
+		String serverURL = baseURL.substring(0, baseURL.indexOf("api/"));
 		res.setCode(200);
 		res.setMessage("Hello  " + urlInfo.getPath() + " <> " + baseURL
 				+ " <> " + serverURL);
@@ -58,10 +57,11 @@ public class UserResource {
 					return res;
 				}
 				if (userAccountDAO.createUser(email, encriptPassword)) {
-					sendConfirmEmail(email);
+					System.out.println(sendConfirmEmail(email).getCode());
 					res.setType("success");
 					res.setCode(200);
 					res.setMessage("Create User successful");
+					return res;
 				}
 				res.setCode(500);
 				res.setType("error");
@@ -74,12 +74,12 @@ public class UserResource {
 				return res;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			res.setCode(500);
 			res.setType("error");
-			res.setMessage(e.getMessage());
+			res.setMessage("unknown" + e.getLocalizedMessage());
 			return res;
 		}
-
 	}
 
 	// 确认用户邮箱
@@ -100,17 +100,19 @@ public class UserResource {
 				res.setType("error");
 				return res;
 			} else {
-				if (!user.isEnabled()) {
+				if (user.isEnabled()) {
 					res.setCode(500);
 					res.setType("error");
 					res.setMessage("This user is already verified. Please login.");
 					return res;
 				}
 				// 改变用户验证状态
-				if (userAccountDAO.userActive(user.getUser_id())) {
+				if (userAccountDAO.userActive(user.getUser_id(),
+						user.getEmail())) {
 					res.setMessage("Success. Please Login.");
 					res.setCode(200);
 					res.setType("success");
+					return res;
 				}
 				res.setCode(500);
 				res.setType("error");
@@ -128,10 +130,10 @@ public class UserResource {
 	}
 
 	// 发送用户邮箱确认连接
-	@GET
+	@POST
 	@Path("/resendRegistrationToken")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResMsg sendConfirmEmail(String email) {
+	public ResMsg sendConfirmEmail(@FormParam("email") String email) {
 		ResMsg res = new ResMsg();
 		// 检查用户是否存在
 		UserAccount user = userAccountDAO.getUserAccountByEmail(email);
@@ -176,8 +178,9 @@ public class UserResource {
 	@POST
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResMsg userLogin(@QueryParam("email") String email,
-			@QueryParam("password") String password) {
+	public ResMsg userLogin(@FormParam("email") String email,
+			@FormParam("password") String password) {
+		System.out.println("login " + email + "<>" + password);
 		ResMsg res = new ResMsg();
 		UserDetail ud = new UserDetail();
 		String encriptPassword;
@@ -186,32 +189,35 @@ public class UserResource {
 					ConfigValues.secureKey_savepassword);
 			UserAccount user = userAccountDAO.getUserAccountByEmail(email);
 			if (user == null) {
-				// 没有此用户
+				System.out.println("没有此用户");
 				res.setCode(401);
 				res.setType("error");
 				res.setMessage("Username or password wrong. Please try again.");
 				return res;
 			}
 			if (!user.isEnabled()) {
-				// 账户没有激活
+				System.out.println("账户没有激活");
 				res.setCode(401);
 				res.setType("error");
 				res.setMessage("Please check your email and active your account.");
 				return res;
 			}
-			if (user.getPassword() != encriptPassword) {
+			if (!user.getPassword().equals(encriptPassword)) {
+				System.out.println("密码错误:" + user.getPassword() + " <> "
+						+ encriptPassword);
 				res.setCode(401);
 				res.setType("error");
 				res.setMessage("Username or password wrong. Please try again.");
 				return res;
 			}
 			// 更新用户的Token和Token过期时间
-			if (userAccountDAO.updateToken(user.getUser_id())) {
+			String token = userAccountDAO.updateToken(user.getUser_id());
+			if (!"".equals(token)) {
 				ud = userAccountDAO.getUserDetailByUserId(user.getUser_id());
 				res.setCode(200);
 				res.setType("success");
 				res.setMessage("Login seccess.");
-				res.setObj(ud);
+				res.setObj(new Object[] { token, ud });
 				return res;
 			} else {
 				res.setCode(500);
@@ -232,8 +238,8 @@ public class UserResource {
 	@POST
 	@Path("/resetPassword")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResMsg changePassword(@QueryParam("token") String token,
-			@QueryParam("newpassword") String newPassword) {
+	public ResMsg changePassword(@FormParam("token") String token,
+			@FormParam("newpassword") String newPassword) {
 		ResMsg res = new ResMsg();
 		try {
 			String[] info = Tools.DESdecrypt(token,
@@ -292,7 +298,7 @@ public class UserResource {
 	@POST
 	@Path("/sendresetpwdmail")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResMsg sendPasswordResetMail(@QueryParam("email") String email) {
+	public ResMsg sendPasswordResetMail(@FormParam("email") String email) {
 		ResMsg res = new ResMsg();
 		String token;
 		String baseURL = urlInfo.getBaseUri().toASCIIString();

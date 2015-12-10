@@ -9,17 +9,18 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-public class MySQLHelper_User implements DataSource{
-	private static final String url = "jdbc:mysql://localhost:3307/happycityweb";
-//	private static final String url = "jdbc:mysql://mydatatest.cqkitdz1e3ma.us-west-2.rds.amazonaws.com:3306/happycityweb";
-//	private static final String name = "com.mysql.jdbc.Driver";
+public class MySQLHelper_User implements DataSource {
+	private static final String url = "jdbc:mysql://localhost:3307/digitalcity";
+	// 阿里云数据库
+	// private static final String url =
+	// "jdbc:mysql://rdsv068s015f5ee7z6cl.mysql.rds.aliyuncs.com:3306/ru28t8ce91gc69ss";
 	private static final String user = "root";
-//	private static final String user = "jcs130";
-//	private static final String password = "jcsss130";
-	private static final String password = "";
-//	private static final String url = "jdbc:mysql://localhost:3306/happycityweb?createDatabaseIfNotExist=true";
+	// 阿里云数据库
+	// private static final String user = "jcs130";
+	private static final String password = "jcsss130";
 	private static final String name = "com.mysql.jdbc.Driver";
-//	private static final String password = "ilikexiah";
+
+	// private static final String password = "ilikexiah";
 
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
@@ -30,13 +31,13 @@ public class MySQLHelper_User implements DataSource{
 	@Override
 	public void setLogWriter(PrintWriter out) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setLoginTimeout(int seconds) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

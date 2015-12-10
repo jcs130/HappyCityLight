@@ -70,7 +70,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 		}
 		// 设置初始的角色
 		ArrayList<Role> roles = new ArrayList<Role>();
-		Role defaultRole = getRoleByRoleId(3);
+		Role defaultRole = getRoleByRoleId(1);
 		roles.add(defaultRole);
 		if (setUserRoles(getUserIDbyEmail(email), roles)) {
 			return true;
@@ -209,7 +209,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			while (rs.next()) {
 				res.setUser_id(rs.getLong("user_id"));
 				res.setEmail(rs.getString("email"));
-				res.setCreated_on(new Date(rs.getLong("create_on")));
+				res.setCreated_on(new Date(rs.getLong("create_at")));
 				res.setPassword(rs.getString("password"));
 				res.setEnabled(rs.getBoolean("enable"));
 				res.setLogin_token(rs.getString("login_token"));
@@ -307,6 +307,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 				ResultSet rs1 = ps1.executeQuery();
 				while (rs1.next()) {
 					res = new Role(rs1.getString("role_name"));
+					res.setId(role_id);
 					// 2. 通过角色ID获得角色权限ID
 					ArrayList<Privilege> privileges = new ArrayList<Privilege>();
 					String sqlString2 = "SELECT privilege_id FROM role_privilege WHERE role_id = ?;";
@@ -333,6 +334,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 					}
 					res.setPrivileges(privileges);
 					role_map.put(role_id, res);
+					System.out.println(res);
 					return res;
 				}
 
@@ -423,31 +425,46 @@ public class userAccountDAOimpl implements UserAccountDAO {
 	}
 
 	@Override
-	public boolean userActive(long userID) {
-		PreparedStatement ps = null;
-		String sqlString = "UPDATE user_accounts SET enable = ? WHERE user_id = ?;";
+	public boolean userActive(long userID, String email) {
+
 		Connection conn = null;
+		Statement statement = null;
 		try {
 			conn = userDB.getConnection();
-			ps = conn.prepareStatement(sqlString);
-			ps.setBoolean(1, true);
-			ps.setLong(2, userID);
-			ps.execute();
+			// 指定在事物中提交
+			conn.setAutoCommit(false);
+			statement = conn.createStatement();
+			// 1.添加新的用户信息数据
+			statement.executeUpdate("INSERT INTO user_detail "
+					+ "(user_id,email) VALUES" + "(" + userID + ", " + email
+					+ ");");
+			// 2.设置账户为启用
+			statement
+					.executeUpdate("UPDATE user_account SET enable = 1 WHERE user_id = "
+							+ userID + ";");
+			// 提交更改
+			conn.commit();
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			// 有错误发生回滚修改
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			return false;
 		} finally {
 			try {
-				ps.close();
+				if (statement != null) {
+
+					statement.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
 			}
 		}
 	}
@@ -503,7 +520,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			conn.setAutoCommit(false);
 			statement = conn.createStatement();
 			// 1.删除之前的角色
-			statement.executeUpdate("DELETE FROM users_role WHERE user_id="
+			statement.executeUpdate("DELETE FROM user_role WHERE user_id="
 					+ userID);
 			// 2.添加新的角色
 			for (int i = 0; i < roles.size(); i++) {
@@ -513,6 +530,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			}
 			// 提交更改
 			conn.commit();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// 有错误发生回滚修改
@@ -521,6 +539,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
+			return false;
 		} finally {
 			try {
 				if (statement != null) {
@@ -534,7 +553,6 @@ public class userAccountDAOimpl implements UserAccountDAO {
 				e.printStackTrace();
 			}
 		}
-		return false;
 	}
 
 	@Override
@@ -634,17 +652,17 @@ public class userAccountDAOimpl implements UserAccountDAO {
 	}
 
 	@Override
-	public boolean updateToken(long userID) {
+	public String updateToken(long userID) {
 		String token = "";
 		try {
 			token = Tools.HmacSHA256Encrypt(java.util.UUID.randomUUID()
 					.toString(), "authword");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return "";
 		}
 		PreparedStatement ps = null;
-		String sqlString = "UPDATE user_accounts SET login_token = ? , token_expire_date= ? WHERE user_id = ?;";
+		String sqlString = "UPDATE user_account SET login_token = ? , token_expire_date= ? WHERE user_id = ?;";
 		Connection conn = null;
 		try {
 			conn = userDB.getConnection();
@@ -654,10 +672,10 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			ps.setLong(2, (new Date().getTime() + EXPIRE_TIME));
 			ps.setLong(3, userID);
 			ps.execute();
-			return true;
+			return token;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return "";
 		} finally {
 			try {
 				ps.close();

@@ -87,7 +87,7 @@ public interface UserAccountDAO {
 	 * @param userID
 	 * @return
 	 */
-	public boolean updateToken(long userID);
+	public String updateToken(long userID);
 
 	/**
 	 * 使用Token登陆
@@ -136,9 +136,10 @@ public interface UserAccountDAO {
 	 * 启用用户
 	 * 
 	 * @param userID
+	 * @param email
 	 * @return
 	 */
-	public boolean userActive(long userID);
+	public boolean userActive(long userID, String email);
 
 	/**
 	 * 根据用户ID得到用户详细信息
