@@ -67,7 +67,7 @@
                                                     }); */
                                                   var serverURL="http://localhost:8080/HappyCityLight";
                                                    //var serverURL="http://zhongliapp.aliapp.com";
-                                                   $.post(serverURL+"/api/user/login",
+                                                   $.post(serverURL+"/api/user/registration",
                                                           {
                                                           "email":email,
                                                           "password":password
@@ -92,7 +92,7 @@
             </div>
             <!-- /.login-logo -->
             <div class="login-box-body">
-                <p class="login-box-msg">Sign in</p>
+                <p class="login-box-msg">Sign Up</p>
                 <form id="loginform" method="post" action="">
                     <div class="form-group has-feedback">
                         <input id="email" type="email" class="form-control"
@@ -109,7 +109,7 @@
                         <!-- /.col -->
                         <div class="col-xs-6">
                             <button name="submit" type="submit" id="loginBtn"
-                                class="btn btn-primary btn-block btn-flat">Sign In</button>
+                                class="btn btn-primary btn-block btn-flat">Sign Up</button>
                         </div>
                         <!-- /.col -->
                     </div>

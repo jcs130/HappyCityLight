@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.glassfish.hk2.utilities.reflection.Logger;
+
 import com.zhongli.happycity.dao.MessageDAO;
 import com.zhongli.happycity.model.message.MarkMessageObj;
 import com.zhongli.happycity.model.message.MarkMsg2Web;
@@ -62,6 +64,8 @@ public class MessageDAOimpl implements MessageDAO {
 				message.setMedia_types(getListFromString(rs
 						.getString("media_types")));
 				message.setMedia_urls(getListFromString(rs
+						.getString("media_urls")));
+				message.setMedia_urls_local(getListFromString(rs
 						.getString("media_urls_local")));
 				message.setLang(rs.getString("lang"));
 				System.out.println(message);
@@ -70,13 +74,17 @@ public class MessageDAOimpl implements MessageDAO {
 			System.out.println("Get new Datas");
 			return res;
 		} catch (SQLException e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
 			throw new RuntimeException(e);
-
 		} finally {
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -166,11 +174,15 @@ public class MessageDAOimpl implements MessageDAO {
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
@@ -198,16 +210,21 @@ public class MessageDAOimpl implements MessageDAO {
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -225,11 +242,15 @@ public class MessageDAOimpl implements MessageDAO {
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
@@ -254,16 +275,23 @@ public class MessageDAOimpl implements MessageDAO {
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -287,9 +315,12 @@ public class MessageDAOimpl implements MessageDAO {
 						Arrays.asList(rs.getString("media_types")));
 				ArrayList<String> urls = new ArrayList<String>(Arrays.asList(rs
 						.getString("media_urls")));
+				ArrayList<String> urls_local = new ArrayList<String>(
+						Arrays.asList(rs.getString("media_urls_local")));
 				ArrayList<MediaObject> medias = new ArrayList<MediaObject>();
 				for (int i = 0; i < types.size(); i++) {
-					medias.add(new MediaObject(types.get(i), urls.get(i)));
+					medias.add(new MediaObject(types.get(i), urls.get(i),
+							urls_local.get(i)));
 				}
 				message.setMsg_id(rs.getLong("msg_id"));
 				message.setText(rs.getString("text"));
@@ -303,16 +334,23 @@ public class MessageDAOimpl implements MessageDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -360,16 +398,23 @@ public class MessageDAOimpl implements MessageDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -388,16 +433,23 @@ public class MessageDAOimpl implements MessageDAO {
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -420,16 +472,23 @@ public class MessageDAOimpl implements MessageDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}

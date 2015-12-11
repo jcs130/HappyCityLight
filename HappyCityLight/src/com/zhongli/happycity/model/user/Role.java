@@ -68,7 +68,7 @@ public class Role implements Serializable {
 			return false;
 		}
 		final Role role = (Role) obj;
-		if (!role.equals(role.name)) {
+		if (!(this.name.equals(role.name) || this.id == role.getId())) {
 			return false;
 		}
 		return true;

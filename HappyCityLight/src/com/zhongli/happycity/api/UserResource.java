@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
+import org.glassfish.hk2.utilities.reflection.Logger;
+
 import com.zhongli.happycity.dao.UserAccountDAO;
 import com.zhongli.happycity.dao.impl.userAccountDAOimpl;
 import com.zhongli.happycity.model.message.ResMsg;
@@ -75,6 +77,7 @@ public class UserResource {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage("unknown" + e.getLocalizedMessage());
@@ -121,6 +124,7 @@ public class UserResource {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setMessage(e.getMessage());
 			res.setCode(500);
 			res.setType("error");
@@ -166,6 +170,7 @@ public class UserResource {
 			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setType("error");
 			res.setCode(500);
 			res.setMessage(e.getLocalizedMessage());
@@ -227,6 +232,7 @@ public class UserResource {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());
@@ -287,6 +293,7 @@ public class UserResource {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());
@@ -329,8 +336,8 @@ public class UserResource {
 			return res;
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setType("error");
 			res.setCode(500);
 			res.setMessage(e.getMessage());

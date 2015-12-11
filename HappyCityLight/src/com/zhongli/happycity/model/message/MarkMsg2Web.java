@@ -29,7 +29,7 @@ public class MarkMsg2Web {
 		this.lang = markMessageObj.getLang();
 		this.medias = new ArrayList<MediaObject>();
 		for (int i = 0; i < markMessageObj.getMedia_types().size(); i++) {
-			medias.add(new MediaObject(markMessageObj.getMedia_types().get(i), markMessageObj.getMedia_urls().get(i)));
+			medias.add(new MediaObject(markMessageObj.getMedia_types().get(i), markMessageObj.getMedia_urls().get(i),markMessageObj.getMedia_urls_local().get(i)));
 		}
 		this.media_num = medias.size();
 	}

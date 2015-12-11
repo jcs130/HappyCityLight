@@ -2,9 +2,10 @@ package com.zhongli.happycity.api;
 
 import java.util.ArrayList;
 
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
+import org.glassfish.hk2.utilities.reflection.Logger;
 
 import com.zhongli.happycity.dao.MessageDAO;
 import com.zhongli.happycity.dao.UserAccountDAO;
@@ -36,6 +37,7 @@ public class MarkPageResource {
 			@QueryParam("annotate_part") @DefaultValue("word_and_media") String annotate_part) {
 		ResMsg res = new ResMsg();
 		try {
+			System.out.println(userID + " <> " + token);
 			if (!userAccountDao.tokenCheck(userID, token)) {
 				res.setCode(401);
 				res.setType("error");
@@ -70,6 +72,8 @@ public class MarkPageResource {
 			return res;
 
 		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());
@@ -120,6 +124,8 @@ public class MarkPageResource {
 			res.setObj(status);
 			return res;
 		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());
@@ -157,6 +163,8 @@ public class MarkPageResource {
 			res.setObj(recent);
 			return res;
 		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());
@@ -191,6 +199,8 @@ public class MarkPageResource {
 			res.setObj(count);
 			return res;
 		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());
@@ -225,6 +235,8 @@ public class MarkPageResource {
 			res.setObj(all);
 			return res;
 		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());
@@ -266,6 +278,8 @@ public class MarkPageResource {
 			res.setObj(ma);
 			return res;
 		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());
@@ -316,6 +330,8 @@ public class MarkPageResource {
 			res.setObj(status);
 			return res;
 		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
 			res.setCode(500);
 			res.setType("error");
 			res.setMessage(e.getLocalizedMessage());

@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.el.ELException;
+
+import org.glassfish.hk2.utilities.reflection.Logger;
+
 import com.zhongli.happycity.dao.UserAccountDAO;
 import com.zhongli.happycity.model.user.Privilege;
 import com.zhongli.happycity.model.user.Role;
@@ -30,6 +34,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 	public boolean createUser(String email, String password) {
 		if (getUserIDbyEmail(email) != -1) {
 			// 用户名重复
+
 			return false;
 		}
 		if (!Tools.emailFormat(email)) {
@@ -54,6 +59,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
 			return false;
 		} finally {
 			try {
@@ -65,6 +71,9 @@ public class userAccountDAOimpl implements UserAccountDAO {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -100,16 +109,23 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -135,16 +151,23 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -166,7 +189,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			while (rs.next()) {
 				res.setUser_id(rs.getLong("user_id"));
 				res.setEmail(rs.getString("email"));
-				res.setCreated_on(new Date(rs.getLong("create_on")));
+				res.setCreated_on(new Date(rs.getLong("create_at")));
 				res.setPassword(rs.getString("password"));
 				res.setEnabled(rs.getBoolean("enable"));
 				res.setLogin_token(rs.getString("login_token"));
@@ -178,16 +201,23 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -196,7 +226,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 	@Override
 	public UserAccount getUserAccountByEmail(String email) {
-		UserAccount res = new UserAccount();
+		UserAccount res = null;
 		PreparedStatement ps = null;
 		Connection conn = null;
 		try {
@@ -207,6 +237,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
+				res = new UserAccount();
 				res.setUser_id(rs.getLong("user_id"));
 				res.setEmail(rs.getString("email"));
 				res.setCreated_on(new Date(rs.getLong("create_at")));
@@ -221,16 +252,23 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -256,16 +294,23 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -340,18 +385,25 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return null;
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+				// return null;
 			} finally {
 				try {
 					ps1.close();
 					ps2.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 				if (conn != null) {
 					try {
 						conn.close();
 					} catch (SQLException e) {
+						e.printStackTrace();
+						Logger.printThrowable(e);
+						throw new RuntimeException(e);
 					}
 				}
 			}
@@ -373,17 +425,24 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
+			// return false;
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -408,16 +467,23 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -465,6 +531,8 @@ public class userAccountDAOimpl implements UserAccountDAO {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -693,13 +761,18 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 	@Override
 	public boolean tokenCheck(long userID, String token) {
-		long time = new Date().getTime();
-		UserAccount user = getUserAccountByUserID(userID);
-		if (user.getLogin_token().equals(token)
-				&& user.getToken_expire_date() > time) {
-			return true;
-		} else {
-			return false;
+		try {
+
+			long time = new Date().getTime();
+			UserAccount user = getUserAccountByUserID(userID);
+			if (user.getLogin_token().equals(token)
+					&& user.getToken_expire_date() > time) {
+				return true;
+			} else {
+				throw new ELException("Auth error");
+			}
+		} catch (Exception e) {
+			throw new ELException("Auth error");
 		}
 	}
 
