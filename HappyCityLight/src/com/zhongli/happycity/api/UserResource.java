@@ -48,6 +48,7 @@ public class UserResource {
 			@FormParam("password") String password) {
 		ResMsg res = new ResMsg();
 		try {
+			System.out.println(email);
 			// Save data to ds;
 			String encriptPassword = Tools.HmacSHA256Encrypt(
 					Tools.MD5(password), ConfigValues.secureKey_savepassword);
@@ -55,6 +56,7 @@ public class UserResource {
 				if (userAccountDAO.getUserIDbyEmail(email) != -1) {
 					res.setCode(500);
 					res.setType("error");
+					System.out.println("Email already exist.");
 					res.setMessage("Email already exist.");
 					return res;
 				}

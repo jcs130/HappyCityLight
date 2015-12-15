@@ -14,6 +14,8 @@ public class APIApplication extends ResourceConfig {
 		register(MarkPageResource.class);
 		// 注册数据转换器
 		register(JacksonJsonProvider.class);
+		// 跨域访问
+		register(CORSFilter.class);
 		// Logging.
 		register(LoggingFilter.class);
 	}
