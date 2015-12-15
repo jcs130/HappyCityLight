@@ -792,7 +792,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 				res = new UserDetail();
 				res.setAge(rs.getInt("age"));
 				res.setFirstname(rs.getString("firstname"));
-				res.setMidlename("midlename");
+				res.setMidlename(rs.getString("midlename"));
 				res.setLastname(rs.getString("lastname"));
 				res.setGender(rs.getInt("gender"));
 				res.setEmail(rs.getString("email"));

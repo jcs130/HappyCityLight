@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Digital City Impulse | Registration</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -108,10 +109,10 @@
     <script src="resources/plugins/iCheck/icheck.min.js"></script>
     <script src="resources/pwstrength.js"></script>
     <script type="text/javascript">
-        var serverURL = "http://localhost:8080/HappyCityLight";
-        //var serverURL = "http://zhongliapp.aliapp.com";
+        //var serverURL = "http://localhost:8080/HappyCityLight";
+        var serverURL = "http://zhongliapp.aliapp.com";
 
-      $(document).ready(function () {
+        $(document).ready(function () {
             $('input').iCheck({
                 checkboxClass: 'icheckbox_square-blue',
                 radioClass: 'iradio_square-blue',
@@ -138,7 +139,7 @@
                     showVerdictsInsideProgressBar: true,
                     showErrors: true,
                     errorMessages: {
-                        wordLength: "Word too short.",
+                        wordLength: "Password too short.",
                         wordNotEmail: "The email format is wrong.",
                         wordLowercase: "Need at least one lowercase word",
                         wordOneNumber: "Need at least one number",
@@ -192,19 +193,21 @@
             if ($("#password").val() != $("#matchPassword").val()) {
                 $("#globalError")
                     .show()
-                    .html(
-                        '<spring:message code="PasswordMatches.user"></spring:message>');
+                    .html("Password not match.");
                 return;
             }
-            var formData = $('form').serialize();
-            alert(formData);
+            var email = $("#email").val();
+            var password = $("#password").val();
             $
                 .ajax({
                     type: "POST",
                     dataType: "JSON",
                     crossDomain: true,
                     url: serverURL + "/api/user/registration",
-                    data: formData,
+                    data: {
+                        "email": email,
+                        "password": password
+                    },
                     beforeSend: function () {
                         //alert("click on submit!");
                         $("title").html("Uploading Registration Info ...");
@@ -215,15 +218,15 @@
                                 "<i class='fa fa-refresh fa-spin text-muted'></i>");
                     },
                     success: function (data) {
-                      alert(JSON.stringify(data));
-                        if (data.obj.type == "success") {
+                        alert(JSON.stringify(data));
+                        if (data.code == 200) {
                             alert("success!");
-                            window.location.href = "successRegister.html";
-                      }else{
-                      $("#RegisterButton").html("Register");
-                      $("#RegisterButton").attr("disabled", "false");
-                      alert(data.message);
-                      }
+                            window.location.href = "login.html?message=registerSuccess";
+                        } else {
+                            $("#RegisterButton").html("Register");
+                            $("#RegisterButton").attr("disabled", "false");
+                            alert(data.message);
+                        }
                     },
                     error: function (data) {
                         $("#RegisterButton").html("Register");

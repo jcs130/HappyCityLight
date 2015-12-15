@@ -223,8 +223,8 @@ public class UserResource {
 				ud = userAccountDAO.getUserDetailByUserId(user.getUser_id());
 				res.setCode(200);
 				res.setType("success");
-				res.setMessage("Login seccess.");
-				res.setObj(new Object[] { token, ud });
+				res.setMessage(token);
+				res.setObj(ud);
 				return res;
 			} else {
 				res.setCode(500);
@@ -246,7 +246,7 @@ public class UserResource {
 	@POST
 	@Path("/resetPassword")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResMsg changePassword(@FormParam("token") String token,
+	public ResMsg resetPassword(@FormParam("token") String token,
 			@FormParam("newpassword") String newPassword) {
 		ResMsg res = new ResMsg();
 		try {
