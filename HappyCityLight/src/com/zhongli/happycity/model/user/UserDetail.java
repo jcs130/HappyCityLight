@@ -1,5 +1,7 @@
 package com.zhongli.happycity.model.user;
 
+import java.util.ArrayList;
+
 /**
  * 记录用户的详细信息
  * 
@@ -16,12 +18,14 @@ public class UserDetail {
 	private int age;
 	private int gender;
 	private String user_picture;
+	private ArrayList<Role> roles;
 
 	public UserDetail() {
-
+		super();
 	}
 
 	public UserDetail(int user_id) {
+		this();
 		this.user_id = user_id;
 
 	}
@@ -98,13 +102,21 @@ public class UserDetail {
 		this.user_picture = user_picture;
 	}
 
+	public ArrayList<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(ArrayList<Role> roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public String toString() {
 		return "UserDetail [user_id=" + user_id + ", email=" + email
 				+ ", nickname=" + nickname + ", firstname=" + firstname
 				+ ", midlename=" + midlename + ", lastname=" + lastname
 				+ ", age=" + age + ", gender=" + gender + ", user_picture="
-				+ user_picture + "]";
+				+ user_picture + ", roles=" + roles + "]";
 	}
 
 }
