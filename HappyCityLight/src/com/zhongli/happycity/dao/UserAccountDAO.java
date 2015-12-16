@@ -99,6 +99,14 @@ public interface UserAccountDAO {
 	public boolean tokenCheck(long userID, String token);
 
 	/**
+	 * 重置用户Token为logout
+	 * 
+	 * @param userID
+	 * @return
+	 */
+	public boolean tokenReset(long userID);
+
+	/**
 	 * 根据用户编号获取用户角色
 	 * 
 	 * @param userID

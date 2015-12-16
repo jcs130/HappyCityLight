@@ -56,14 +56,14 @@ public interface MessageDAO {
 	 * @param message_id
 	 * @param user_id
 	 */
-	public void updateUserDetail(long message_id, long user_id);
+	public void updateUserMarkDetail(long message_id, long user_id);
 
 	/**
 	 * 创建user detail
 	 * 
 	 * @param user_id
 	 */
-	public void createUserDetail(long user_id);
+	public void createUserMarkDetail(long user_id);
 
 	/**
 	 * 取最近count条标记的数据

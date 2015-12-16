@@ -10,13 +10,13 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 public class MySQLHelper_Mark implements DataSource {
+	private static final String url = "jdbc:mysql://localhost:3307/digitalcity";
+	// 阿里云数据库
 	// private static final String url =
-	// "jdbc:mysql://localhost:3307/digitalcity";
+	// "jdbc:mysql://rdsv068s015f5ee7z6cl.mysql.rds.aliyuncs.com:3306/ru28t8ce91gc69ss";
+	private static final String user = "root";
 	// 阿里云数据库
-	private static final String url = "jdbc:mysql://rdsv068s015f5ee7z6cl.mysql.rds.aliyuncs.com:3306/ru28t8ce91gc69ss";
-	// private static final String user = "root";
-	// 阿里云数据库
-	private static final String user = "jcs130";
+	// private static final String user = "jcs130";
 	private static final String password = "jcsss130";
 	// private static final String password = "";
 	private static final String name = "com.mysql.jdbc.Driver";

@@ -136,16 +136,16 @@ public class MarkPageResource {
 		ResMsg res = new ResMsg();
 		try {
 			if (!userAccountDAO.tokenCheck(userID, token)) {
-				res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
-				res.setType(Response.Status.BAD_REQUEST.name());
+				res.setCode(Response.Status.FORBIDDEN.getStatusCode());
+				res.setType(Response.Status.FORBIDDEN.name());
 				res.setMessage("Token expaired. Please login again.");
 				return res;
 			}
 			// 检察权限,若权限不足则返回错误信息
 			if (!userAccountDAO.getUserRolesByUserId(userID).contains(
 					new Role(RequreRole))) {
-				res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
-				res.setType(Response.Status.BAD_REQUEST.name());
+				res.setCode(Response.Status.FORBIDDEN.getStatusCode());
+				res.setType(Response.Status.FORBIDDEN.name());
 				res.setMessage("Primition decline.");
 				return res;
 			}
@@ -160,8 +160,8 @@ public class MarkPageResource {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.printThrowable(e);
-			res.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-			res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
 			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}

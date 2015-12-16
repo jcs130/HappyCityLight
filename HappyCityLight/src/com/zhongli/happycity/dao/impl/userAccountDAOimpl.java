@@ -415,7 +415,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 	@Override
 	public boolean changePassword(long userID, String password) {
 		PreparedStatement ps = null;
-		String sqlString = "UPDATE user_accounts SET password = ? WHERE user_id = ?;";
+		String sqlString = "UPDATE user_account SET password = ? WHERE user_id = ?;";
 		Connection conn = null;
 		try {
 			conn = userDB.getConnection();
@@ -799,10 +799,13 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			long time = new Date().getTime();
 			UserAccount user = getUserAccountByUserID(userID);
 			if (user.getLogin_token().equals(token)
-					&& user.getToken_expire_date() > time) {
+					&& user.getToken_expire_date() > time
+					&& !user.getLogin_token().equals("logout")
+					&& !user.getLogin_token().equals("")) {
+				System.out.println(user.getLogin_token() + " <> " + token);
 				return true;
 			} else {
-				throw new ELException("Auth error");
+				return false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -860,6 +863,43 @@ public class userAccountDAOimpl implements UserAccountDAO {
 			}
 		}
 		return res;
+	}
+
+	@Override
+	public boolean tokenReset(long userID) {
+		String token = "logout";
+		PreparedStatement ps = null;
+		String sqlString = "UPDATE user_account SET login_token = ? WHERE user_id = ?;";
+		Connection conn = null;
+		try {
+			conn = userDB.getConnection();
+			ps = conn.prepareStatement(sqlString);
+			ps.setString(1, token);
+			ps.setLong(2, userID);
+			ps.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
+				}
+			}
+		}
 	}
 
 }

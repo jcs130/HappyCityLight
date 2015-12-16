@@ -37,7 +37,7 @@
 <body class="hold-transition register-page container">
     <div class="register-box">
         <div class="register-logo">
-            <a href="#"><b>Digital </b>City Impulse</a>
+            <a href="index.html"><b>Digital </b>City Impulse</a>
         </div>
 
         <div class="register-box-body">
@@ -108,10 +108,8 @@
     <!-- iCheck 1.0.1 -->
     <script src="resources/plugins/iCheck/icheck.min.js"></script>
     <script src="resources/pwstrength.js"></script>
+    <script src="resources/dist/js/serverConfig.js"></script>
     <script type="text/javascript">
-        //var serverURL = "http://localhost:8080/HappyCityLight";
-        var serverURL = "http://zhongliapp.aliapp.com";
-
         $(document).ready(function () {
             $('input').iCheck({
                 checkboxClass: 'icheckbox_square-blue',
@@ -203,7 +201,7 @@
                     type: "POST",
                     dataType: "JSON",
                     crossDomain: true,
-                    url: serverURL + "/api/user/registration",
+                    url: serverURL + "user/registration",
                     data: {
                         "email": email,
                         "password": password
@@ -218,10 +216,10 @@
                                 "<i class='fa fa-refresh fa-spin text-muted'></i>");
                     },
                     success: function (data) {
-                        alert(JSON.stringify(data));
+                        //                        alert(JSON.stringify(data));
                         if (data.code == 200) {
-                            alert("success!");
-                            window.location.href = "login.html?message=registerSuccess";
+                            //                            alert("success!");
+                            window.location.href = "login.html?message=registerSuccess. Please check your email.";
                         } else {
                             $("#RegisterButton").html("Register");
                             $("#RegisterButton").attr("disabled", "false");

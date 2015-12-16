@@ -45,6 +45,26 @@ public class UserResource {
 	}
 
 	@POST
+	@Path("/tokencheck")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ResMsg tokenCheck(@FormParam("userID") long userID,
+			@FormParam("token") String token) {
+		ResMsg res = new ResMsg();
+		System.out.println(userID + " <> " + token);
+		if (!userAccountDAO.tokenCheck(userID, token)) {
+			res.setCode(Response.Status.FORBIDDEN.getStatusCode());
+			res.setType(Response.Status.FORBIDDEN.name());
+			res.setMessage("Token expaired. Please login again.");
+			return res;
+		} else {
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Token is ok.");
+			return res;
+		}
+	}
+
+	@POST
 	@Path("/registration")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResMsg registerUserAccount(@FormParam("email") String email,
@@ -350,6 +370,44 @@ public class UserResource {
 			res.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 			res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
 			res.setMessage(e.getMessage());
+			return res;
+		}
+	}
+
+	// 用户登出
+	@POST
+	@Path("/logout")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ResMsg userLogout(@FormParam("userID") long userID,
+			@FormParam("token") String token) {
+		ResMsg res = new ResMsg();
+		try {
+			// System.out.println(userID + " <> " + token);
+			res = tokenCheck(userID, token);
+			if (res.getCode() != 200) {
+				return res;
+			}
+			ArrayList<Role> userRoles = userAccountDAO
+					.getUserRolesByUserId(userID);
+			// 检察权限,若权限不足则返回错误信息
+			if (!userRoles.contains(new Role(RequreRole))) {
+				res.setCode(Response.Status.FORBIDDEN.getStatusCode());
+				res.setType(Response.Status.FORBIDDEN.name());
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			// 将Token重置
+			userAccountDAO.tokenReset(userID);
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Logout success.");
+			return res;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			res.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+			res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
+			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
 	}

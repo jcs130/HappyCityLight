@@ -194,8 +194,8 @@ public class MessageDAOimpl implements MessageDAO {
 
 		// update mark_messages
 		updateMarkMessage(message_id);
-		// update user_details, message_id, updatetime
-		updateUserDetail(message_id, user_id);
+		// update mark_detail, message_id, updatetime
+		updateUserMarkDetail(message_id, user_id);
 	}
 
 	@Override
@@ -231,14 +231,15 @@ public class MessageDAOimpl implements MessageDAO {
 	}
 
 	@Override
-	public void createUserDetail(long user_id) {
+	public void createUserMarkDetail(long user_id) {
 		PreparedStatement ps = null;
-		String sqlString = "INSERT user_details (user_id, updated_on) VALUES (?, NOW());";
+		String sqlString = "INSERT mark_detail (user_id, updated_on) VALUES (?, ?);";
 		Connection conn = null;
 		try {
 			conn = markDB.getConnection();
 			ps = conn.prepareStatement(sqlString);
 			ps.setLong(1, user_id);
+			ps.setLong(2, new Date().getTime());
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -262,16 +263,17 @@ public class MessageDAOimpl implements MessageDAO {
 	}
 
 	@Override
-	public void updateUserDetail(long message_id, long user_id) {
+	public void updateUserMarkDetail(long message_id, long user_id) {
 		PreparedStatement ps = null;
-		String sqlString = "UPDATE user_details SET last_recorded_message_id = ?,count=count+1 , updated_on = NOW()"
+		String sqlString = "UPDATE mark_detail SET last_recorded_message_id = ?,count=count+1 , updated_on = ?"
 				+ " WHERE user_id = ?;";
 		Connection conn = null;
 		try {
 			conn = markDB.getConnection();
 			ps = conn.prepareStatement(sqlString);
 			ps.setLong(1, message_id);
-			ps.setLong(2, user_id);
+			ps.setLong(2, new Date().getTime());
+			ps.setLong(3, user_id);
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -389,6 +391,8 @@ public class MessageDAOimpl implements MessageDAO {
 				record.setMedia_types(getListFromString(rs
 						.getString("media_types")));
 				record.setMedia_urls(getListFromString(rs
+						.getString("media_urls")));
+				record.setMedia_urls_local(getListFromString(rs
 						.getString("media_urls_local")));
 				record.setMsg_id(rs.getLong("msg_id"));
 				record.setRecord_id(rs.getInt("record_id"));
@@ -423,7 +427,7 @@ public class MessageDAOimpl implements MessageDAO {
 
 	private void updateRecordCount(long user_id, int count) {
 		PreparedStatement ps = null;
-		String sqlString = "UPDATE user_details SET count=" + count
+		String sqlString = "UPDATE mark_detail SET count=" + count
 				+ " WHERE user_id = ?;";
 		Connection conn = null;
 		try {
@@ -462,7 +466,7 @@ public class MessageDAOimpl implements MessageDAO {
 		try {
 			conn = markDB.getConnection();
 			String sqlString = "SELECT count(*) FROM mark_records WHERE user_id = ?";
-			// String sqlString = "SELECT count FROM user_details WHERE user_id
+			// String sqlString = "SELECT count FROM mark_detail WHERE user_id
 			// = ?";
 			ps = conn.prepareStatement(sqlString);
 			ps.setLong(1, user_id);

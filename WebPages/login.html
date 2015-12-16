@@ -32,6 +32,8 @@
     <script src="resources/bootstrap/js/bootstrap.min.js"></script>
     <!-- iCheck 1.0.1 -->
     <script src="resources/plugins/iCheck/icheck.min.js"></script>
+    
+    <script src="resources/dist/js/serverConfig.js"></script>
     <script>
         $(function () {
             $('input').iCheck({
@@ -42,9 +44,111 @@
         });
     </script>
     <script type="text/javascript">
-        //var serverURL = "http://localhost:8080/HappyCityLight";
-        var serverURL="http://zhongliapp.aliapp.com";
+        var homepage = "annotation_domjs.html";
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg); //匹配目标参数
+            if (r != null) return unescape(r[2]);
+            return null; //返回参数值
+        }
+        //检测是否已经登陆，如果已经登陆则跳转到homepage
+        //检查用户信息的函数
+        function checkLogin() {
+            var token = $.cookie("token");
+            var user_id = $.cookie("user_id");
+            if (navigator.cookieEnabled) {
+                //如果已经有登录信息，检查是否正确
+                if (token != null && user_id != null) {
+                    //                    alert($.cookie("token") + " <> " + $.cookie("user_id"));
+                    //如果token正确则直接进入homepage
+                    $.ajax({
+                        type: "POST",
+                        crossDomain: true,
+                        url: serverURL + "user/tokencheck",
+                        data: {
+                            "userID": user_id,
+                            "token": token
+                        },
+                        dataType: "json",
+                        success: function (data, textStatus) {
+                            if (data.code == 200) {
+                                //token正确,直接前往homepage
+                                window.location.href = homepage;
+                            } else {
+                                //清除cookie
+                                $.removeCookie('token', {
+                                    path: '/'
+                                });
+                                $.removeCookie('email', {
+                                    path: '/'
+                                });
+                                $.removeCookie('firstname', {
+                                    path: '/'
+                                });
+                                $.removeCookie('lastname', {
+                                    path: '/'
+                                });
+                                $.removeCookie('user_picture', {
+                                    path: '/'
+                                });
+                                $.removeCookie('user_id', {
+                                    path: '/'
+                                });
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            //清除cookie
+                            $.removeCookie('token', {
+                                path: '/'
+                            });
+                            $.removeCookie('email', {
+                                path: '/'
+                            });
+                            $.removeCookie('firstname', {
+                                path: '/'
+                            });
+                            $.removeCookie('lastname', {
+                                path: '/'
+                            });
+                            $.removeCookie('user_picture', {
+                                path: '/'
+                            });
+                            $.removeCookie('user_id', {
+                                path: '/'
+                            });
+                        }
+                    });
+                } else {
+                    //清除cookie
+                    $.removeCookie('token', {
+                        path: '/'
+                    });
+                    $.removeCookie('email', {
+                        path: '/'
+                    });
+                    $.removeCookie('firstname', {
+                        path: '/'
+                    });
+                    $.removeCookie('lastname', {
+                        path: '/'
+                    });
+                    $.removeCookie('user_picture', {
+                        path: '/'
+                    });
+                    $.removeCookie('user_id', {
+                        path: '/'
+                    });
+                }
+                //根据URL后面的参数显示提示信息
+                var message = getUrlParam("message");
+                if (message != null) {
+                    //                    alert(message);
+                    $("#infobar").html("<div class='alert alert-info alert-dismissible'><button type='button'class='close' data-dismiss='alert'aria-hidden='true'>×</button><div class='text-center'<h4><i class='icon fa fa-info'></i> " + message + "</h4></div></div>");
+                }
+            }
+        }
         $(document).ready(function () {
+            checkLogin();
             $("form").submit(function (e) {
                 e.preventDefault();
                 /* alert("Submit prevented"); */
@@ -53,12 +157,12 @@
                 var email = $("#email").val();
                 var password = $("#password").val();
                 var dataString = 'email=' + email + '&password=' + password;
-                alert(dataString);
+                //                alert(dataString);
                 if ($.trim(email).length > 0 && $.trim(password).length > 0) {
                     $.ajax({
                         type: "POST",
                         crossDomain: true,
-                        url: serverURL+"/api/user/login",
+                        url: serverURL + "user/login",
                         data: {
                             "email": email,
                             "password": password
@@ -68,9 +172,8 @@
                             $("#loginBtn").val('Connecting...');
                         },
                         success: function (data) {
-                            alert(JSON.stringify(data));
+                            //                            alert(JSON.stringify(data));
                             if (data.code == 200) {
-                                var homepage = "annotation_domjs.html";
                                 //如果启用了cookie则存储在cookie中
                                 if (navigator.cookieEnabled) {
                                     //向浏览器cookie中保存登录信息
@@ -80,6 +183,7 @@
                                     $.cookie("firstname", data.obj.firstname);
                                     $.cookie("lastname", data.obj.lastname);
                                     $.cookie("user_picture", data.obj.user_picture);
+                                    $.cookie("user_roles", data.obj.user_roles);
                                     //alert("cookie ok");
                                 } else {
                                     //如果禁用了cookie则将toenk添加到url中传递
@@ -110,9 +214,10 @@
 </head>
 
 <body class="hold-transition login-page">
+    <div id="infobar"></div>
     <div class="login-box">
         <div class="login-logo">
-            <a href=""><b>Digital </b>City Impulse</a>
+            <a href="index.html"><b>Digital </b>City Impulse</a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
