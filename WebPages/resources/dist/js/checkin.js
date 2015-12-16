@@ -14,18 +14,19 @@ function getUrlParam(name) {
 
 //检查用户信息的函数
 function checkLogin() {
-    if (navigator.cookieEnabled) {
-        logintoken = $.cookie("token");
-        user_email = $.cookie("email");
-        user_firstname = $.cookie("firstname");
-        user_lastname = $.cookie("lastname");
-        user_picture = $.cookie("user_picture");
-        user_id = $.cookie("user_id");
+    logintoken = $.cookie("token");
+    user_email = $.cookie("email");
+    user_firstname = $.cookie("firstname");
+    user_lastname = $.cookie("lastname");
+    user_picture = $.cookie("user_picture");
+    user_id = $.cookie("user_id");
+    if (logintoken != null && user_id != null) {
+        //alert(logintoken+" <> "+user_id);
         //如果参数获取不全则退回登陆界面
-        if (logintoken == null || user_id == null) {
-            //alert("Please Login First.");
-            window.location.href = "login.html?message=Please Login First.";
-        }
+        //        if (logintoken == null || user_id == null) {
+        //            alert("Cookie 参数不全");
+        //            window.location.href = "login.html?message=Please Login First.";
+        //        }
         //如果token过期则返回登陆界面
         $.ajax({
             type: "POST",
@@ -39,6 +40,18 @@ function checkLogin() {
             success: function (data, textStatus) {
                 if (data.code == 200) {
                     //token正确
+                    //更改页面上显示文字
+                    if (user_firstname != "null") {
+                        $(".userfirstname").html(user_firstname);
+                    } else {
+                        $(".userfirstname").html("");
+                    }
+                    if (user_lastname != "null") {
+                        $(".userlastname").html(user_lastname);
+                    } else {
+                        $(".userlastname").html("");
+                    }
+                    $(".useremail").html(user_email);
                     checkin_afterChencin();
                 } else {
                     alert(JSON.stringify(data));
@@ -56,9 +69,10 @@ function checkLogin() {
         //如果Cookie被禁用则通过URL获取tooken和userID然后向服务器请求其他参数
         logintoken = getUrlParam("token");
         user_id = getUrlParam("user_id");
+        //alert("Cookie 被禁用,  token: " + logintoken + " <> user_id: " + user_id);
         //如果参数获取不全则退回登陆界面
         if (logintoken == null || user_id == null) {
-            //            alert("Please Login First.");
+            //alert("参数不全");
             //清除cookie
             $.removeCookie('token', {
                 path: '/'
@@ -96,6 +110,24 @@ function checkLogin() {
                     user_picture = data.obj.user_picture;
                     user_firstname = data.obj.firstname;
                     user_lastname = data.obj.lastname;
+                    //在inside-link后面添加参数
+                    $("a.inside-link").each(function () {
+                        var _href = $(this).attr("href");
+                        $(this).attr("href", _href + "?user_id=" + user_id + "&token=" + logintoken);
+                        //alert($(this).attr("href"));
+                    });
+                    //更改页面上显示文字
+                    if (user_firstname != "null") {
+                        $(".userfirstname").html(user_firstname);
+                    } else {
+                        $(".userfirstname").html("");
+                    }
+                    if (user_lastname != "null") {
+                        $(".userlastname").html(user_lastname);
+                    } else {
+                        $(".userlastname").html("");
+                    }
+                    $(".useremail").html(user_email);
                     checkin_afterChencin();
                 } else {
                     alert(JSON.stringify(data));
@@ -128,18 +160,6 @@ function checkLogin() {
             }
         });
     }
-    //更改页面上显示文字
-    if (user_firstname != "null") {
-        $(".userfirstname").html(user_firstname);
-    } else {
-        $(".userfirstname").html("");
-    }
-    if (user_lastname != "null") {
-        $(".userlastname").html(user_lastname);
-    } else {
-        $(".userlastname").html("");
-    }
-    $(".useremail").html(user_email);
 }
 
 $(function () {
