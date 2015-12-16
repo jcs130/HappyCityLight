@@ -23,7 +23,7 @@ function checkLogin() {
         user_id = $.cookie("user_id");
         //如果参数获取不全则退回登陆界面
         if (logintoken == null || user_id == null) {
-            alert("Please Login First.");
+            //alert("Please Login First.");
             window.location.href = "login.html?message=Please Login First.";
         }
         //如果token过期则返回登陆界面
