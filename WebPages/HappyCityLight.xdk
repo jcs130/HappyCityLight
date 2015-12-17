@@ -6,7 +6,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.jsapp",
       "src": "",
       "projectGuid": "5375e852-1915-49f4-b60e-4e4bf5233c19",
-      "lastModifiedDate": 1450249017761,
+      "lastModifiedDate": 1450315639449,
       "creationDate": 1450212887279
     },
     "sourceDirectory": "",
@@ -62,7 +62,7 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "0.0.1",
+        "appVersion_": "0.03",
         "appVersionCode_": "1",
         "crosswalkVersion_": "14",
         "cordovaCLIVersion_": "5.1.1"
@@ -91,7 +91,7 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "0.0.1",
+        "appVersion_": "0.0.3",
         "appVersionCode_": "1",
         "crosswalkVersion_": "15",
         "cordovaCLIVersion_": "5.1.1"
