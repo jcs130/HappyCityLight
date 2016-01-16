@@ -81,4 +81,20 @@ public interface MessageDAO {
 	 * @return
 	 */
 	public int getRecordCount(long user_id);
+
+	/**
+	 * 向数据库中添加新的待标记数据
+	 * @param msg_id
+	 * @param full_msg_id
+	 * @param text
+	 * @param media_types
+	 * @param media_urls
+	 * @param media_urls_local
+	 * @param mark_times
+	 * @param lang
+	 * @param message_from
+	 */
+	public void insertNewMessage(long msg_id, long full_msg_id, String text,
+			String media_types, String media_urls, String media_urls_local,
+			int mark_times, String lang, String message_from);
 }

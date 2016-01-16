@@ -130,7 +130,9 @@ public class MessageDAOimpl implements MessageDAO {
 
 	@Override
 	public MarkMsg2Web getOneNewMsg() {
-		String queryOption = "mark_times <" + markMaxTime;
+		// String queryOption = "mark_times <" + markMaxTime;
+		// 优先获得所有只差一条的
+		String queryOption = "mark_times =2";
 		if (cacheMessage.size() == 0) {
 			// 若缓存中无数据，则获取新的数据
 			cacheMessage.addAll(getNewMarkingMsg(cacheSize, queryOption));
@@ -138,6 +140,16 @@ public class MessageDAOimpl implements MessageDAO {
 			// 若缓存已满，则获取新的数据
 			cacheMessage.clear();
 			index = 0;
+			cacheMessage.addAll(getNewMarkingMsg(cacheSize, queryOption));
+		}
+		// 如果缓存中没有足够的消息则获取标记数量为1的
+		if (cacheMessage.size() < cacheSize) {
+			queryOption = "mark_times =1";
+			cacheMessage.addAll(getNewMarkingMsg(cacheSize, queryOption));
+		}
+		// 如果缓存中没有足够的消息则获取标记数量为0的
+		if (cacheMessage.size() < cacheSize) {
+			queryOption = "mark_times =0";
 			cacheMessage.addAll(getNewMarkingMsg(cacheSize, queryOption));
 		}
 		MarkMsg2Web res = new MarkMsg2Web(cacheMessage.get(index));
@@ -196,6 +208,48 @@ public class MessageDAOimpl implements MessageDAO {
 		updateMarkMessage(message_id);
 		// update mark_detail, message_id, updatetime
 		updateUserMarkDetail(message_id, user_id);
+	}
+
+	@Override
+	public void insertNewMessage(long msg_id, long full_msg_id, String text,
+			String media_types, String media_urls, String media_urls_local,
+			int mark_times, String lang, String message_from) {
+		PreparedStatement ps = null;
+		Connection conn = null;
+		try {
+			conn = markDB.getConnection();
+
+			String sqlString = "INSERT INTO mark_messages (msg_id, full_msg_id, text, media_types, media_urls, media_urls_local, mark_times, lang, message_from) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			ps = conn.prepareStatement(sqlString);
+			ps.setLong(1, msg_id);
+			ps.setLong(2, full_msg_id);
+			ps.setString(3, text);
+			ps.setString(4, media_types);
+			ps.setString(5, media_urls);
+			ps.setString(6, media_urls_local);
+			ps.setInt(7, mark_times);
+			ps.setString(8, lang);
+			ps.setString(9, message_from);
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
 	}
 
 	@Override

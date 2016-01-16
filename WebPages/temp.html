@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="text/javascript"
+	src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript"
+	src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"
+	type="text/javascript"></script>
+<script type="text/javascript" src="resources/js/gmap3.js"></script>
+<link
+	href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css"
+	rel="stylesheet" type="text/css">
+<style>
+html, body {
+	height: 100%;
+}
+body {
+	padding-top: 60px; /*padding for navbar*/
+}
+#main, #main>.row {
+	height: 100%;
+}
+#main>.row {
+	overflow-y: hidden;
+}
+#left {
+	height: 100%;
+}
+#map-canvas {
+	max-width: 100%;
+	height: calc(100% - 0);
+	position: absolute;
+	bottom: 10px;
+	overflow: hidden;
+	left: 10px;
+	right: 10px;
+	top: 60px;
+}
+</style>
+<script type="text/javascript">
+	var myCenter = new google.maps.LatLng(51.508742, -0.120850);
+	var map;
+	var markersArray = [];
+	var infowindowArray = [];
+	var lat;
+	var lon;
+	var pos = 'resources/images/pos32.png';
+	pos.height = 32;
+	pos.width = 32;
+	var neu = 'resources/images/neu32.png';
+	neu.height = 32;
+	neu.width = 32;
+	var neg = 'resources/images/neg32.png';
+	neg.height = 32;
+	neg.width = 32;
+	function placeMarker(location, content, emotion) {
+		//如果表计数量大于一定值，则删除最后一个
+		if (markersArray.length > 20) {
+			markersArray.shift().setMap(null);
+		}
+		if(infowindowArray.length>2){
+			infowindowArray.shift().close();
+		}
+		var ticon;
+		//根据情感来选择表情图标
+		if (emotion == "positive") {
+			ticon = pos;
+		} else if (emotion == "negative") {
+			ticon = neg;
+		} else if (emotion == "neutral") {
+			ticon = neu;
+		} else {
+			ticon = null;
+		}
+		var marker = new google.maps.Marker({
+			position : location,
+			animation : google.maps.Animation.DROP,
+			icon : ticon,
+			map : map
+		});
+		markersArray.push(marker);
+		var infowindow = new google.maps.InfoWindow({
+			content : content
+		});
+		
+		infowindowArray.push(infowindow);
+		infowindow.open(map, marker);
+		map.panTo(location);
+	}
+	function getLocAjax() {
+		$
+				.ajax({
+					url : 'ajaxgetloc.html',
+					success : function(data) {
+						//$('#result').html(data);
+						var jsonData;
+						try {
+							jsonData = $.parseJSON(data);
+						} catch (e) {
+							alert("解析JSON错误：JSON： " + data);
+							alert(e.name + "\n" + e.number + "\n"
+									+ e.descripition + "\n" + e.message);
+						}
+						if (lat != jsonData.location[0]
+								&& lon != jsonData.location[1]) {
+							lat = jsonData.location[0];
+							lon = jsonData.location[1];
+							//在地图上标明
+							var loc = new google.maps.LatLng(lat, lon);
+							try {
+								placeMarker(loc, jsonData.msg, jsonData.emotion);
+							} catch (e) {
+								alert(e.name + "\n" + e.number + "\n"
+										+ e.descripition + "\n" + e.message);
+							}
+						}
+					}
+				});
+	}
+	// Removes the overlays from the map, but keeps them in the array
+	function clearOverlays() {
+		if (markersArray) {
+			for (i in markersArray) {
+				markersArray[i].setMap(null);
+			}
+		}
+	}
+	// Shows any overlays currently in the array
+	function showOverlays() {
+		if (markersArray) {
+			for (i in markersArray) {
+				markersArray[i].setMap(map);
+			}
+		}
+	}
+	// Deletes all markers in the array by removing references to them
+	function deleteOverlays() {
+		if (markersArray) {
+			for (i in markersArray) {
+				markersArray[i].setMap(null);
+			}
+			markersArray.length = 0;
+		}
+	}
+	function init_map() {
+		var var_mapoptions = {
+			center : myCenter,
+			zoom : 6
+		};
+		map = new google.maps.Map(document.getElementById("map-canvas"),
+				var_mapoptions);
+	}
+	google.maps.event.addDomListener(window, 'load', init_map);
+	
+	var intervalId = 0;
+	intervalId = setInterval(getLocAjax, 3000);
+</script>
+</head>
+
+<body>
+	<div class="navbar navbar-default navbar-fixed-top templatemo-nav"
+		role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#navbar-ex-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand"><span>uOttawa</span></a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbar-ex-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="home">Home</a></li>
+					<li><a href="#">Contacts</a></li>
+				</ul>
+				<p class="lead navbar-left navbar-middle navbar-text">Twitter on
+					the Map</p>
+				<form class="navbar-form navbar-right" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control"
+							placeholder="Max number of Markers">
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="map-canvas"></div>
+	<div class="container-fluid" id="main">
+		<div class="row">
+			<div class="col-xs-12">
+				<!--map-canvas will be postioned here-->
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
