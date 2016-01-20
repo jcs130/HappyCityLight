@@ -1,11 +1,7 @@
 package com.zhongli.happycity.model.message;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * 格式化之后的完整的数据库中的一行数据
@@ -16,61 +12,46 @@ import java.util.TimeZone;
 public class StructuredFullMessage {
 	// 主键
 	private int num_id;
-	// 消息在缓存数据库中的ID
-	private String MongoId;
 	// 消息原来的编号
 	private String raw_id_str;
-	// 创建时间(GMT)
-	private Date creat_at;
-	SimpleDateFormat sdf;
-	// 时间戳
-	private long timestamp_ms;
+	// 用户名称
+	private String user_name;
+	// 创建时间(时间戳)
+	private long creat_at;
 	// 消息内容
 	private String text;
 	// 媒体类型
 	private List<String> media_type = new ArrayList<String>();
 	// 媒体地址
 	private List<String> media_urls = new ArrayList<String>();
+	private List<String> media_urls_local = new ArrayList<String>();
 	// 国家，省，城市，坐标区域等
-	private String placeType = "null";
-	private String placeName = "null";
-	private String placeFullName = "null";
-	private String placeBoundingType = "null";
-	private List<Double[]> placeCoordinates = new ArrayList<Double[]>();
+	private String place_type = "null";
+	private String place_name = "null";
+	private String place_fullname = "null";
 	private String country = "null";
 	private String province = "null";
 	private String city = "null";
-	private String geo_type = "null";
-	private List<Double[]> geo_coordinates = new ArrayList<Double[]>();
+	// 综合地理位置，如果有具体的位置，则直接使用原始位置，如果位置是个区域则使用大概的坐标位置
+	private double query_location_latitude;
+	private double query_location_langtitude;
 	// HT标签
 	private List<String> hashtags = new ArrayList<String>();
 	// 转发的消息的原编号
 	private String replay_to = "null";
 	// 语言
 	private String lang = "null";
-	// 文字人工标记情感
-	private String emotion_text_human = "null";
-	// 文字人工标记次数
-	private int emotion_text_human_times;
-	// 文字人工标记可信度
-	private double emotion_text_human_confidence;
-	// 媒体人工标记情感
-	private List<String> emotion_media_human;
-	// 媒体人工标记次数
-	private int emotion_media_human_times;
-	// 媒体人工标记可信度
-	private List<Double> emotion_media_human_confidence;
 	// 文字机器标记情感
-	private String emotion_text_machine;
+	private String emotion_text;
 	// 媒体机器标记情感
-	private List<Double> emotion_media_machine;
+	private List<String> emotion_medias;
+	// 总体情感
+	private String emotion_all;
 	// 来源
-	private String messageFrom;
+	private String message_from;
 
 	public StructuredFullMessage() {
 		super();
-		sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US);
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 
 	public int getNum_id() {
@@ -89,20 +70,20 @@ public class StructuredFullMessage {
 		this.raw_id_str = raw_id_str;
 	}
 
-	public Date getCreat_at() {
+	public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+
+	public long getCreat_at() {
 		return creat_at;
 	}
 
-	public void setCreat_at(Date creat_at) {
+	public void setCreat_at(long creat_at) {
 		this.creat_at = creat_at;
-	}
-
-	public long getTimestamp_ms() {
-		return timestamp_ms;
-	}
-
-	public void setTimestamp_ms(long timestamp_ms) {
-		this.timestamp_ms = timestamp_ms;
 	}
 
 	public String getText() {
@@ -129,6 +110,38 @@ public class StructuredFullMessage {
 		this.media_urls = media_urls;
 	}
 
+	public List<String> getMedia_urls_local() {
+		return media_urls_local;
+	}
+
+	public void setMedia_urls_local(List<String> media_urls_local) {
+		this.media_urls_local = media_urls_local;
+	}
+
+	public String getPlace_type() {
+		return place_type;
+	}
+
+	public void setPlace_type(String place_type) {
+		this.place_type = place_type;
+	}
+
+	public String getPlace_name() {
+		return place_name;
+	}
+
+	public void setPlace_name(String place_name) {
+		this.place_name = place_name;
+	}
+
+	public String getPlace_fullname() {
+		return place_fullname;
+	}
+
+	public void setPlace_fullname(String place_fullname) {
+		this.place_fullname = place_fullname;
+	}
+
 	public String getCountry() {
 		return country;
 	}
@@ -151,6 +164,22 @@ public class StructuredFullMessage {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public double getQuery_location_latitude() {
+		return query_location_latitude;
+	}
+
+	public void setQuery_location_latitude(double query_location_latitude) {
+		this.query_location_latitude = query_location_latitude;
+	}
+
+	public double getQuery_location_langtitude() {
+		return query_location_langtitude;
+	}
+
+	public void setQuery_location_langtitude(double query_location_langtitude) {
+		this.query_location_langtitude = query_location_langtitude;
 	}
 
 	public List<String> getHashtags() {
@@ -177,167 +206,53 @@ public class StructuredFullMessage {
 		this.lang = lang;
 	}
 
-	public String getEmotion_text_human() {
-		return emotion_text_human;
+	public String getEmotion_text() {
+		return emotion_text;
 	}
 
-	public void setEmotion_text_human(String emotion_text_human) {
-		this.emotion_text_human = emotion_text_human;
+	public void setEmotion_text(String emotion_text) {
+		this.emotion_text = emotion_text;
 	}
 
-	public int getEmotion_text_human_times() {
-		return emotion_text_human_times;
+	public List<String> getEmotion_medias() {
+		return emotion_medias;
 	}
 
-	public void setEmotion_text_human_times(int emotion_text_human_times) {
-		this.emotion_text_human_times = emotion_text_human_times;
+	public void setEmotion_medias(List<String> emotion_medias) {
+		this.emotion_medias = emotion_medias;
 	}
 
-	public double getEmotion_text_human_confidence() {
-		return emotion_text_human_confidence;
+	public String getEmotion_all() {
+		return emotion_all;
 	}
 
-	public void setEmotion_text_human_confidence(
-			double emotion_text_human_confidence) {
-		this.emotion_text_human_confidence = emotion_text_human_confidence;
+	public void setEmotion_all(String emotion_all) {
+		this.emotion_all = emotion_all;
 	}
 
-	public List<String> getEmotion_media_human() {
-		return emotion_media_human;
+	public String getMessage_from() {
+		return message_from;
 	}
 
-	public void setEmotion_media_human(List<String> emotion_media_human) {
-		this.emotion_media_human = emotion_media_human;
-	}
-
-	public int getEmotion_media_human_times() {
-		return emotion_media_human_times;
-	}
-
-	public void setEmotion_media_human_times(int emotion_media_human_times) {
-		this.emotion_media_human_times = emotion_media_human_times;
-	}
-
-	public List<Double> getEmotion_media_human_confidence() {
-		return emotion_media_human_confidence;
-	}
-
-	public void setEmotion_media_human_confidence(
-			List<Double> emotion_media_human_confidence) {
-		this.emotion_media_human_confidence = emotion_media_human_confidence;
-	}
-
-	public String getEmotion_text_machine() {
-		return emotion_text_machine;
-	}
-
-	public void setEmotion_text_machine(String emotion_text_machine) {
-		this.emotion_text_machine = emotion_text_machine;
-	}
-
-	public List<Double> getEmotion_media_machine() {
-		return emotion_media_machine;
-	}
-
-	public void setEmotion_media_machine(List<Double> emotion_media_machine) {
-		this.emotion_media_machine = emotion_media_machine;
-	}
-
-	public String getMessageFrom() {
-		return messageFrom;
-	}
-
-	public void setMessageFrom(String messageFrom) {
-		this.messageFrom = messageFrom;
-	}
-
-	public String getMongoId() {
-		return MongoId;
-	}
-
-	public void setMongoId(String mongoId) {
-		MongoId = mongoId;
-	}
-
-	public String getGeo_type() {
-		return geo_type;
-	}
-
-	public void setGeo_type(String geo_type) {
-		this.geo_type = geo_type;
-	}
-
-	public List<Double[]> getGeo_coordinates() {
-		return geo_coordinates;
-	}
-
-	public void setGeo_coordinates(List<Double[]> geo_coordinates) {
-		this.geo_coordinates = geo_coordinates;
-	}
-
-	public String getPlaceType() {
-		return placeType;
-	}
-
-	public void setPlaceType(String placeType) {
-		this.placeType = placeType;
-	}
-
-	public String getPlaceName() {
-		return placeName;
-	}
-
-	public void setPlaceName(String placeName) {
-		this.placeName = placeName;
-	}
-
-	public String getPlaceFullName() {
-		return placeFullName;
-	}
-
-	public void setPlaceFullName(String placeFullName) {
-		this.placeFullName = placeFullName;
+	public void setMessage_from(String message_from) {
+		this.message_from = message_from;
 	}
 
 	@Override
 	public String toString() {
-		return "SQLmessage [num_id=" + num_id + ", MongoId=" + MongoId
-				+ ", raw_id_str=" + raw_id_str + ", creat_at="
-				+ sdf.format(creat_at) + ", timestamp_ms=" + timestamp_ms
-				+ ", text=" + text + ", media_type=" + media_type
-				+ ", media_urls=" + media_urls + ", placeType=" + placeType
-				+ ", placeName=" + placeName + ", placeFullName="
-				+ placeFullName + ", placeBoundingType=" + placeBoundingType
-				+ ", placeCoordinates=" + placeCoordinates + ", country="
-				+ country + ", province=" + province + ", city=" + city
-				+ ", geo_type=" + geo_type + ", geo_coordinates="
-				+ geo_coordinates + ", hashtags=" + hashtags + ", replay_to="
-				+ replay_to + ", lang=" + lang + ", emotion_text_human="
-				+ emotion_text_human + ", emotion_text_human_times="
-				+ emotion_text_human_times + ", emotion_text_human_confidence="
-				+ emotion_text_human_confidence + ", emotion_media_human="
-				+ emotion_media_human + ", emotion_media_human_times="
-				+ emotion_media_human_times
-				+ ", emotion_media_human_confidence="
-				+ emotion_media_human_confidence + ", emotion_text_machine="
-				+ emotion_text_machine + ", emotion_media_machine="
-				+ emotion_media_machine + ", messageFrom=" + messageFrom + "]";
-	}
-
-	public List<Double[]> getPlaceCoordinates() {
-		return placeCoordinates;
-	}
-
-	public void setPlaceCoordinates(List<Double[]> placeCoordinates) {
-		this.placeCoordinates = placeCoordinates;
-	}
-
-	public String getPlaceBoundingType() {
-		return placeBoundingType;
-	}
-
-	public void setPlaceBoundingType(String placeBoundingType) {
-		this.placeBoundingType = placeBoundingType;
+		return "StructuredFullMessage [num_id=" + num_id + ", raw_id_str="
+				+ raw_id_str + ", user_name=" + user_name + ", creat_at="
+				+ creat_at + ", text=" + text + ", media_type=" + media_type
+				+ ", media_urls=" + media_urls + ", media_urls_local="
+				+ media_urls_local + ", place_type=" + place_type
+				+ ", place_name=" + place_name + ", place_fullname="
+				+ place_fullname + ", query_location_latitude="
+				+ query_location_latitude + ", query_location_langtitude="
+				+ query_location_langtitude + ", hashtags=" + hashtags
+				+ ", replay_to=" + replay_to + ", lang=" + lang
+				+ ", emotion_text=" + emotion_text + ", emotion_medias="
+				+ emotion_medias + ", emotion_all=" + emotion_all
+				+ ", message_from=" + message_from + "]";
 	}
 
 }
