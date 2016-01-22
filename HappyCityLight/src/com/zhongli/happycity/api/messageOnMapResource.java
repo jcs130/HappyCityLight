@@ -25,7 +25,7 @@ import com.zhongli.happycity.tool.Tools;
 @Path("/messageonmap")
 public class messageOnMapResource {
 	// 设置缓存数据的大小
-	private static int CACHE_NUMBER = 10;
+	private static int CACHE_NUMBER = 1000;
 	// 用于存储缓存数据的队列
 	private static ArrayList<StructuredFullMessage> cache_messages = new ArrayList<StructuredFullMessage>(
 			CACHE_NUMBER);
