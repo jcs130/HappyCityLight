@@ -80,6 +80,7 @@ public class messageOnMapResource {
 			@FormParam("city") String city,
 			@FormParam("query_location_latitude") String query_location_latitude,
 			@FormParam("query_location_langtitude") String query_location_langtitude,
+			@FormParam("is_real_location") String is_real_location,
 			@FormParam("hashtags") String hashtags,
 			@FormParam("replay_to") String replay_to,
 			@FormParam("message_from") String message_from) {
@@ -114,6 +115,7 @@ public class messageOnMapResource {
 					.parseDouble(query_location_latitude));
 			msg.setQuery_location_langtitude(Double
 					.parseDouble(query_location_langtitude));
+			msg.setReal_location(Boolean.parseBoolean(is_real_location));
 			msg.setHashtags(Tools.buildListFromString(hashtags));
 			msg.setReplay_to(replay_to);
 			msg.setMessage_from(message_from);
@@ -257,6 +259,9 @@ public class messageOnMapResource {
 		// 是否在指定地理坐标和范围
 		if (location_lat_min != 0 && location_lan_min != 0
 				&& location_lat_max != 0 && location_lan_max != 0) {
+			if (!temp.isReal_location()) {
+				return false;
+			}
 			if (temp.getQuery_location_latitude() < location_lat_min
 					|| temp.getQuery_location_latitude() > location_lat_max
 					|| temp.getQuery_location_langtitude() < location_lan_min
@@ -264,7 +269,7 @@ public class messageOnMapResource {
 				return false;
 			}
 		}
-		System.out.println(temp + "符合条件");
+		// System.out.println(temp + "符合条件");
 		return true;
 	}
 

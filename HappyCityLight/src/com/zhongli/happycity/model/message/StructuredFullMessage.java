@@ -35,6 +35,8 @@ public class StructuredFullMessage {
 	// 综合地理位置，如果有具体的位置，则直接使用原始位置，如果位置是个区域则使用大概的坐标位置
 	private double query_location_latitude = 0;
 	private double query_location_langtitude = 0;
+	// 是否为精确位置
+	private boolean real_location = false;
 	// HT标签
 	private List<String> hashtags = new ArrayList<String>();
 	// 转发的消息的原编号
@@ -238,6 +240,14 @@ public class StructuredFullMessage {
 		this.message_from = message_from;
 	}
 
+	public boolean isReal_location() {
+		return real_location;
+	}
+
+	public void setReal_location(boolean real_location) {
+		this.real_location = real_location;
+	}
+
 	@Override
 	public String toString() {
 		return "StructuredFullMessage [num_id=" + num_id + ", raw_id_str="
@@ -246,13 +256,15 @@ public class StructuredFullMessage {
 				+ ", media_urls=" + media_urls + ", media_urls_local="
 				+ media_urls_local + ", place_type=" + place_type
 				+ ", place_name=" + place_name + ", place_fullname="
-				+ place_fullname + ", query_location_latitude="
+				+ place_fullname + ", country=" + country + ", province="
+				+ province + ", city=" + city + ", query_location_latitude="
 				+ query_location_latitude + ", query_location_langtitude="
 				+ query_location_langtitude + ", hashtags=" + hashtags
 				+ ", replay_to=" + replay_to + ", lang=" + lang
 				+ ", emotion_text=" + emotion_text + ", emotion_medias="
 				+ emotion_medias + ", emotion_all=" + emotion_all
-				+ ", message_from=" + message_from + "]";
+				+ ", message_from=" + message_from + ", real_location="
+				+ real_location + "]";
 	}
 
 }
