@@ -23,7 +23,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 		Connection conn = null;
 		try {
 			conn = savingDB.getConnection();
-			String sqlString = "INSERT INTO full_message (raw_id_str, user_name, creat_at, text, media_types, media_urls, media_urls_local, place_type, place_name, place_fullname, country, province, city, query_location_latitude, query_location_langtitude, hashtags, replay_to, lang, message_from) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			String sqlString = "INSERT INTO full_message (raw_id_str, user_name, creat_at, text, media_types, media_urls, media_urls_local, place_type, place_name, place_fullname, country, province, city, query_location_latitude, query_location_langtitude, hashtags, replay_to, lang, message_from,is_real_location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 			ps = conn.prepareStatement(sqlString);
 			ps.setString(1, msg.getRaw_id_str());
 			ps.setString(2, msg.getUser_name());
@@ -45,6 +45,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 			ps.setString(17, msg.getReplay_to());
 			ps.setString(18, msg.getLang());
 			ps.setString(19, msg.getMessage_from());
+			ps.setBoolean(20, msg.isReal_location());
 			ps.execute();
 		} catch (SQLException e) {
 			// e.printStackTrace();
@@ -79,7 +80,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 			// 循环添加新消息
 			for (int i = 0; i < msgs.size(); i++) {
 				msg = msgs.get(i);
-				String sqlString = "INSERT INTO full_message (raw_id_str, user_name, creat_at, text, media_types, media_urls, media_urls_local, place_type, place_name, place_fullname, country, province, city, query_location_latitude, query_location_langtitude, hashtags, replay_to, lang, message_from) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+				String sqlString = "INSERT INTO full_message (raw_id_str, user_name, creat_at, text, media_types, media_urls, media_urls_local, place_type, place_name, place_fullname, country, province, city, query_location_latitude, query_location_langtitude, hashtags, replay_to, lang, message_from,is_real_location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 				PreparedStatement ps = conn.prepareStatement(sqlString);
 				ps.setString(1, msg.getRaw_id_str());
 				ps.setString(2, msg.getUser_name());
@@ -101,6 +102,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 				ps.setString(17, msg.getReplay_to());
 				ps.setString(18, msg.getLang());
 				ps.setString(19, msg.getMessage_from());
+				ps.setBoolean(20, msg.isReal_location());
 				ps.executeUpdate();
 			}
 			// 提交更改

@@ -45,7 +45,7 @@ public class LocatedTwitterListener implements RawStreamListener {
 		try {
 			msg = rawTwet2StructuredMsg(rawString);
 			// 每次插入一条消息
-			db.insert(msg);
+			// db.insert(msg);
 			// 每次插入多条消息
 			// cacheMessages.put(Long.parseLong(msg.getRaw_id_str()), msg);
 			// if (cacheMessages.size() > CACHE_NUM) {
@@ -53,6 +53,19 @@ public class LocatedTwitterListener implements RawStreamListener {
 			// db.insert(writeList);
 			// writeList.clear();
 			// }
+			// 向静态区域插入一条数据
+			if (!Tools.cacheUpdateMessages.containsKey(Long.parseLong(msg
+					.getRaw_id_str()))) {
+				Tools.cacheUpdateMessages.put(
+						Long.parseLong(msg.getRaw_id_str()), msg);
+				if (msg.isReal_location()) {
+					// 发送有具体坐标的数据
+					Tools.sendNewMessage(Config.DCI_SERVER_URL
+							+ "messageonmap/uploadnewmessage",
+							Config.UPLOAD_TOKEN, msg);
+				}
+			}
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -89,10 +102,7 @@ public class LocatedTwitterListener implements RawStreamListener {
 				JSONArray geo = tmp.getJSONArray("coordinates");
 				msg.setQuery_location_latitude(geo.getDouble(0));
 				msg.setQuery_location_langtitude(geo.getDouble(1));
-				// 发送有具体坐标的数据
-				Tools.sendNewMessage(Config.DCI_SERVER_URL
-						+ "messageonmap/uploadnewmessage", Config.UPLOAD_TOKEN,
-						msg);
+				msg.setReal_location(true);
 				// System.out.println(geo);
 			} else if (type.toLowerCase().equals("polygon")) {
 				JSONArray geo = tmp.getJSONArray("coordinates");
@@ -100,13 +110,14 @@ public class LocatedTwitterListener implements RawStreamListener {
 				double lat = 0, lan = 0;
 				for (int i = 0; i < geo.length(); i++) {
 					for (int j = 0; j < geo.getJSONArray(i).length(); j++) {
-						lat += geo.getJSONArray(i).getJSONArray(j).getDouble(0);
-						lan += geo.getJSONArray(i).getJSONArray(j).getDouble(1);
+						lat += geo.getJSONArray(i).getJSONArray(j).getDouble(1);
+						lan += geo.getJSONArray(i).getJSONArray(j).getDouble(0);
 						times++;
 					}
 				}
 				msg.setQuery_location_latitude(lat / (double) times);
 				msg.setQuery_location_langtitude(lan / (double) times);
+				msg.setReal_location(false);
 			} else {
 				// System.out.println("ttttttttt:" + type);
 			}
@@ -145,6 +156,7 @@ public class LocatedTwitterListener implements RawStreamListener {
 								.getJSONArray("coordinates");
 						msg.setQuery_location_latitude(geo.getDouble(0));
 						msg.setQuery_location_langtitude(geo.getDouble(1));
+						msg.setReal_location(true);
 						// System.out.println(geo);
 					} else if (type.toLowerCase().equals("polygon")) {
 						JSONArray geo = bounding_box
@@ -154,14 +166,15 @@ public class LocatedTwitterListener implements RawStreamListener {
 						for (int i = 0; i < geo.length(); i++) {
 							for (int j = 0; j < geo.getJSONArray(i).length(); j++) {
 								lat += geo.getJSONArray(i).getJSONArray(j)
-										.getDouble(0);
-								lan += geo.getJSONArray(i).getJSONArray(j)
 										.getDouble(1);
+								lan += geo.getJSONArray(i).getJSONArray(j)
+										.getDouble(0);
 								times++;
 							}
 						}
 						msg.setQuery_location_latitude(lat / (double) times);
 						msg.setQuery_location_langtitude(lan / (double) times);
+						msg.setReal_location(false);
 					} else {
 						// System.out.println("ttttttttt:" + type);
 					}

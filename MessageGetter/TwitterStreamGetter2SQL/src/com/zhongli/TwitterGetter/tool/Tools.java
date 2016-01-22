@@ -5,6 +5,7 @@ import java.net.*;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +35,7 @@ import com.zhongli.TwitterGetter.model.StructuredFullMessage;
 public class Tools {
 	private static final String MAC_NAME = "HmacSHA256";
 	private static final String ENCODING = "UTF-8";
+	public static HashMap<Long, StructuredFullMessage> cacheUpdateMessages = new HashMap<Long, StructuredFullMessage>();
 
 	public static ArrayList<String> buildListFromString(String listString) {
 		String[] temp = listString.split(",");
@@ -323,6 +325,7 @@ public class Tools {
 		// System.out.println("23");
 		postMethod.addParameter("message_from", msg.getMessage_from());
 		// System.out.println("24");
+		postMethod.addParameter("is_real_location", Boolean.toString(msg.isReal_location()));
 		try {
 			// System.out.println("URL:" + url);
 			httpClient.executeMethod(postMethod);
