@@ -45,16 +45,16 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 			ps.setString(17, msg.getReplay_to());
 			ps.setString(18, msg.getLang());
 			ps.setString(19, msg.getMessage_from());
-			ps.setBoolean(20, msg.isReal_location());
+			ps.setString(20, Boolean.toString(msg.isReal_location()));
 			ps.execute();
 		} catch (SQLException e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 			// throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
-				// e.printStackTrace();
+				e.printStackTrace();
 				// throw new RuntimeException(e);
 			}
 			if (conn != null) {
@@ -102,7 +102,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 				ps.setString(17, msg.getReplay_to());
 				ps.setString(18, msg.getLang());
 				ps.setString(19, msg.getMessage_from());
-				ps.setBoolean(20, msg.isReal_location());
+				ps.setString(20, Boolean.toString(msg.isReal_location()));
 				ps.executeUpdate();
 			}
 			// 提交更改

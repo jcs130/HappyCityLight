@@ -24,7 +24,7 @@ public class LocatedTwitterListener implements RawStreamListener {
 	private TwitterSaveDAO db;
 	private HashMap<Long, StructuredFullMessage> cacheMessages;
 	private ArrayList<StructuredFullMessage> writeList;
-	private int CACHE_NUM = 300;
+	private int CACHE_NUM = 1000;
 
 	public LocatedTwitterListener(TwitterSaveDAO db) {
 		this.db = db;
@@ -58,6 +58,10 @@ public class LocatedTwitterListener implements RawStreamListener {
 					.getRaw_id_str()))) {
 				Tools.cacheUpdateMessages.put(
 						Long.parseLong(msg.getRaw_id_str()), msg);
+				if (Tools.cacheUpdateMessages.size() > CACHE_NUM) {
+					Tools.cacheUpdateMessages.clear();
+				}
+				db.insert(msg);
 				if (msg.isReal_location()) {
 					// 发送有具体坐标的数据
 					Tools.sendNewMessage(Config.DCI_SERVER_URL
@@ -67,12 +71,14 @@ public class LocatedTwitterListener implements RawStreamListener {
 			}
 
 		} catch (JSONException e) {
+			System.out.println("String:" + rawString);
 			e.printStackTrace();
 		}
 	}
 
 	private StructuredFullMessage rawTwet2StructuredMsg(String rawJSONString)
 			throws JSONException {
+		System.out.println(rawJSONString);
 		JSONObject cur = new JSONObject(rawJSONString);
 		JSONObject tmp;
 		StructuredFullMessage msg = new StructuredFullMessage();
