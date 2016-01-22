@@ -11,15 +11,15 @@ import java.util.List;
  */
 public class StructuredFullMessage {
 	// 主键
-	private int num_id;
+	private int num_id = 0;
 	// 消息原来的编号
-	private String raw_id_str;
+	private String raw_id_str = "";
 	// 用户名称
-	private String user_name;
+	private String user_name = "";
 	// 创建时间(时间戳)
-	private long creat_at;
+	private long creat_at = 0;
 	// 消息内容
-	private String text;
+	private String text = "";
 	// 媒体类型
 	private List<String> media_type = new ArrayList<String>();
 	// 媒体地址
@@ -33,22 +33,22 @@ public class StructuredFullMessage {
 	private String province = "null";
 	private String city = "null";
 	// 综合地理位置，如果有具体的位置，则直接使用原始位置，如果位置是个区域则使用大概的坐标位置
-	private double query_location_latitude;
-	private double query_location_langtitude;
+	private double query_location_latitude = 0;
+	private double query_location_langtitude = 0;
 	// HT标签
 	private List<String> hashtags = new ArrayList<String>();
 	// 转发的消息的原编号
-	private String replay_to = "null";
+	private String replay_to = "";
 	// 语言
-	private String lang = "null";
+	private String lang = "";
 	// 文字机器标记情感
-	private String emotion_text;
+	private String emotion_text = "";
 	// 媒体机器标记情感
-	private List<String> emotion_medias;
+	private List<String> emotion_medias = new ArrayList<String>();
 	// 总体情感
-	private String emotion_all;
+	private String emotion_all = "";
 	// 来源
-	private String message_from;
+	private String message_from = "";
 
 	public StructuredFullMessage() {
 		super();
