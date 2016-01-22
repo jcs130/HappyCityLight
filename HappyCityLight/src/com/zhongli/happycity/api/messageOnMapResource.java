@@ -249,11 +249,12 @@ public class messageOnMapResource {
 				return false;
 			}
 		}
-		//城市名称优先
+		// 城市名称优先
 		// 是否在指定区域内（名称）
 		if (!"".equals(city) && !"null".equals(city)) {
-			if (!(isEquals(city.trim().split(","), temp.getPlace_name()) || isEquals(
-					city.trim().split(","), temp.getCity()))) {
+			if (!(isEquals(city.trim().split(","), temp.getPlace_name())
+					|| isEquals(city.trim().split(","), temp.getCity()) || isEquals(
+						city.trim().split(","), temp.getPlace_fullname()))) {
 				return false;
 			}
 		} else {
