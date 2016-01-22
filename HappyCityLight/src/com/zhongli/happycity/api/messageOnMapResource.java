@@ -249,24 +249,26 @@ public class messageOnMapResource {
 				return false;
 			}
 		}
+		//城市名称优先
 		// 是否在指定区域内（名称）
 		if (!"".equals(city) && !"null".equals(city)) {
 			if (!(isEquals(city.trim().split(","), temp.getPlace_name()) || isEquals(
 					city.trim().split(","), temp.getCity()))) {
 				return false;
 			}
-		}
-		// 是否在指定地理坐标和范围
-		if (location_lat_min != 0 && location_lan_min != 0
-				&& location_lat_max != 0 && location_lan_max != 0) {
-			if (!temp.isReal_location()) {
-				return false;
-			}
-			if (temp.getQuery_location_latitude() < location_lat_min
-					|| temp.getQuery_location_latitude() > location_lat_max
-					|| temp.getQuery_location_langtitude() < location_lan_min
-					|| temp.getQuery_location_langtitude() > location_lan_max) {
-				return false;
+		} else {
+			// 是否在指定地理坐标和范围
+			if (location_lat_min != 0 && location_lan_min != 0
+					&& location_lat_max != 0 && location_lan_max != 0) {
+				if (!temp.isReal_location()) {
+					return false;
+				}
+				if (temp.getQuery_location_latitude() < location_lat_min
+						|| temp.getQuery_location_latitude() > location_lat_max
+						|| temp.getQuery_location_langtitude() < location_lan_min
+						|| temp.getQuery_location_langtitude() > location_lan_max) {
+					return false;
+				}
 			}
 		}
 		// System.out.println(temp + "符合条件");
