@@ -18,7 +18,7 @@
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>com.zhongli.happycity.app.APIApplication</param-value>
+			<param-value>com.citydigitalpulse.webservice.app.APIApplication</param-value>
 		</init-param>
 
 		<load-on-startup>1</load-on-startup>
