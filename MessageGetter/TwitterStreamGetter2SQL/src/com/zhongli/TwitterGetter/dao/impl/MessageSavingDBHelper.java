@@ -9,14 +9,11 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import com.zhongli.TwitterGetter.app.Config;
+
 public class MessageSavingDBHelper implements DataSource {
 
-	private static final String url = "jdbc:mysql://localhost:3307/MsgSaving";
-	// private static final String url =
 	private static final String name = "com.mysql.jdbc.Driver";
-	private static final String user = "root";
-	// private static final String user = "jcs130";
-	private static final String password = "jcsss130";
 
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
@@ -63,8 +60,8 @@ public class MessageSavingDBHelper implements DataSource {
 	@Override
 	public Connection getConnection(String username, String password)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return DriverManager.getConnection(Config.MESSAGE_SAVING_DATABASE_URL,
+				username, password);// 获取连接
 	}
 
 	@Override
@@ -75,7 +72,9 @@ public class MessageSavingDBHelper implements DataSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}// 指定连接类型
-		return DriverManager.getConnection(url, user, password);// 获取连接
+		return DriverManager.getConnection(Config.MESSAGE_SAVING_DATABASE_URL,
+				Config.MESSAGE_SAVING_DATABASE_USER_NAME,
+				Config.MESSAGE_SAVING_DATABASE_USER_PASSWORD);// 获取连接
 	}
 
 }

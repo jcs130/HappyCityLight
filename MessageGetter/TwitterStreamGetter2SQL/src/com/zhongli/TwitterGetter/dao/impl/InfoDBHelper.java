@@ -9,11 +9,10 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-public class InfoDBHelper implements DataSource{
-	private static final String url = "jdbc:mysql://localhost:3307/happycityproject";
+import com.zhongli.TwitterGetter.app.Config;
+
+public class InfoDBHelper implements DataSource {
 	private static final String name = "com.mysql.jdbc.Driver";
-	private static final String user = "root";
-	private static final String password = "jcsss130";
 
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
@@ -24,13 +23,13 @@ public class InfoDBHelper implements DataSource{
 	@Override
 	public void setLogWriter(PrintWriter out) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setLoginTimeout(int seconds) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -60,8 +59,9 @@ public class InfoDBHelper implements DataSource{
 	@Override
 	public Connection getConnection(String username, String password)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return DriverManager.getConnection(
+				Config.MESSAGE_GETTER_CONTROLLER_DATABASE_URL, username,
+				password);// 获取连接
 	}
 
 	@Override
@@ -72,7 +72,10 @@ public class InfoDBHelper implements DataSource{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}// 指定连接类型
-		return DriverManager.getConnection(url, user, password);// 获取连接
+		return DriverManager.getConnection(
+				Config.MESSAGE_GETTER_CONTROLLER_DATABASE_URL,
+				Config.MESSAGE_GETTER_CONTROLLER_DATABASE_USER_NAME,
+				Config.MESSAGE_GETTER_CONTROLLER_DATABASE_USER_PASSWORD);// 获取连接
 	}
 
 }
