@@ -6,24 +6,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.glassfish.hk2.utilities.reflection.Logger;
 
-import com.citydigitalpulse.webservice.dao.MessageDAO;
+import com.citydigitalpulse.webservice.dao.MarkingMessageDAO;
 import com.citydigitalpulse.webservice.model.message.MarkMessageObj;
 import com.citydigitalpulse.webservice.model.message.MarkMsg2Web;
 import com.citydigitalpulse.webservice.model.message.MarkRecordObj;
 import com.citydigitalpulse.webservice.model.message.MediaObject;
 
-public class MessageDAOimpl implements MessageDAO {
+public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 	private MySQLHelper_Mark markDB;
 	// private SimpleDateFormat sdf;
 	// 缓存区
@@ -32,7 +28,7 @@ public class MessageDAOimpl implements MessageDAO {
 	private int cacheSize;
 	private int markMaxTime;
 
-	public MessageDAOimpl(int cacheSize, int markMaxTime) {
+	public MarkingMessageDAOimpl(int cacheSize, int markMaxTime) {
 		markDB = new MySQLHelper_Mark();
 		this.cacheSize = cacheSize;
 		this.markMaxTime = markMaxTime;

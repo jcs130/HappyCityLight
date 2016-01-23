@@ -1,9 +1,9 @@
 package com.citydigitalpulse.webservice.api;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
@@ -14,16 +14,28 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.glassfish.hk2.utilities.reflection.Logger;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import com.citydigitalpulse.webservice.impl.MessageSavingDAOimpl;
 import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
 import com.citydigitalpulse.webservice.tool.Tools;
+import com.citydigitalpulse.webservice.tool.NLPPart.alchemyapi.api.AlchemyAPI;
 
 //即时显示界面的API
 @Path("/messageonmap")
 public class messageOnMapResource {
+	private static MessageSavingDAOimpl msgSav = new MessageSavingDAOimpl();
 	// 设置缓存数据的大小
 	private static int CACHE_NUMBER = 1000;
 	// 用于存储缓存数据的队列
@@ -62,6 +74,7 @@ public class messageOnMapResource {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg uploadNewMessage(
 			@FormParam("token") String token,
+			@FormParam("num_id") @DefaultValue("0") String num_id,
 			@FormParam("raw_id_str") String raw_id_str,
 			@FormParam("user_name") String user_name,
 			@FormParam("text") String text,
@@ -96,6 +109,7 @@ public class messageOnMapResource {
 			}
 			// 根据传来的参数构建对象
 			StructuredFullMessage msg = new StructuredFullMessage();
+			msg.setNum_id(Long.parseLong(num_id));
 			msg.setRaw_id_str(raw_id_str);
 			msg.setUser_name(user_name);
 			msg.setText(text);
@@ -191,6 +205,9 @@ public class messageOnMapResource {
 					}
 				}
 			}
+			// Update the emotion of the messages
+			// 更新情感标记
+			updateEmotions(list);
 			res.setObj(list);
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());
@@ -203,6 +220,63 @@ public class messageOnMapResource {
 			res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
 			res.setMessage(e.getLocalizedMessage());
 			return res;
+		}
+	}
+
+	private void updateEmotions(ArrayList<StructuredFullMessage> list)
+			throws XPathExpressionException, IOException, SAXException,
+			ParserConfigurationException {
+		String emotion_text = "";
+		for (int i = 0; i < list.size(); i++) {
+			StructuredFullMessage temp = list.get(i);
+			if ("".equals(temp.getEmotion_text())) {
+				// 如果没有感情数据则通过API获取并且将情感标记存入数据库
+				if (temp.getLang().equals("en")) {
+					emotion_text = getTextEmotion(temp.getText());
+					temp.setEmotion_text(emotion_text);
+					// 将情感标记存入数据库
+					msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
+				} else {
+					// 不是英语调用其他方法
+				}
+			}
+		}
+
+	}
+
+	private String getTextEmotion(String text) throws XPathExpressionException,
+			IOException, SAXException, ParserConfigurationException {
+		String emotion = "";
+		double score;
+		AlchemyAPI alchemyObj = AlchemyAPI
+				.GetInstanceFromString("b232c9bbb50818d45e1ecd2f14ea0bc47bdea8d1");
+		Document doc = alchemyObj.TextGetTextSentiment(text);
+		System.out.println(getStringFromDocument(doc));
+		// 使用 DOM解析返回的XML文档
+		emotion = doc.getElementsByTagName("type").item(0).getTextContent();
+		if (emotion.equals("neutral")) {
+			score = 0;
+		} else {
+			score = Double.parseDouble(doc.getElementsByTagName("score")
+					.item(0).getTextContent());
+		}
+		return emotion;
+	}
+
+	private static String getStringFromDocument(Document doc) {
+		try {
+			DOMSource domSource = new DOMSource(doc);
+			StringWriter writer = new StringWriter();
+			StreamResult result = new StreamResult(writer);
+
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer transformer = tf.newTransformer();
+			transformer.transform(domSource, result);
+
+			return writer.toString();
+		} catch (TransformerException ex) {
+			ex.printStackTrace();
+			return null;
 		}
 	}
 

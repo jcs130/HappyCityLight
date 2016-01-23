@@ -12,7 +12,7 @@ import com.citydigitalpulse.webservice.model.message.MarkRecordObj;
  * @author zhonglili
  *
  */
-public interface MessageDAO {
+public interface MarkingMessageDAO {
 	/**
 	 * 获取一条新的待标记信息， 需不需要在提取之后做一个标记防止重复读取？ 需不需要建立一个缓存区，一次性读取若干条消息，然后在等待全部标记完成？
 	 */

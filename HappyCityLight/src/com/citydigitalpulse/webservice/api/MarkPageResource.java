@@ -8,9 +8,9 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.hk2.utilities.reflection.Logger;
 
-import com.citydigitalpulse.webservice.dao.MessageDAO;
+import com.citydigitalpulse.webservice.dao.MarkingMessageDAO;
 import com.citydigitalpulse.webservice.dao.UserAccountDAO;
-import com.citydigitalpulse.webservice.impl.MessageDAOimpl;
+import com.citydigitalpulse.webservice.impl.MarkingMessageDAOimpl;
 import com.citydigitalpulse.webservice.impl.userAccountDAOimpl;
 import com.citydigitalpulse.webservice.model.message.*;
 import com.citydigitalpulse.webservice.model.user.Role;
@@ -23,7 +23,7 @@ import com.citydigitalpulse.webservice.model.user.Role;
  */
 @Path("/annotation")
 public class MarkPageResource {
-	private static MessageDAO msgDAO = new MessageDAOimpl(20, 3);
+	private static MarkingMessageDAO msgDAO = new MarkingMessageDAOimpl(20, 3);
 	private static UserAccountDAO userAccountDAO = new userAccountDAOimpl();
 	private static String RequreRole = "ROLE_USER";
 

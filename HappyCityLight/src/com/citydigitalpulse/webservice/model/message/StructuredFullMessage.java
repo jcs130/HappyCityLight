@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class StructuredFullMessage {
 	// 主键
-	private int num_id = 0;
+	private long num_id = 0;
 	// 消息原来的编号
 	private String raw_id_str = "";
 	// 用户名称
@@ -35,8 +35,6 @@ public class StructuredFullMessage {
 	// 综合地理位置，如果有具体的位置，则直接使用原始位置，如果位置是个区域则使用大概的坐标位置
 	private double query_location_latitude = 0;
 	private double query_location_langtitude = 0;
-	// 是否为精确位置
-	private boolean real_location = false;
 	// HT标签
 	private List<String> hashtags = new ArrayList<String>();
 	// 转发的消息的原编号
@@ -51,16 +49,18 @@ public class StructuredFullMessage {
 	private String emotion_all = "";
 	// 来源
 	private String message_from = "";
+	// 是否为精确位置
+	private boolean real_location = false;
 
 	public StructuredFullMessage() {
 		super();
 	}
 
-	public int getNum_id() {
+	public long getNum_id() {
 		return num_id;
 	}
 
-	public void setNum_id(int num_id) {
+	public void setNum_id(long num_id) {
 		this.num_id = num_id;
 	}
 
