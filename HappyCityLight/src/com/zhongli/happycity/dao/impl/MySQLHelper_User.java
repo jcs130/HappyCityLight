@@ -9,15 +9,9 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import com.zhongli.happycity.app.ServerConfig;
+
 public class MySQLHelper_User implements DataSource {
-	// private static final String url =
-	// "jdbc:mysql://localhost:3307/digitalcity";
-	// 阿里云数据库
-	private static final String url = "jdbc:mysql://rdsv068s015f5ee7z6cl.mysql.rds.aliyuncs.com:3306/ru28t8ce91gc69ss";
-	// private static final String user = "root";
-	// 阿里云数据库
-	private static final String user = "jcs130";
-	private static final String password = "jcsss130";
 	private static final String name = "com.mysql.jdbc.Driver";
 
 	// private static final String password = "ilikexiah";
@@ -68,7 +62,8 @@ public class MySQLHelper_User implements DataSource {
 	public Connection getConnection(String username, String password)
 			throws SQLException {
 		// TODO Auto-generated method stub
-		return DriverManager.getConnection(url, username, password);// 获取连接
+		return DriverManager.getConnection(
+				ServerConfig.WEB_SERVER_DATABASE_URL, username, password);// 获取连接
 	}
 
 	@Override
@@ -79,7 +74,10 @@ public class MySQLHelper_User implements DataSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}// 指定连接类型
-		return DriverManager.getConnection(url, user, password);// 获取连接
+		return DriverManager.getConnection(
+				ServerConfig.WEB_SERVER_DATABASE_URL,
+				ServerConfig.WEB_SERVER_DATABASE_USER_NAME,
+				ServerConfig.WEB_SERVER_DATABASE_USER_PASSWORD);// 获取连接
 	}
 
 }

@@ -83,6 +83,7 @@ public class messageOnMapResource {
 			@FormParam("is_real_location") String is_real_location,
 			@FormParam("hashtags") String hashtags,
 			@FormParam("replay_to") String replay_to,
+			@FormParam("lang") String lang,
 			@FormParam("message_from") String message_from) {
 		ResMsg res = new ResMsg();
 		try {
@@ -118,6 +119,7 @@ public class messageOnMapResource {
 			msg.setReal_location(Boolean.parseBoolean(is_real_location));
 			msg.setHashtags(Tools.buildListFromString(hashtags));
 			msg.setReplay_to(replay_to);
+			msg.setLang(lang);
 			msg.setMessage_from(message_from);
 			// 将该信息保存到缓存队列中
 			if (cache_messages.size() < CACHE_NUMBER) {
