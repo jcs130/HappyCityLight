@@ -29,7 +29,7 @@ public class MarkPageResource {
 
 	@GET
 	@Path("/getnewmessage")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getUnMarkedMessage(
 			@QueryParam("userID") long userID,
 			@QueryParam("token") String token,
@@ -83,7 +83,7 @@ public class MarkPageResource {
 	// 向标注记录表更新数据
 	@POST
 	@Path("/sendannotatedmessage")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getMarkedMessage(
 			@FormParam("userID") long userID,
 			@FormParam("token") String token,
@@ -130,7 +130,7 @@ public class MarkPageResource {
 
 	@GET
 	@Path("/getrecentannotation")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getRecentMarkedMsg(@QueryParam("userID") long userID,
 			@QueryParam("token") String token) {
 		ResMsg res = new ResMsg();
@@ -169,7 +169,7 @@ public class MarkPageResource {
 
 	@GET
 	@Path("/getrecordcount")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getMarkedMsgNumber(@QueryParam("userID") long userID,
 			@QueryParam("token") String token) {
 		ResMsg res = new ResMsg();
@@ -205,7 +205,7 @@ public class MarkPageResource {
 
 	@GET
 	@Path("/getallrecord")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getAllMarkedMsg(@QueryParam("userID") long userID,
 			@QueryParam("token") String token) {
 		ResMsg res = new ResMsg();
@@ -241,7 +241,7 @@ public class MarkPageResource {
 
 	@GET
 	@Path("/getnewmessage2")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getUnMarkedMessage2(@QueryParam("userID") long userID,
 			@QueryParam("token") String token,
 			@QueryParam(value = "number") @DefaultValue("20") int number) {
@@ -284,7 +284,7 @@ public class MarkPageResource {
 
 	@GET
 	@Path("/sendannotatedmessage2")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getMarkedMessage2(
 			@QueryParam("userID") long userID,
 			@QueryParam("token") String token,

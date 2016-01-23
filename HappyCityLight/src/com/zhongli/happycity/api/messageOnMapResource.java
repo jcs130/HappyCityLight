@@ -59,7 +59,7 @@ public class messageOnMapResource {
 	 */
 	@POST
 	@Path("/uploadnewmessage")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg uploadNewMessage(
 			@FormParam("token") String token,
 			@FormParam("raw_id_str") String raw_id_str,
@@ -150,7 +150,7 @@ public class messageOnMapResource {
 	// 从缓存中获得按照指定要求筛选的数据
 	@GET
 	@Path("/getlatest")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getLatest(
 			@QueryParam("token") @DefaultValue("") String token,
 			@QueryParam("message_from") @DefaultValue("") String message_from,

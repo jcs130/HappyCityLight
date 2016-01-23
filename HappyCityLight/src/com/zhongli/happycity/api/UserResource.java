@@ -32,7 +32,7 @@ public class UserResource {
 	// 测试方法
 	@GET
 	@Path("/test")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg test() {
 		ResMsg res = new ResMsg();
 		String baseURL = urlInfo.getBaseUri().toString();
@@ -46,7 +46,7 @@ public class UserResource {
 
 	@POST
 	@Path("/tokencheck")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg tokenCheck(@FormParam("userID") long userID,
 			@FormParam("token") String token) {
 		ResMsg res = new ResMsg();
@@ -66,7 +66,7 @@ public class UserResource {
 
 	@POST
 	@Path("/registration")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg registerUserAccount(@FormParam("email") String email,
 			@FormParam("password") String password) {
 		ResMsg res = new ResMsg();
@@ -113,7 +113,7 @@ public class UserResource {
 	// 确认用户邮箱
 	@GET
 	@Path("/regitrationConfirm")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg regitrationConfirm(@QueryParam("token") String token) {
 		ResMsg res = new ResMsg();
 		try {
@@ -162,7 +162,7 @@ public class UserResource {
 	// 发送用户邮箱确认连接
 	@POST
 	@Path("/resendRegistrationToken")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg sendConfirmEmail(@FormParam("email") String email) {
 		ResMsg res = new ResMsg();
 		// 检查用户是否存在
@@ -208,7 +208,7 @@ public class UserResource {
 	// 用户登录
 	@POST
 	@Path("/login")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg userLogin(@FormParam("email") String email,
 			@FormParam("password") String password) {
 		System.out.println("login " + email + "<>" + password);
@@ -270,7 +270,7 @@ public class UserResource {
 	// 更改密码
 	@POST
 	@Path("/resetPassword")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg resetPassword(@FormParam("token") String token,
 			@FormParam("newpassword") String newPassword) {
 		ResMsg res = new ResMsg();
@@ -333,7 +333,7 @@ public class UserResource {
 	// 发送更改密码确认链接
 	@POST
 	@Path("/sendresetpwdmail")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg sendPasswordResetMail(@FormParam("email") String email) {
 		ResMsg res = new ResMsg();
 		String token;
@@ -377,7 +377,7 @@ public class UserResource {
 	// 用户登出
 	@POST
 	@Path("/logout")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg userLogout(@FormParam("userID") long userID,
 			@FormParam("token") String token) {
 		ResMsg res = new ResMsg();
@@ -415,7 +415,7 @@ public class UserResource {
 	// 获取用户资料，默认获取自己的
 	@GET
 	@Path("/getuserdetail")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getUserDetailByEmail(
 			@QueryParam("userID") long userID,
 			@QueryParam("token") String token,
