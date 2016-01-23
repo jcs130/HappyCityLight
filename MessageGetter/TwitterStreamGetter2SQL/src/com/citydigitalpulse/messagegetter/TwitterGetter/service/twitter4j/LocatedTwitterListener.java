@@ -61,14 +61,16 @@ public class LocatedTwitterListener implements RawStreamListener {
 				if (Tools.cacheUpdateMessages.size() > CACHE_NUM) {
 					Tools.cacheUpdateMessages.clear();
 				}
-				db.insert(msg);
-				
-				if (msg.isReal_location()) {
-					System.out.println(msg.getText());
-					// 发送有具体坐标的数据
-					Tools.sendNewMessage(Config.DCI_SERVER_URL
-							+ "messageonmap/uploadnewmessage",
-							Config.UPLOAD_TOKEN, msg);
+				// 插入数据库并获得ID
+				msg.setNum_id(db.insert(msg));
+				if (msg.getNum_id() != 0) {
+					if (msg.isReal_location()) {
+						System.out.println(msg.getText());
+						// 发送有具体坐标的数据
+						Tools.sendNewMessage(Config.DCI_SERVER_URL
+								+ "messageonmap/uploadnewmessage",
+								Config.UPLOAD_TOKEN, msg);
+					}
 				}
 			}
 
@@ -80,7 +82,7 @@ public class LocatedTwitterListener implements RawStreamListener {
 
 	private StructuredFullMessage rawTwet2StructuredMsg(String rawJSONString)
 			throws JSONException {
-//		System.out.println(rawJSONString);
+		// System.out.println(rawJSONString);
 		JSONObject cur = new JSONObject(rawJSONString);
 		JSONObject tmp;
 		StructuredFullMessage msg = new StructuredFullMessage();

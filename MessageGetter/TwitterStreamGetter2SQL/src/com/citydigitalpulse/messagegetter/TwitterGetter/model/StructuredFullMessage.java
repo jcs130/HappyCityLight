@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class StructuredFullMessage {
 	// 主键
-	private int num_id = 0;
+	private long num_id = 0;
 	// 消息原来的编号
 	private String raw_id_str = "";
 	// 用户名称
@@ -56,11 +56,11 @@ public class StructuredFullMessage {
 		super();
 	}
 
-	public int getNum_id() {
+	public long getNum_id() {
 		return num_id;
 	}
 
-	public void setNum_id(int num_id) {
+	public void setNum_id(long num_id) {
 		this.num_id = num_id;
 	}
 

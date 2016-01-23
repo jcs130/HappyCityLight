@@ -18,13 +18,13 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 	}
 
 	@Override
-	public void insert(StructuredFullMessage msg) {
+	public long insert(StructuredFullMessage msg) {
 		PreparedStatement ps = null;
 		Connection conn = null;
 		try {
 			conn = savingDB.getConnection();
 			String sqlString = "INSERT INTO full_message (raw_id_str, user_name, creat_at, text, media_types, media_urls, media_urls_local, place_type, place_name, place_fullname, country, province, city, query_location_latitude, query_location_langtitude, hashtags, replay_to, lang, message_from,is_real_location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-			ps = conn.prepareStatement(sqlString);
+			ps = conn.prepareStatement(sqlString, new String[] { "num_id" });
 			ps.setString(1, msg.getRaw_id_str());
 			ps.setString(2, msg.getUser_name());
 			ps.setLong(3, msg.getCreat_at());
@@ -46,7 +46,12 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 			ps.setString(18, msg.getLang());
 			ps.setString(19, msg.getMessage_from());
 			ps.setString(20, Boolean.toString(msg.isReal_location()));
-			ps.execute();
+			if (ps.execute()) {
+				// 获得插入数据库的编号
+				return ps.getGeneratedKeys().getLong(1);
+			} else {
+				return 0;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// throw new RuntimeException(e);
@@ -64,6 +69,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 				}
 			}
 		}
+		return 0;
 
 	}
 

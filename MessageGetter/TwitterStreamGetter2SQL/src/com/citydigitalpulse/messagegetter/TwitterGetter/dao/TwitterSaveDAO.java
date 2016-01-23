@@ -16,8 +16,9 @@ public interface TwitterSaveDAO {
 	 * Insert one data into the database
 	 * 
 	 * @param msg
+	 * @return
 	 */
-	public void insert(StructuredFullMessage msg);
+	public long insert(StructuredFullMessage msg);
 
 	/**
 	 * Insert many data into databases
