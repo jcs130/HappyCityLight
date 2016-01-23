@@ -62,8 +62,9 @@ public class LocatedTwitterListener implements RawStreamListener {
 					Tools.cacheUpdateMessages.clear();
 				}
 				// 插入数据库并获得ID
-				msg.setNum_id(db.insert(msg));
-				if (msg.getNum_id() != 0) {
+				long num_id = db.insert(msg);
+				if (num_id != 0) {
+					msg.setNum_id(num_id);
 					if (msg.isReal_location()) {
 						System.out.println(msg.getText());
 						// 发送有具体坐标的数据
@@ -71,6 +72,8 @@ public class LocatedTwitterListener implements RawStreamListener {
 								+ "messageonmap/uploadnewmessage",
 								Config.UPLOAD_TOKEN, msg);
 					}
+				} else {
+					System.out.println("Error with the num_id:" + num_id);
 				}
 			}
 

@@ -2,6 +2,7 @@ package com.citydigitalpulse.messagegetter.TwitterGetter.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -21,10 +22,12 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 	public long insert(StructuredFullMessage msg) {
 		PreparedStatement ps = null;
 		Connection conn = null;
+		long key = 0;
 		try {
 			conn = savingDB.getConnection();
 			String sqlString = "INSERT INTO full_message (raw_id_str, user_name, creat_at, text, media_types, media_urls, media_urls_local, place_type, place_name, place_fullname, country, province, city, query_location_latitude, query_location_langtitude, hashtags, replay_to, lang, message_from,is_real_location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-			ps = conn.prepareStatement(sqlString, new String[] { "num_id" });
+			ps = conn.prepareStatement(sqlString,
+					Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, msg.getRaw_id_str());
 			ps.setString(2, msg.getUser_name());
 			ps.setLong(3, msg.getCreat_at());
@@ -46,21 +49,25 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 			ps.setString(18, msg.getLang());
 			ps.setString(19, msg.getMessage_from());
 			ps.setString(20, Boolean.toString(msg.isReal_location()));
-			if (ps.execute()) {
-				// 获得插入数据库的编号
-				return ps.getGeneratedKeys().getLong(1);
+			ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				key = rs.getLong(1);
+				System.out.println("key:" + key);
 			} else {
-				return 0;
+				// 插入失败
 			}
+			// 获得插入数据库的编号
+			return key;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// throw new RuntimeException(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				// throw new RuntimeException(e);
+				throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {
@@ -69,7 +76,6 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 				}
 			}
 		}
-		return 0;
 
 	}
 

@@ -271,6 +271,7 @@ public class Tools {
 				HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
 		postMethod.addParameter("token", token);
 		// System.out.println("3");
+		postMethod.addParameter("num_id", "" + msg.getNum_id());
 		postMethod.addParameter("raw_id_str", msg.getRaw_id_str());
 		// System.out.println("4");
 		postMethod.addParameter("user_name", msg.getUser_name());
