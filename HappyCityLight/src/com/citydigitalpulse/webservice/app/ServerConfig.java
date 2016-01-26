@@ -26,25 +26,25 @@ public class ServerConfig {
 	public static String MESSAGE_SAVING_DATABASE_USER_NAME = "jcs130";
 	public static String MESSAGE_SAVING_DATABASE_USER_PASSWORD = "jcsss130";
 
-	// // 用于存储网站用户信息的数据库
-	// public static String WEB_SERVER_DATABASE_URL =
-	// "jdbc:mysql://localhost:3307/digitalcity";
-	// public static String WEB_SERVER_DATABASE_USER_NAME = "root";
-	// public static String WEB_SERVER_DATABASE_USER_PASSWORD = "jcsss130";
-	//
-	// // 用于存储人工标注的训练数据的数据库
-	// public static String TRAINING_DATABASE_URL =
-	// "jdbc:mysql://localhost:3307/digitalcity";
-	// public static String TRAINING_DATABASE_USER_NAME = "root";
-	// public static String TRAINING_DATABASE_USER_PASSWORD = "jcsss130";
+//	 // 用于存储网站用户信息的数据库
+//	 public static String WEB_SERVER_DATABASE_URL =
+//	 "jdbc:mysql://localhost:3307/digitalcity";
+//	 public static String WEB_SERVER_DATABASE_USER_NAME = "root";
+//	 public static String WEB_SERVER_DATABASE_USER_PASSWORD = "jcsss130";
+//	
+//	 // 用于存储人工标注的训练数据的数据库
+//	 public static String TRAINING_DATABASE_URL =
+//	 "jdbc:mysql://localhost:3307/digitalcity";
+//	 public static String TRAINING_DATABASE_USER_NAME = "root";
+//	 public static String TRAINING_DATABASE_USER_PASSWORD = "jcsss130";
 	
 	// 用于存储网站用户信息的数据库
 	public static String WEB_SERVER_DATABASE_URL = "jdbc:mysql://137.122.89.207:3306/digitalcity";
-	public static String WEB_SERVER_DATABASE_USER_NAME = "root";
-	public static String WEB_SERVER_DATABASE_USER_PASSWORD = "DCI_research";
+	public static String WEB_SERVER_DATABASE_USER_NAME = "jcs130";
+	public static String WEB_SERVER_DATABASE_USER_PASSWORD = "jcsss130";
 
 	// 用于存储人工标注的训练数据的数据库
 	public static String TRAINING_DATABASE_URL = "jdbc:mysql://137.122.89.207:3306/digitalcity";
-	public static String TRAINING_DATABASE_USER_NAME = "root";
-	public static String TRAINING_DATABASE_USER_PASSWORD = "DCI_research";
+	public static String TRAINING_DATABASE_USER_NAME = "jcs130";
+	public static String TRAINING_DATABASE_USER_PASSWORD = "jcsss130";
 }

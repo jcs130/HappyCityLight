@@ -15,61 +15,21 @@ function getUrlParam(name) {
 //检查用户信息的函数
 function checkLogin() {
     logintoken = $.cookie("token");
-    user_email = $.cookie("email");
-    user_firstname = $.cookie("firstname");
-    user_lastname = $.cookie("lastname");
-    user_picture = $.cookie("user_picture");
     user_id = $.cookie("user_id");
-    if (logintoken != null && user_id != null) {
-        //alert(logintoken+" <> "+user_id);
-        //如果参数获取不全则退回登陆界面
-        //        if (logintoken == null || user_id == null) {
-        //            alert("Cookie 参数不全");
-        //            window.location.href = "login.html?message=Please Login First.";
-        //        }
-        //如果token过期则返回登陆界面
-        $.ajax({
-            type: "POST",
-            crossDomain: true,
-            url: serverURL + "user/tokencheck",
-            data: {
-                userID: user_id,
-                token: logintoken
-            },
-            dataType: "json",
-            success: function (data, textStatus) {
-                if (data.code == 200) {
-                    //token正确
-                    //更改页面上显示文字
-                    if (user_firstname != "null") {
-                        $(".userfirstname").html(user_firstname);
-                    } else {
-                        $(".userfirstname").html("");
-                    }
-                    if (user_lastname != "null") {
-                        $(".userlastname").html(user_lastname);
-                    } else {
-                        $(".userlastname").html("");
-                    }
-                    $(".useremail").html(user_email);
-                    checkin_afterChencin();
-                } else {
-                    alert(JSON.stringify(data));
-                    if (data.code == 400) {
-                        window.location.href = "login.html?message=Please Login Again.";
-                    }
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // set [submit] button able if the submit is not
-                // successful
-            }
-        });
-    } else {
+    user_email = localStorage.getItem("email");
+    user_firstname = localStorage.getItem("firstname");
+    user_lastname = localStorage.getItem("lastname");
+    user_picture = localStorage.getItem("user_picture");
+    if (logintoken == null || user_id == null) {
+         //通过localStorage获取登录信息
+        logintoken = localStorage.getItem("token");
+        user_id = localStorage.getItem("user_id");
+          //如果还是没有,则检查URL参数
+        if (logintoken == null || user_id == null) {
         //如果Cookie被禁用则通过URL获取tooken和userID然后向服务器请求其他参数
         logintoken = getUrlParam("token");
         user_id = getUrlParam("user_id");
-        //alert("Cookie 被禁用,  token: " + logintoken + " <> user_id: " + user_id);
+            //alert("Cookie 被禁用,  token: " + logintoken + " <> user_id: " + user_id);
         //如果参数获取不全则退回登陆界面
         if (logintoken == null || user_id == null) {
             //alert("参数不全");
@@ -159,7 +119,46 @@ function checkLogin() {
                 });
             }
         });
+        }
     }
+        //如果token过期则返回登陆界面
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: serverURL + "user/tokencheck",
+            data: {
+                userID: user_id,
+                token: logintoken
+            },
+            dataType: "json",
+            success: function (data, textStatus) {
+                if (data.code == 200) {
+                    //token正确
+                    //更改页面上显示文字
+                    if (user_firstname != "null") {
+                        $(".userfirstname").html(user_firstname);
+                    } else {
+                        $(".userfirstname").html("");
+                    }
+                    if (user_lastname != "null") {
+                        $(".userlastname").html(user_lastname);
+                    } else {
+                        $(".userlastname").html("");
+                    }
+                    $(".useremail").html(user_email);
+                    checkin_afterChencin();
+                } else {
+                    alert(JSON.stringify(data));
+                    if (data.code == 400) {
+                        window.location.href = "login.html?message=Please Login Again.";
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // set [submit] button able if the submit is not
+                // successful
+            }
+        });
 }
 
 $(function () {
@@ -198,31 +197,53 @@ $(function () {
                     $.removeCookie('user_id', {
                         path: '/'
                     });
+                    localStorage.clear();
                     window.location.href = "login.html?message=Logout success.";
                 } else {
                     alert(JSON.stringify(data));
+                     //清除cookie
+                    $.removeCookie('token', {
+                        path: '/'
+                    });
+                    $.removeCookie('email', {
+                        path: '/'
+                    });
+                    $.removeCookie('firstname', {
+                        path: '/'
+                    });
+                    $.removeCookie('lastname', {
+                        path: '/'
+                    });
+                    $.removeCookie('user_picture', {
+                        path: '/'
+                    });
+                    $.removeCookie('user_id', {
+                        path: '/'
+                    });
+                    localStorage.clear();
+                    window.location.href = "login.html?message=Logout success.";
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                $.removeCookie('token', {
-                    path: '/'
-                });
-                $.removeCookie('email', {
-                    path: '/'
-                });
-                $.removeCookie('firstname', {
-                    path: '/'
-                });
-                $.removeCookie('lastname', {
-                    path: '/'
-                });
-                $.removeCookie('user_picture', {
-                    path: '/'
-                });
-                $.removeCookie('user_id', {
-                    path: '/'
-                });
-                window.location.href = "login.html?message=Please Login Again..";
+//                $.removeCookie('token', {
+//                    path: '/'
+//                });
+//                $.removeCookie('email', {
+//                    path: '/'
+//                });
+//                $.removeCookie('firstname', {
+//                    path: '/'
+//                });
+//                $.removeCookie('lastname', {
+//                    path: '/'
+//                });
+//                $.removeCookie('user_picture', {
+//                    path: '/'
+//                });
+//                $.removeCookie('user_id', {
+//                    path: '/'
+//                });
+               // window.location.href = "login.html?message=Please Login Again..";
             }
         });
     });

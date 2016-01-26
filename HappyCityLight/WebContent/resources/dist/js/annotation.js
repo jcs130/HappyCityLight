@@ -121,6 +121,7 @@ function getnewmessage() {
                 success: function (data, textStatus) {
                     if (data.code == 200) {
                         msg_id = data.obj.msg_id;
+                        //alert(msg_id);
                         // clear html element
                         $("#annotation").empty();
                         // append new msg to html element
