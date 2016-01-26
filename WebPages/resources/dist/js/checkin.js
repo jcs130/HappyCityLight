@@ -243,7 +243,7 @@ $(function () {
 //                $.removeCookie('user_id', {
 //                    path: '/'
 //                });
-               // window.location.href = "login.html?message=Please Login Again..";
+                window.location.href = "login.html?message=Please Login Again..";
             }
         });
     });
