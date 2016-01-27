@@ -33,7 +33,7 @@ public class MarkPageResource {
 	public ResMsg getUnMarkedMessage(
 			@QueryParam("userID") long userID,
 			@QueryParam("token") String token,
-			@QueryParam("user_email") @DefaultValue("null") String user_email,
+			@QueryParam("user_email") @DefaultValue("") String user_email,
 			@QueryParam("lang") @DefaultValue("en") String languages,
 			@QueryParam("annotate_part") @DefaultValue("word_and_media") String annotate_part) {
 		ResMsg res = new ResMsg();

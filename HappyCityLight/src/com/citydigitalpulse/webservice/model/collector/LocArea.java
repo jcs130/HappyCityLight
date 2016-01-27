@@ -1,4 +1,4 @@
-package com.citydigitalpulse.messagegetter.TwitterGetter.model;
+package com.citydigitalpulse.webservice.model.collector;
 
 /**
  * 区域对象

@@ -34,7 +34,7 @@ import com.citydigitalpulse.webservice.tool.NLPPart.alchemyapi.api.AlchemyAPI;
 
 //即时显示界面的API
 @Path("/messageonmap")
-public class messageOnMapResource {
+public class MessageOnMapResource {
 	private static MessageSavingDAOimpl msgSav = new MessageSavingDAOimpl();
 	// 设置缓存数据的大小
 	private static int CACHE_NUMBER = 1000;
@@ -169,16 +169,24 @@ public class messageOnMapResource {
 			@QueryParam("token") @DefaultValue("") String token,
 			@QueryParam("message_from") @DefaultValue("") String message_from,
 			@QueryParam("keyword") @DefaultValue("") String keyword,
-			@QueryParam("hashtags") @DefaultValue("") String hashtags,
 			@QueryParam("city") @DefaultValue("") String city,
 			@QueryParam("location_lat_min") @DefaultValue("0") double location_lat_min,
 			@QueryParam("location_lan_min") @DefaultValue("0") double location_lan_min,
 			@QueryParam("location_lat_max") @DefaultValue("0") double location_lat_max,
 			@QueryParam("location_lan_max") @DefaultValue("0") double location_lan_max,
 			@QueryParam("lang") @DefaultValue("") String lang,
-			@QueryParam("limit") @DefaultValue("1") int limit) {
+			@QueryParam("limit") @DefaultValue("1") int limit,
+			@QueryParam("skip_num_ids") @DefaultValue("") String skip_num_ids) {
 		ResMsg res = new ResMsg();
 		try {
+			System.out.println("message_from:" + message_from + " keyword:"
+					+ keyword + " city:" + city + " location_lat_min:"
+					+ location_lat_min + " location_lat_max:"
+					+ location_lat_max + " location_lan_min:"
+					+ location_lan_min + " location_lan_max:"
+					+ location_lan_max + " lang:" + lang + " limit:" + limit
+					+ " skip_num_ids" + skip_num_ids);
+
 			// 检查客户端Token
 			if (!token.equals("ArashiArashiFordream")) {
 				System.out.println(token);
@@ -194,14 +202,17 @@ public class messageOnMapResource {
 			ArrayList<StructuredFullMessage> list = new ArrayList<StructuredFullMessage>();
 			StructuredFullMessage temp;
 			cache.addAll(cache_messages);
+			ArrayList<Long> skips = Tools.buildLongListFromString(skip_num_ids);
 			for (int i = cache.size() - 1; i > 0; i--) {
 				temp = cache.get(i);
-				if (isMatch(temp, message_from, keyword, hashtags, city,
-						location_lat_min, location_lat_max, location_lat_min,
-						location_lan_max, lang)) {
-					list.add(temp);
-					if (list.size() >= limit) {
-						break;
+				if (!skips.contains(temp.getNum_id())) {
+					if (isMatch(temp, message_from, keyword, city,
+							location_lat_min, location_lat_max,
+							location_lat_min, location_lan_max, lang)) {
+						list.add(temp);
+						if (list.size() >= limit) {
+							break;
+						}
 					}
 				}
 			}
@@ -223,21 +234,29 @@ public class messageOnMapResource {
 		}
 	}
 
-	private void updateEmotions(ArrayList<StructuredFullMessage> list)
-			throws XPathExpressionException, IOException, SAXException,
-			ParserConfigurationException {
+	private void updateEmotions(ArrayList<StructuredFullMessage> list) {
 		String emotion_text = "";
 		for (int i = 0; i < list.size(); i++) {
 			StructuredFullMessage temp = list.get(i);
 			if ("".equals(temp.getEmotion_text())) {
 				// 如果没有感情数据则通过API获取并且将情感标记存入数据库
 				if (temp.getLang().equals("en")) {
-					emotion_text = getTextEmotion(temp.getText());
-					temp.setEmotion_text(emotion_text);
-					// 将情感标记存入数据库
-					msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
+					try {
+						emotion_text = getTextEmotion(temp.getText());
+						temp.setEmotion_text(emotion_text);
+						// 将情感标记存入数据库
+						msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
+					} catch (XPathExpressionException | IOException
+							| SAXException | ParserConfigurationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						// 临时设置为中性
+						temp.setEmotion_text("neutral");
+					}
 				} else {
 					// 不是英语调用其他方法
+					// 临时设置为中性
+					temp.setEmotion_text("neutral");
 				}
 			}
 		}
@@ -295,9 +314,9 @@ public class messageOnMapResource {
 	 * @return
 	 */
 	private boolean isMatch(StructuredFullMessage temp, String message_from,
-			String keyword, String hashtags, String city,
-			double location_lat_min, double location_lat_max,
-			double location_lan_min, double location_lan_max, String lang) {
+			String keyword, String city, double location_lat_min,
+			double location_lat_max, double location_lan_min,
+			double location_lan_max, String lang) {
 		// 语言，传入对象为列表
 		if (!"".equals(lang) && !"null".equals(lang)) {
 			System.out.println("lang: " + lang);
@@ -319,12 +338,6 @@ public class messageOnMapResource {
 				return false;
 			}
 		}
-		// 是否包含Hashtag
-		if (!"".equals(hashtags) && !"null".equals(hashtags)) {
-			if (!isEquals(hashtags.trim().split(","), temp.getHashtags())) {
-				return false;
-			}
-		}
 		// 城市名称优先
 		// 是否在指定区域内（名称）
 		if (!"".equals(city) && !"null".equals(city)) {
@@ -337,6 +350,8 @@ public class messageOnMapResource {
 			// 是否在指定地理坐标和范围
 			if (location_lat_min != 0 && location_lan_min != 0
 					&& location_lat_max != 0 && location_lan_max != 0) {
+				System.out.println(location_lat_min + "<>" + location_lan_min
+						+ "<>" + location_lat_max + "<>" + location_lan_max);
 				if (!temp.isReal_location()) {
 					return false;
 				}
@@ -379,7 +394,7 @@ public class messageOnMapResource {
 	 */
 	private boolean isContains(String[] split, String dest) {
 		for (int i = 0; i < split.length; i++) {
-			if (dest.toLowerCase().contains(split[i].toLowerCase())) {
+			if (dest.toLowerCase().indexOf(split[i].toLowerCase()) != -1) {
 				return true;
 			}
 		}
