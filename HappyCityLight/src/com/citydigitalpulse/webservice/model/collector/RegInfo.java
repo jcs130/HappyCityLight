@@ -1,6 +1,5 @@
 package com.citydigitalpulse.webservice.model.collector;
 
-
 import java.util.ArrayList;
 
 /**
@@ -15,6 +14,7 @@ public class RegInfo {
 	private String country;
 	private int streamState;
 	private ArrayList<LocArea> areas;
+	private String box_points;
 
 	public RegInfo(String regName) {
 		this.regName = regName;
@@ -57,10 +57,19 @@ public class RegInfo {
 		return areas;
 	}
 
+	public String getBox_points() {
+		return box_points;
+	}
+
+	public void setBox_points(String box_points) {
+		this.box_points = box_points;
+	}
+
 	@Override
 	public String toString() {
 		return "RegInfo [regID=" + regID + ", regName=" + regName
-				+ ", country=" + country + ", streamState=" + streamState + "]";
+				+ ", country=" + country + ", streamState=" + streamState
+				+ ", areas=" + areas + ", box_points=" + box_points + "]";
 	}
 
 }

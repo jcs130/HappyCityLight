@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.glassfish.hk2.utilities.reflection.Logger;
+
 import com.citydigitalpulse.webservice.dao.CollectorControllerDAO;
 import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.collector.LocPoint;
@@ -42,6 +44,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 			while (rs.next()) {
 				reg = new RegInfo(rs.getString("regname"));
 				reg.setRegID(rs.getInt("regid"));
+				reg.setBox_points(rs.getString("box_points"));
 				getAreasByReg(reg);
 				// System.out.println(reg);
 				result.add(reg);
@@ -193,6 +196,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 			while (rs.next()) {
 				result = new RegInfo(rs.getString("regname"));
 				result.setRegID(rs.getInt("regid"));
+				result.setBox_points(rs.getString("box_points"));
 				getAreasByReg(result);
 				// System.out.println(reg);
 				return result;
@@ -210,5 +214,39 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 		}
 		// System.out.println(result.size());
 		return result;
+	}
+
+	@Override
+	public void updateRegBoxInfo(RegInfo reg) {
+
+		PreparedStatement ps = null;
+		String sqlString = "UPDATE regnames SET box_points=? WHERE regid=?;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			ps = conn.prepareStatement(sqlString);
+			ps.setString(1, reg.getBox_points());
+			ps.setInt(2, reg.getRegID());
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 	}
 }

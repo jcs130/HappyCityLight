@@ -43,11 +43,6 @@ public class UserResource {
 		return res;
 
 	}
-	
-	
-	
-	
-	
 
 	@POST
 	@Path("/tokencheck")

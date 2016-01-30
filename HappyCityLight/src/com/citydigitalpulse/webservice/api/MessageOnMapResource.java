@@ -208,7 +208,7 @@ public class MessageOnMapResource {
 				if (!skips.contains(temp.getNum_id())) {
 					if (isMatch(temp, message_from, keyword, city,
 							location_lat_min, location_lat_max,
-							location_lat_min, location_lan_max, lang)) {
+							location_lan_min, location_lan_max, lang)) {
 						list.add(temp);
 						if (list.size() >= limit) {
 							break;
@@ -350,8 +350,6 @@ public class MessageOnMapResource {
 			// 是否在指定地理坐标和范围
 			if (location_lat_min != 0 && location_lan_min != 0
 					&& location_lat_max != 0 && location_lan_max != 0) {
-				System.out.println(location_lat_min + "<>" + location_lan_min
-						+ "<>" + location_lat_max + "<>" + location_lan_max);
 				if (!temp.isReal_location()) {
 					return false;
 				}
@@ -359,6 +357,8 @@ public class MessageOnMapResource {
 						|| temp.getQuery_location_latitude() > location_lat_max
 						|| temp.getQuery_location_langtitude() < location_lan_min
 						|| temp.getQuery_location_langtitude() > location_lan_max) {
+					System.out.println(location_lat_min + "<>" + location_lan_min
+							+ "<>" + location_lat_max + "<>" + location_lan_max);
 					return false;
 				}
 			}

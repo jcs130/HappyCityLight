@@ -3,6 +3,7 @@ package com.citydigitalpulse.messagegetter.TwitterGetter.model;
 
 import java.util.ArrayList;
 
+
 /**
  * 监听区域的类
  * 

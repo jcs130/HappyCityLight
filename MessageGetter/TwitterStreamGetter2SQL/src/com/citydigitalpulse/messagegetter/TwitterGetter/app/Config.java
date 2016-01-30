@@ -6,9 +6,8 @@ package com.citydigitalpulse.messagegetter.TwitterGetter.app;
  *
  */
 public class Config {
-	// public static String
-	// DCI_SERVER_URL="http://localhost:8080/HappyCityLight/api/";
-	public static String DCI_SERVER_URL = "http://137.122.89.207/api/";
+	public static String DCI_SERVER_URL = "http://localhost:8080/HappyCityLight/api/";
+	// public static String DCI_SERVER_URL = "http://137.122.89.207/api/";
 	public static String UPLOAD_TOKEN = "Imagoodboy";
 
 //	// 用于控制爬虫程序的数据库

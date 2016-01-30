@@ -50,4 +50,11 @@ public interface CollectorControllerDAO {
 	public List<LocArea> getAreaByLoc(double north, double south, double west,
 			double east);
 
+	/**
+	 * 更新地区信息
+	 * 
+	 * @param reg
+	 */
+	public void updateRegBoxInfo(RegInfo reg);
+
 }
