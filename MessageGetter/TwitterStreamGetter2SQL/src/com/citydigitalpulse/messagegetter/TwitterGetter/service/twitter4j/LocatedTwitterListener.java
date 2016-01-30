@@ -91,7 +91,8 @@ public class LocatedTwitterListener implements RawStreamListener {
 		StructuredFullMessage msg = new StructuredFullMessage();
 		msg.setRaw_id_str(cur.getString("id_str"));
 		msg.setUser_name(cur.getJSONObject("user").getString("name"));
-
+		msg.setProfile_image_url(cur.getJSONObject("user").getString(
+				"profile_image_url"));
 		msg.setCreat_at(Long.parseLong(cur.getString("timestamp_ms")));
 		// 取得回复对象
 		if (cur.getString("in_reply_to_status_id_str") != null) {

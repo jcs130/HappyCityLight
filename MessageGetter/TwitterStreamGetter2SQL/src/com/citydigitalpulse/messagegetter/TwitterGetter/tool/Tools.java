@@ -275,6 +275,9 @@ public class Tools {
 		postMethod.addParameter("raw_id_str", msg.getRaw_id_str());
 		// System.out.println("4");
 		postMethod.addParameter("user_name", msg.getUser_name());
+		postMethod
+				.addParameter("profile_image_url", msg.getProfile_image_url());
+
 		// System.out.println("5");
 		postMethod.addParameter("text", msg.getText());
 		// System.out.println("6");
