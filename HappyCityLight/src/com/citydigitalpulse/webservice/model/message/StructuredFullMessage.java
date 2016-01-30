@@ -16,6 +16,8 @@ public class StructuredFullMessage {
 	private String raw_id_str = "";
 	// 用户名称
 	private String user_name = "";
+	//用户头像
+	private String profile_image_url="";
 	// 创建时间(时间戳)
 	private long creat_at = 0;
 	// 消息内容
@@ -265,6 +267,14 @@ public class StructuredFullMessage {
 				+ emotion_medias + ", emotion_all=" + emotion_all
 				+ ", message_from=" + message_from + ", real_location="
 				+ real_location + "]";
+	}
+
+	public String getProfile_image_url() {
+		return profile_image_url;
+	}
+
+	public void setProfile_image_url(String profile_image_url) {
+		this.profile_image_url = profile_image_url;
 	}
 
 }

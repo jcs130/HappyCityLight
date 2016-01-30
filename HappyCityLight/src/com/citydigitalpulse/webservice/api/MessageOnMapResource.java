@@ -77,6 +77,7 @@ public class MessageOnMapResource {
 			@FormParam("num_id") @DefaultValue("0") String num_id,
 			@FormParam("raw_id_str") String raw_id_str,
 			@FormParam("user_name") String user_name,
+			@FormParam("profile_image_url") @DefaultValue("") String profile_image_url,
 			@FormParam("text") String text,
 			@FormParam("creat_at") String creat_at,
 			@FormParam("emotion_text") String emotion_text,
@@ -112,6 +113,7 @@ public class MessageOnMapResource {
 			msg.setNum_id(Long.parseLong(num_id));
 			msg.setRaw_id_str(raw_id_str);
 			msg.setUser_name(user_name);
+			msg.setProfile_image_url(profile_image_url);
 			msg.setText(text);
 			msg.setCreat_at(Long.parseLong(creat_at));
 			msg.setEmotion_text(emotion_text);
@@ -357,8 +359,9 @@ public class MessageOnMapResource {
 						|| temp.getQuery_location_latitude() > location_lat_max
 						|| temp.getQuery_location_langtitude() < location_lan_min
 						|| temp.getQuery_location_langtitude() > location_lan_max) {
-					System.out.println(location_lat_min + "<>" + location_lan_min
-							+ "<>" + location_lat_max + "<>" + location_lan_max);
+					System.out.println(location_lat_min + "<>"
+							+ location_lan_min + "<>" + location_lat_max + "<>"
+							+ location_lan_max);
 					return false;
 				}
 			}
