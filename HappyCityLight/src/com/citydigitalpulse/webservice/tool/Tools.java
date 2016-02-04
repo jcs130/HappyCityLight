@@ -251,7 +251,6 @@ public class Tools {
 		}
 		return arrOut;
 	}
-
 	public static void sendVerificationEmail(String userEmail, String verifyUrl)
 			throws UnsupportedEncodingException, MessagingException {
 		mailSender.sendMail("lzl19920403@163.com", "Digital City", userEmail,

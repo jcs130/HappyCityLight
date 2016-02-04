@@ -27,17 +27,20 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.citydigitalpulse.webservice.impl.MessageSavingDAOimpl;
+import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
 import com.citydigitalpulse.webservice.tool.Tools;
 import com.citydigitalpulse.webservice.tool.NLPPart.alchemyapi.api.AlchemyAPI;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 //即时显示界面的API
 @Path("/messageonmap")
 public class MessageOnMapResource {
 	private static MessageSavingDAOimpl msgSav = new MessageSavingDAOimpl();
 	// 设置缓存数据的大小
-	private static int CACHE_NUMBER = 1000;
+	private static int CACHE_NUMBER = 5000;
 	// 用于存储缓存数据的队列
 	private static ArrayList<StructuredFullMessage> cache_messages = new ArrayList<StructuredFullMessage>(
 			CACHE_NUMBER);
@@ -167,27 +170,24 @@ public class MessageOnMapResource {
 	@GET
 	@Path("/getlatest")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public ResMsg getLatest(
+	public ResMsg getLates(
 			@QueryParam("token") @DefaultValue("") String token,
 			@QueryParam("message_from") @DefaultValue("") String message_from,
 			@QueryParam("keyword") @DefaultValue("") String keyword,
 			@QueryParam("city") @DefaultValue("") String city,
-			@QueryParam("location_lat_min") @DefaultValue("0") double location_lat_min,
-			@QueryParam("location_lan_min") @DefaultValue("0") double location_lan_min,
-			@QueryParam("location_lat_max") @DefaultValue("0") double location_lat_max,
-			@QueryParam("location_lan_max") @DefaultValue("0") double location_lan_max,
+			@QueryParam("location_areas") @DefaultValue("") String location_area_json,
 			@QueryParam("lang") @DefaultValue("") String lang,
 			@QueryParam("limit") @DefaultValue("1") int limit,
 			@QueryParam("skip_num_ids") @DefaultValue("") String skip_num_ids) {
 		ResMsg res = new ResMsg();
 		try {
-			System.out.println("message_from:" + message_from + " keyword:"
-					+ keyword + " city:" + city + " location_lat_min:"
-					+ location_lat_min + " location_lat_max:"
-					+ location_lat_max + " location_lan_min:"
-					+ location_lan_min + " location_lan_max:"
-					+ location_lan_max + " lang:" + lang + " limit:" + limit
-					+ " skip_num_ids" + skip_num_ids);
+			// System.out.println("message_from:" + message_from + " keyword:"
+			// + keyword + " city:" + city + " location_lat_min:"
+			// + location_lat_min + " location_lat_max:"
+			// + location_lat_max + " location_lan_min:"
+			// + location_lan_min + " location_lan_max:"
+			// + location_lan_max + " lang:" + lang + " limit:" + limit
+			// + " skip_num_ids" + skip_num_ids);
 
 			// 检查客户端Token
 			if (!token.equals("ArashiArashiFordream")) {
@@ -197,7 +197,13 @@ public class MessageOnMapResource {
 				res.setMessage("Token is wrong.");
 				return res;
 			}
+			ArrayList<LocArea> location_area = null;
 			System.out.println(cache_messages.size());
+			ObjectMapper mapper = new ObjectMapper();
+			// 将json转换为区域数组
+			location_area = mapper.readValue(location_area_json,
+					new TypeReference<List<LocArea>>() {
+					});
 			// 得到所有的查询条件并且返回最新的符合条件的数据
 			ArrayList<StructuredFullMessage> cache = new ArrayList<StructuredFullMessage>(
 					CACHE_NUMBER);
@@ -208,9 +214,11 @@ public class MessageOnMapResource {
 			for (int i = cache.size() - 1; i > 0; i--) {
 				temp = cache.get(i);
 				if (!skips.contains(temp.getNum_id())) {
+					// if (isMatch(temp, message_from, keyword, city,
+					// location_lat_min, location_lat_max,
+					// location_lan_min, location_lan_max, lang)) {
 					if (isMatch(temp, message_from, keyword, city,
-							location_lat_min, location_lat_max,
-							location_lan_min, location_lan_max, lang)) {
+							location_area, lang)) {
 						list.add(temp);
 						if (list.size() >= limit) {
 							break;
@@ -234,6 +242,66 @@ public class MessageOnMapResource {
 			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
+	}
+
+	private boolean isMatch(StructuredFullMessage temp, String message_from,
+			String keyword, String city, ArrayList<LocArea> location_area,
+			String lang) {
+
+		if (!temp.isReal_location()) {
+			return false;
+		}
+		// 语言，传入对象为列表
+		if (!"".equals(lang) && !"null".equals(lang)) {
+			System.out.println("lang: " + lang);
+			if (!isEquals(lang.trim().split(","), temp.getLang())) {
+				return false;
+			}
+		}
+		// 消息来源，传入对象为列表
+		if (!"".equals(message_from) && !"null".equals(message_from)) {
+			System.out.println("message_from" + message_from);
+			if (!isEquals(message_from.trim().split(","),
+					temp.getMessage_from())) {
+				return false;
+			}
+		}
+		// 是否包含关键字
+		if (!"".equals(keyword) && !"null".equals(keyword)) {
+			if (!isContains(keyword.trim().split(","), temp.getText())) {
+				return false;
+			}
+		}
+		// 城市名称优先
+		// 是否在指定区域内（名称）
+		// if (!"".equals(city) && !"null".equals(city)) {
+		// if (!(isEquals(city.trim().split(","), temp.getPlace_name())
+		// || isEquals(city.trim().split(","), temp.getCity()) || isEquals(
+		// city.trim().split(","), temp.getPlace_fullname()))) {
+		// // 如果有城市名称，数据库中找不到
+		// } else {
+		// // 如果在城市但是不在指定城市的边界中，返回false
+		// return true;
+		// }
+		// }
+		if (location_area != null && location_area.size() != 0) {
+			// 是否在指定地理坐标和范围
+			for (int i = 0; i < location_area.size(); i++) {
+				if (temp.getQuery_location_latitude() < location_area.get(i)
+						.getNorth()
+						&& temp.getQuery_location_latitude() > location_area
+								.get(i).getSouth()
+						&& temp.getQuery_location_langtitude() < location_area
+								.get(i).getEast()
+						&& temp.getQuery_location_langtitude() > location_area
+								.get(i).getWest()) {
+					return true;
+				}
+			}
+			return false;
+		}
+		// System.out.println(temp + "符合条件");
+		return true;
 	}
 
 	private void updateEmotions(ArrayList<StructuredFullMessage> list) {
@@ -299,75 +367,6 @@ public class MessageOnMapResource {
 			ex.printStackTrace();
 			return null;
 		}
-	}
-
-	/**
-	 * 检查一条消息是否满足条件
-	 * 
-	 * @param temp
-	 * @param message_from
-	 * @param keyword
-	 * @param hashtags
-	 * @param city
-	 * @param location_lat
-	 * @param location_lan
-	 * @param range
-	 * @param lang
-	 * @return
-	 */
-	private boolean isMatch(StructuredFullMessage temp, String message_from,
-			String keyword, String city, double location_lat_min,
-			double location_lat_max, double location_lan_min,
-			double location_lan_max, String lang) {
-		// 语言，传入对象为列表
-		if (!"".equals(lang) && !"null".equals(lang)) {
-			System.out.println("lang: " + lang);
-			if (!isEquals(lang.trim().split(","), temp.getLang())) {
-				return false;
-			}
-		}
-		// 消息来源，传入对象为列表
-		if (!"".equals(message_from) && !"null".equals(message_from)) {
-			System.out.println("message_from" + message_from);
-			if (!isEquals(message_from.trim().split(","),
-					temp.getMessage_from())) {
-				return false;
-			}
-		}
-		// 是否包含关键字
-		if (!"".equals(keyword) && !"null".equals(keyword)) {
-			if (!isContains(keyword.trim().split(","), temp.getText())) {
-				return false;
-			}
-		}
-		// 城市名称优先
-		// 是否在指定区域内（名称）
-		if (!"".equals(city) && !"null".equals(city)) {
-			if (!(isEquals(city.trim().split(","), temp.getPlace_name())
-					|| isEquals(city.trim().split(","), temp.getCity()) || isEquals(
-						city.trim().split(","), temp.getPlace_fullname()))) {
-				return false;
-			}
-		} else {
-			// 是否在指定地理坐标和范围
-			if (location_lat_min != 0 && location_lan_min != 0
-					&& location_lat_max != 0 && location_lan_max != 0) {
-				if (!temp.isReal_location()) {
-					return false;
-				}
-				if (temp.getQuery_location_latitude() < location_lat_min
-						|| temp.getQuery_location_latitude() > location_lat_max
-						|| temp.getQuery_location_langtitude() < location_lan_min
-						|| temp.getQuery_location_langtitude() > location_lan_max) {
-					System.out.println(location_lat_min + "<>"
-							+ location_lan_min + "<>" + location_lat_max + "<>"
-							+ location_lan_max);
-					return false;
-				}
-			}
-		}
-		// System.out.println(temp + "符合条件");
-		return true;
 	}
 
 	/**

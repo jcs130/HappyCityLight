@@ -35,13 +35,13 @@
             }
         }
 
+        parcelleHeig.push(parcelleHeig[0]);
 
-        polygoneParcelleHeig = new google.maps.Polygon({
-            paths: parcelleHeig,
+        polygoneParcelleHeig = new google.maps.Polyline({
+            path: parcelleHeig,
             strokeColor: "#9F353A",
             strokeOpacity: 0.6,
-            strokeWeight: 1,
-            fillOpacity: 0
+            strokeWeight: 1
         });
 
         //alert(parcelleHeig.toString());

@@ -26,9 +26,12 @@ var realTime;
 var allInfoboxs = new Array();
 var allMarkers = new Array();
 var infoboxNow = null;
+var markerNow = null;
 var listenPlaceList = new Array();
 var cityBoundaryArray = new Array();
 var cityBoundaryPaths = new Array();
+var boundaryRecArray = new Array();
+var location_areas;
 
 var infowindow, cityMarker, cityBoundary;
 
@@ -58,7 +61,7 @@ function getListenPlaceList() {
                         //alert(this);
                         //listenPlaceList.push(JSON.stringify(this));
                         listenPlaceList.push(this.toString());
-                        console.log(this.toString());
+                        //                        console.log(this.toString());
                     });
                     //alert(listenPlaceList.toString());
                     map.setZoom(9);
@@ -100,13 +103,16 @@ function getPlaceEdge(place) {
 
                     var hexResultArray = new Array();
                     var hexInfoArray = new Array();
+                    location_areas = JSON.stringify(data.obj.areas);
+                    console.log("Set location_areas: " + location_areas);
                     //var tempHexArray = new Array();
                     $.each(data.obj.areas, function () {
+                        boundaryRecArray.push(this);
                         $.each(getHexInsideRec(this), function () {
                             if ($.inArray("" + this.q + this.r + this.s, hexInfoArray) <= -1) {
                                 hexInfoArray.push("" + this.q + this.r + this.s);
                                 hexResultArray.push(this);
-                                console.log("Adding Hex: " + this.q + "," + this.r + "," + this.s);
+                                //                                console.log("Adding Hex: " + this.q + "," + this.r + "," + this.s);
                             } else {
                                 console.log("Hex already exists.");
                             }
@@ -133,18 +139,31 @@ function getPlaceEdge(place) {
                     }
 
 
-                    if (data.obj.box_points != null) {
+                    if ((data.obj.box_points != null) && (data.obj.box_points != [])) {
+
                         //alert(JSON.stringify($.parseJSON(data.obj.box_points)));
                         console.log("box_points exists.");
-                        var polygoneParcelleHeig = new google.maps.Polygon({
-                            paths: $.parseJSON(data.obj.box_points),
+                        var polygoneParcelleHeig = new google.maps.Polyline({
+                            path: $.parseJSON(data.obj.box_points),
                             map: map,
                             strokeColor: "#9F353A",
                             strokeOpacity: 0.6,
-                            strokeWeight: 1,
-                            fillOpacity: 0
+                            strokeWeight: 1
                         });
 
+                        $.each($.parseJSON(data.obj.box_points), function () {
+                            cityBoundaryPaths.push(this);
+                            //                            var tempMarker = new google.maps.Marker({
+                            //                                position: this,
+                            //                                map: map,
+                            //                            });
+                            //                            var infowindow = new google.maps.InfoWindow({
+                            //                                content: tempMarker.getPosition().toString()
+                            //                            });
+                            //
+                            //                            infowindow.open(map, tempMarker);
+
+                        });
                         cityBoundaryArray.push(polygoneParcelleHeig);
 
                     } else {
@@ -221,10 +240,7 @@ function getLatestData() {
         url: serverURL + "messageonmap/getlatest",
         data: {
             token: apiToken,
-            location_lat_min: S,
-            location_lan_min: W,
-            location_lat_max: N,
-            location_lan_max: E,
+            location_areas: location_areas,
             city: city,
             lang: data_filter_lang,
             message_from: data_filter_source,
@@ -234,102 +250,127 @@ function getLatestData() {
         },
         dataType: "json",
         success: function (data, textStatus) {
+            console.log(JSON.stringify(data));
             if (data.code == 200) {
                 console.log("success in getLatestData();");
-                console.log(JSON.stringify(data));
-
-                var i = 0;
-                if (infoboxNow != null) {
-                    infoboxNow.setVisible(false);
-                }
-
-                var msgData = data.obj[i++];
-                if (!msgDataQueue.contains(msgData, checkMsgById) && ((msgData.emotion_text == 'positive') || (msgData.emotion_text == 'negative') || (msgData.emotion_text == 'neutral'))) {
-                    //manage msgDataQueue that stores raw datas recieved from server
-                    msgDataQueue.add(msgData);
-                    skip_num_ids.push(msgData.num_id);
-                    console.log("skip_num_ids adding: " + msgData.num_id);
-                    if (msgDataQueue.size == msgDataQueueSize) {
-                        msgDataQueue.clear();
-                        skip_num_ids = [];
+                if ((data.obj != null) && (data.obj.length != 0)) {
+                    var i = 0;
+                    if (infoboxNow != null) {
+                        infoboxNow.setVisible(false);
                     }
-                    //set map center / marker / infobox
-                    var newCenterLatlng = new google.maps.LatLng(msgData.query_location_latitude, msgData.query_location_langtitude);
-                    var createAt = new Date(msgData.creat_at * 1000);
-                    var placeName;
-                    if (msgData.place_fullname != null) {
-                        placeName = msgData.place_fullname;
-                    } else if (msgData.place_name != null) {
-                        placeName = msgData.place_name;
-                    } else {
-                        placeName = "";
+                    if (markerNow != null) {
+                        markerNow.setVisible(false);
+                        console.log("remove a marker.")
                     }
 
-                    switch (msgData.emotion_text) {
-                    case "positive":
-                        var centerMarker = new google.maps.Marker({
-                            map: map,
-                            animation: google.maps.Animation.DROP,
-                            position: newCenterLatlng,
-                            icon: "resources/img/positive.png"
-                        });
-                        break;
-                    case "neutral":
-                        var centerMarker = new google.maps.Marker({
-                            map: map,
-                            animation: google.maps.Animation.DROP,
-                            position: newCenterLatlng,
-                            icon: "resources/img/neutral.png"
-                        });
-                        break;
-                    case "negative":
-                        var centerMarker = new google.maps.Marker({
-                            map: map,
-                            animation: google.maps.Animation.DROP,
-                            position: newCenterLatlng,
-                            icon: "resources/img/negative.png"
-                        });
-                        break;
-                    default:
-                        break;
-                    }
-
-                    var content = "<div id='infobox' class='box box-widget'><div class='box-header with-border'><div class='user-block'><img class='img-circle' src='resources/img/userDefault.png' alt='User Image'><span class='username'><a href='#'>" + msgData.user_name + "</a></span><span class='description'>" + placeName + " - " + createAt.toDateString() + "</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool' data-toggle='tooltip' title='Mark as read'><i class='fa fa-circle-o'></i></button><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button><button type='button' class='btn btn-box-tool btn-close' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'>";
-                    if ((msgData.media_type[0] == 'photo') && (msgData.media_urls[0] != null)) {
-                        content += "<img class='img-responsive' src='" + msgData.media_urls[0] + "' alt='Photo' style='width:120px;'>"
-                    }
-
-                    content += "<p>" + msgData.text + "</p></div></div>";
-
-
-                    var realtimeInfowindow = new InfoBox({
-                        content: content,
-                        disableAutoPan: false,
-                        maxWidth: 120,
-                        pixelOffset: new google.maps.Size(-140, 0),
-                        zIndex: null
-                    });
-
-
-                    map.panTo(newCenterLatlng);
-                    realtimeInfowindow.open(map, centerMarker);
-                    updateHex(msgData);
-                    infoboxNow = realtimeInfowindow;
-                    allInfoboxs.push(realtimeInfowindow);
-                    allMarkers.push(centerMarker);
-
-                    centerMarker.addListener('click', function () {
-                        if (realtimeInfowindow.getVisible()) {
-                            realtimeInfowindow.setVisible(false);
-                        } else {
-                            realtimeInfowindow.setVisible(true);
+                    var msgData = data.obj[i++];
+                    if (!msgDataQueue.contains(msgData, checkMsgById) && ((msgData.emotion_text == 'positive') || (msgData.emotion_text == 'negative') || (msgData.emotion_text == 'neutral'))) {
+                        //manage msgDataQueue that stores raw datas recieved from server
+                        msgDataQueue.add(msgData);
+                        skip_num_ids.push(msgData.num_id);
+                        console.log("skip_num_ids adding: " + msgData.num_id);
+                        if (msgDataQueue.size == msgDataQueueSize) {
+                            msgDataQueue.clear();
+                            skip_num_ids = [];
+                            if (hexArray != null) {
+                                $.each(hexArray, function () {
+                                    this.hexPolygon.setMap(null);
+                                });
+                                hexArray = [];
+                            }
                         }
-                    });
+                        //set map center / marker / infobox
+                        var newCenterLatlng = new google.maps.LatLng(msgData.query_location_latitude, msgData.query_location_langtitude);
+                        var createAt = new Date(msgData.creat_at);
+                        var placeName;
+                        if (msgData.place_fullname != null) {
+                            placeName = msgData.place_fullname;
+                        } else if (msgData.place_name != null) {
+                            placeName = msgData.place_name;
+                        } else {
+                            placeName = "";
+                        }
 
+                        switch (msgData.emotion_text) {
+                        case "positive":
+                            var centerMarker = new google.maps.Marker({
+                                map: map,
+                                animation: google.maps.Animation.DROP,
+                                position: newCenterLatlng,
+                                icon: "resources/img/positive.png"
+                            });
+                            break;
+                        case "neutral":
+                            var centerMarker = new google.maps.Marker({
+                                map: map,
+                                animation: google.maps.Animation.DROP,
+                                position: newCenterLatlng,
+                                icon: "resources/img/neutral.png"
+                            });
+                            break;
+                        case "negative":
+                            var centerMarker = new google.maps.Marker({
+                                map: map,
+                                animation: google.maps.Animation.DROP,
+                                position: newCenterLatlng,
+                                icon: "resources/img/negative.png"
+                            });
+                            break;
+                        default:
+                            break;
+                        }
+
+                        var content = "<div id='infobox' class='box box-widget'><div class='box-header with-border'><div class='user-block'><img class='img-circle'";
+
+                        if (msgData.profile_image_url != null) {
+                            content += "src='" + msgData.profile_image_url + "'";
+
+                        } else {
+                            content += "src='resources/img/userDefault.png'";
+                        }
+
+
+                        content += "alt='User Image'><span class='username'><a href='#'>" + msgData.user_name + "</a></span><span class='description'>" + placeName + " - " + createAt.getFullYear() + "/" + createAt.getMonth() + "/" + createAt.getDate() + "</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool' data-toggle='tooltip' title='Mark as read'><i class='fa fa-circle-o'></i></button><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button><button type='button' class='btn btn-box-tool btn-close' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'>";
+                        if ((msgData.media_type[0] == 'photo') && (msgData.media_urls[0] != null)) {
+                            content += "<img class='img-responsive' src='" + msgData.media_urls[0] + "' alt='Photo' style='width:120px;'>"
+                        }
+
+                        content += "<p>" + msgData.text + "</p></div></div>";
+
+
+                        var realtimeInfowindow = new InfoBox({
+                            content: content,
+                            disableAutoPan: false,
+                            maxWidth: 120,
+                            pixelOffset: new google.maps.Size(-140, 0),
+                            zIndex: null
+                        });
+
+
+                        map.panTo(newCenterLatlng);
+                        realtimeInfowindow.open(map, centerMarker);
+                        updateHex(msgData);
+                        infoboxNow = realtimeInfowindow;
+                        markerNow = centerMarker;
+                        allInfoboxs.push(realtimeInfowindow);
+                        allMarkers.push(centerMarker);
+
+                        //                    centerMarker.addListener('click', function () {
+                        //                        if (realtimeInfowindow.getVisible()) {
+                        //                            realtimeInfowindow.setVisible(false);
+                        //                        } else {
+                        //                            realtimeInfowindow.setVisible(true);
+                        //                        }
+                        //                    });
+
+                    }
+                    if (i >= data.obj.length) {
+                        clearInterval(displayData);
+                    };
+
+                } else {
+                    console.log("No data in this getLatestData()......");
                 }
-                if (i >= data.obj.length) {
-                    clearInterval(displayData);
-                };
 
             } else {
                 if (data.code == 400) {
@@ -355,7 +396,7 @@ function getSpecificData() {
     $("#language option").each(function () {
         if (this.selected) {
             data_filter_lang_array.push(this.val());
-            console.log(this.val());
+            //            console.log(this.val());
         } else {
             flag_lang = 0;
         }
@@ -363,7 +404,7 @@ function getSpecificData() {
     $("#dataSource option").each(function () {
         if (this.selected) {
             data_filter_source_array.push(this.val());
-            console.log(this.val());
+            //            console.log(this.val());
         } else {
             flag_source = 0;
         }
@@ -432,7 +473,7 @@ $(function () {
     //init tagsinput
     $('#topics').tagsinput({
         maxTags: 3,
-        maxChars: 8
+        maxChars: 10
     });
 
     getListenPlaceList();
@@ -477,8 +518,8 @@ $(function () {
         //alert(place.name);
         if ($.inArray(place.name.toLowerCase(), listenPlaceList) > -1) {
             //向后台请求自定义的区域边界信息并显示
-            getPlaceEdge(place.name);
             city = place.name;
+            getPlaceEdge(place.name);
             return;
         } else {
             if (!place.geometry) {
@@ -530,7 +571,16 @@ $(function () {
                     west: W
                 }
             });
-
+            var area = {};
+            area["north"] = N;
+            area["south"] = S;
+            area["west"] = W;
+            area["east"] = E;
+            area["locID"] = 0;
+            var jsonArea = [];
+            jsonArea.push(area);
+            location_areas = JSON.stringify(jsonArea);
+            console.log("Set location_areas: " + location_areas);
         }
 
     });
@@ -583,13 +633,44 @@ $(function () {
 
     //redraw hex grid when map zoom changes
     google.maps.event.addListener(map, 'zoom_changed', function () {
-        if (!msgDataQueue.isEmpty()) {
+        console.log("Googlemap zoom changed.");
+        if (hexArray != null) {
             $.each(hexArray, function () {
                 this.hexPolygon.setMap(null);
             });
             hexArray = [];
+        }
+        if (allInfoboxs != null) {
+            $.each(allInfoboxs, function () {
+                this.setVisible(false);
+            });
+            allInfoboxs = [];
+        }
+
+        if (!msgDataQueue.isEmpty()) {
             msgDataQueue.forEach(function (msgData) {
                 updateHex(msgData);
+            });
+        }
+
+        if (boundaryRecArray != null) {
+            var hexResultArray = new Array();
+            var hexInfoArray = new Array();
+            $.each(boundaryRecArray, function () {
+                $.each(getHexInsideRec(this), function () {
+                    if ($.inArray("" + this.q + this.r + this.s, hexInfoArray) <= -1) {
+                        hexInfoArray.push("" + this.q + this.r + this.s);
+                        hexResultArray.push(this);
+                        //console.log("Adding Hex: " + this.q + "," + this.r + "," + this.s);
+                    } else {
+                        //console.log("Hex already exists.");
+                    }
+                });
+            });
+
+            $.each(hexResultArray, function () {
+                drawHexFromHex(this);
+                hexArray.push(this);
             });
         }
     });
@@ -598,15 +679,16 @@ $(function () {
 
     //operations when click on GO! button
     $("#sendRequest").click(function () {
-        $.each(hexArray, function () {
-            this.hexPolygon.setMap(null);
-        });
-        hexArray = [];
+        //        $.each(hexArray, function () {
+        //            this.hexPolygon.setMap(null);
+        //        });
+        //        hexArray = [];
+        boundaryRecArray = [];
         cityMarker.setMap(null);
         cityBoundary.setMap(null);
         infowindow.close();
-        msgDataQueue.clear();
-        msgDataQueue = new buckets.Queue();
+        //msgDataQueue.clear();
+        //msgDataQueue = new buckets.Queue();
         $("#sendRequest").prop('disabled', true);
         console.log("Real-time Visualization Start.");
         getSpecificData();
@@ -621,6 +703,9 @@ $(function () {
         $("#sendRequest").prop('disabled', false);
         if (infoboxNow != null) {
             infoboxNow.setVisible(false);
+        }
+        if (markerNow != null) {
+            markerNow.setVisible(false);
         }
     });
 

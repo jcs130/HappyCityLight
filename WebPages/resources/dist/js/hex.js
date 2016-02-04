@@ -1,6 +1,6 @@
 var minZoomLevel = 9;
 //defination of a hex
-function Hex(q, r, s, positive, neutral, negative, msg, hexPolygon) {
+function Hex(q, r, s, positive, neutral, negative, msg, hexPolygon, infobox) {
     this.q = q;
     this.r = r;
     this.s = s;
@@ -9,6 +9,7 @@ function Hex(q, r, s, positive, neutral, negative, msg, hexPolygon) {
     this.negative = negative;
     this.msg = msg;
     this.hexPolygon = hexPolygon;
+    this.infobox = infobox;
 }
 
 
@@ -49,7 +50,7 @@ function cubeRound(h) {
         rz = -rx - ry;
     }
 
-    var hex = new Hex(rx, ry, rz, 0, 0, 0, new Array(), null);
+    var hex = new Hex(rx, ry, rz, 0, 0, 0, new Array(), null, null);
     return hex;
 }
 
@@ -105,7 +106,7 @@ function getHexFromWorld(worldCoordinate) {
         rz = -rx - ry;
     }
 
-    var hex = new Hex(rx, ry, rz, 0, 0, 0, new Array(), null);
+    var hex = new Hex(rx, ry, rz, 0, 0, 0, new Array(), null, null);
     return hex;
 }
 
@@ -141,7 +142,7 @@ function updateHex(msgData) {
     $.each(hexArray, function () {
         if ((this.q == hex.q) && (this.r == hex.r) && (this.s == hex.s)) {
             flag = 1;
-            this.msg.push(num_id);
+            this.msg.push(msgData);
             //alert("1:" + this.msg);
             switch (msgData.emotion_text) {
             case "positive":
@@ -162,7 +163,7 @@ function updateHex(msgData) {
     });
 
     if (flag == 0) {
-        hex.msg.push(num_id);
+        hex.msg.push(msgData);
         //alert("0:" + hex.msg);
         switch (msgData.emotion_text) {
         case "positive":
@@ -229,10 +230,10 @@ function getHexInsideRec(rec) {
         } else if (this.s == (s + 1)) {
             if (temp.length == 2) {
                 if ((temp[1].q - temp[0].q) > 1) {
-                    console.log("(" + temp[0].q + "," + temp[0].r + "," + temp[0].s + ") <-> (" + temp[1].q + "," + temp[1].r + "," + temp[1].s + ")");
+                    //console.log("(" + temp[0].q + "," + temp[0].r + "," + temp[0].s + ") <-> (" + temp[1].q + "," + temp[1].r + "," + temp[1].s + ")");
                     for (var q = temp[0].q + 1; q < temp[1].q; q++) {
-                        console.log("Adding: " + q + "," + (-q - temp[0].s) + "," + temp[0].s);
-                        resultHexArray.push(new Hex(q, (-q - temp[0].s), temp[0].s, 0, 0, 0, new Array(), null));
+                        //                        console.log("Adding: " + q + "," + (-q - temp[0].s) + "," + temp[0].s);
+                        resultHexArray.push(new Hex(q, (-q - temp[0].s), temp[0].s, 0, 0, 0, new Array(), null, null));
                     }
                 }
             }
@@ -262,6 +263,7 @@ function getHexInsideRec(rec) {
 
 function getColorFromHex(hex) {
     if ((hex.positive == 0) && (hex.neutral == 0) && (hex.negative == 0)) {
+        //        return d3.rgb(208, 90, 110);
         return d3.rgb(222, 222, 222);
     }
 
@@ -306,11 +308,62 @@ function drawHexFromHex(hex) {
         paths: [proj.fromPointToLatLng(p1), proj.fromPointToLatLng(p2), proj.fromPointToLatLng(p3), proj.fromPointToLatLng(p4), proj.fromPointToLatLng(p5), proj.fromPointToLatLng(p6), proj.fromPointToLatLng(p1)],
         strokeWeight: 0,
         fillColor: getColorFromHex(hex),
-        fillOpacity: 0.8
+        fillOpacity: 0.5
     });
     //alert(newHexPolygon.getPath().getAt(0).lat());
     hex.hexPolygon = newHexPolygon;
     hex.hexPolygon.setMap(map);
+    google.maps.event.addListener(hex.hexPolygon, 'click', function (event) {
+        if (!((hex.positive == 0) && (hex.negative == 0) && (hex.neutral == 0))) {
+            if (hex.infobox != null) {
+                if (hex.infobox.getVisible()) {
+                    hex.infobox.setVisible(false);
+                } else {
+                    hex.infobox.setVisible(true);
+                }
+            } else {
+                //            alert(proj.fromPointToLatLng(getCenter(hex)));
+                var content = "<div id='infobox' class='box box-widget'><div class='box-header with-border'><div class='user-block'><span class='username'><a href='#'>Region</a></span><span class='description'>Public Region</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool closeInfobox' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'><p>Region Info</p></div><div class='box-footer box-comments'>";
+                if (hex.msg != null) {
+                    console.log("Display msg in the hex.");
+                    $.each(hex.msg, function () {
+                        content += "<div class='box-comment'><img class='img-circle img-sm' src='";
+                        if (this.profile_image_url != null) {
+                            content += this.profile_image_url;
+                        } else {
+                            content += "resources/img/userDefault.png";
+                        }
+                        var date = new Date(this.creat_at);
+                        content += "' alt='User Image'><div class='comment-text'><span class='username'>" + this.user_name + "<span class='text-muted pull-right'>" + date.toDateString() + "</span>" + this.text + "</span></div></div>";
+                    });
+
+                }
+                content += "</div></div>";
+
+                var hexInfobox = new InfoBox({
+                    content: content,
+                    maxWidth: 60,
+                    pixelOffset: new google.maps.Size(-70, 0),
+                    disableAutoPan: false,
+                    zIndex: null
+                });
+                var Marker = new google.maps.Marker({
+                    map: map,
+                    position: proj.fromPointToLatLng(getCenter(hex)),
+                });
+
+                hexInfobox.open(map, Marker);
+                Marker.setMap(null);
+                hex.infobox = hexInfobox;
+                allInfoboxs.push(hex.infobox);
+
+                $(".box-tools").click(function () {
+                    hex.infobox.setVisible(false);
+                });
+
+            }
+        }
+    });
 }
 
 

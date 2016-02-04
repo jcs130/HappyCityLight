@@ -94,10 +94,10 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 						LocArea loc = new LocArea(areaIDs.get(i),
 								rs.getDouble("north"), rs.getDouble("west"),
 								rs.getDouble("south"), rs.getDouble("east"));
-						loc.setCenterAndRange(
-								new LocPoint(rs.getDouble("center_lat"), rs
-										.getDouble("center_lon")), rs
-										.getInt("range"));
+//						loc.setCenterAndRange(
+//								new LocPoint(rs.getDouble("center_lat"), rs
+//										.getDouble("center_lon")), rs
+//										.getInt("range"));
 						reg.getAreas().add(loc);
 					}
 				}
@@ -135,8 +135,9 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 				LocArea loc = new LocArea(rs.getInt("areaid"),
 						rs.getDouble("north"), rs.getDouble("west"),
 						rs.getDouble("south"), rs.getDouble("east"));
-				loc.setCenterAndRange(new LocPoint(rs.getDouble("center_lat"),
-						rs.getDouble("center_lon")), rs.getInt("range"));
+				// loc.setCenterAndRange(new
+				// LocPoint(rs.getDouble("center_lat"),
+				// rs.getDouble("center_lon")), rs.getInt("range"));
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
