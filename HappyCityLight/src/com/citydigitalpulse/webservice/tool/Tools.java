@@ -30,22 +30,27 @@ public class Tools {
 	private static final String ENCODING = "UTF-8";
 
 	public static ArrayList<String> buildListFromString(String listString) {
-		String[] temp = listString.split(",");
 		ArrayList<String> res = new ArrayList<String>();
-		for (int i = 0; i < temp.length; i++) {
-			if (!"".equals(temp[i])) {
-				res.add(temp[i]);
+		if (listString != null) {
+			String[] temp = listString.split(",");
+			for (int i = 0; i < temp.length; i++) {
+				if (!"".equals(temp[i])) {
+					res.add(temp[i]);
+				}
 			}
 		}
+
 		return res;
 	}
 
 	public static ArrayList<Long> buildLongListFromString(String listString) {
-		String[] temp = listString.split(",");
 		ArrayList<Long> res = new ArrayList<Long>();
-		for (int i = 0; i < temp.length; i++) {
-			if (!"".equals(temp[i])) {
-				res.add(Long.parseLong(temp[i]));
+		if (listString != null) {
+			String[] temp = listString.split(",");
+			for (int i = 0; i < temp.length; i++) {
+				if (!"".equals(temp[i])) {
+					res.add(Long.parseLong(temp[i]));
+				}
 			}
 		}
 		return res;
@@ -251,6 +256,7 @@ public class Tools {
 		}
 		return arrOut;
 	}
+
 	public static void sendVerificationEmail(String userEmail, String verifyUrl)
 			throws UnsupportedEncodingException, MessagingException {
 		mailSender.sendMail("lzl19920403@163.com", "Digital City", userEmail,

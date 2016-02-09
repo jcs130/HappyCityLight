@@ -26,15 +26,12 @@
     <link rel="stylesheet" href="resources/plugins/iCheck/all.css">
 
 
+
     <link href="resources/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet">
-
-
     <link href="resources/plugins/bootstrap-select-1.9.4/dist/css/bootstrap-select.min.css" rel="stylesheet">
-
-
     <link href="resources/plugins/bootstrap-tagsinput-latest/dist/bootstrap-tagsinput.css" rel="stylesheet">
-
-    <link href="resources/plugins/slider/css/slider.css" rel="stylesheet">
+    <link href="resources/plugins/bootstrap-slider/bootstrap-slider.css" rel="stylesheet">
+    <link href="resources/plugins/animate.css" rel="stylesheet">
 
 
     <style>
@@ -44,7 +41,7 @@
         }
     </style>
     <style>
-    .content {
+        .content {
             position: relative;
             padding: 0;
         }
@@ -62,52 +59,83 @@
         
         #control-panel-row {
             position: absolute;
-            left: 0%;
-            top: 0%;
+            left: 15px;
+            top: 15px;
             height: auto;
             width: 100%;
-            margin: 0;
-            padding: 0;
             z-index: 5;
         }
-    }
-    #control-panel-col {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    #control-panel {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background: rgba(122, 130, 136, 0.2)!important;
-    }
-    #searchPlace {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        width: auto;
-        opacity: 1;
-    }
-    .label-info {
-        background-color: #5bc0de;
-    }
-    .bootstrap-tagsinput {
-        width: auto !important;
-    }
-    #ex1Slider .slider-selection {
-        background: #EEE;
-    }
-    .input-group {
-        width: 100%;
-    }
-    #advanceFilter {
-        color: #2E5C6E;
-    }
-    #advanceFilter:hover {
-        color: #BF6766;
-        cursor: pointer;
-    }
+        
+        #control-panel-col {
+            height: 100%;
+            border: none;
+        }
+        
+        .list-unstyled .list-group-item {
+            padding: 1% 1%;
+            background: rgba(122, 130, 136, 0.3)!important;
+        }
+        
+        #searchPlace {
+            height: 100%;
+            width: auto;
+            opacity: 1;
+        }
+        
+        .label-info {
+            background-color: #5bc0de;
+        }
+        
+        .bootstrap-tagsinput {
+            width: auto !important;
+        }
+        
+        #ex1Slider .slider-selection {
+            background: #EEE;
+        }
+        
+        .input-group {
+            width: 100%;
+        }
+        
+        #advanceFilter {
+            color: #2E5C6E;
+        }
+        
+        #advanceFilter:hover {
+            color: #BF6766;
+            cursor: pointer;
+        }
+        
+        #titleForPhone {
+            background-color: #3c8dbc;
+            color: #fff;
+            border-bottom: 0 solid transparent;
+            float: none;
+            -webkit-transition: width .3s ease-in-out;
+            -o-transition: width .3s ease-in-out;
+            transition: width .3s ease-in-out;
+            display: block;
+            float: left;
+            height: 50px;
+            font-size: 20px;
+            line-height: 50px;
+            text-align: center;
+            width: 80px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding: 0;
+            font-weight: 300;
+            overflow: hidden;
+        }
+        
+        #infobox {
+            max-width: 350px;
+        }
+        
+        #infobox .box-footer {
+            max-height: 350px;
+            overflow: auto;
+        }
     </style>
 
 
@@ -123,7 +151,7 @@
         <header class="main-header">
 
             <!-- Logo -->
-            <a href="index.html" class="logo inside-link">
+            <a href="index.html" class="logo inside-link" id="header-logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>DCI</b></span>
                 <!-- logo for regular state and mobile devices -->
@@ -134,6 +162,9 @@
             <nav class="navbar navbar-static-top" role="navigation">
                 <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span>
+                </a>
+                <a id="titleForPhone">
+                    <span><b>DCI</b></span>
                 </a>
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
@@ -147,15 +178,15 @@
                                 <!-- The user image in the navbar-->
                                 <img src="resources/img/user.ico" class="user-image user_picture" alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs"><span class="userfirstname">FirstName</span>
-                                <span class="userlastname">LastName</span> </span>
+                                <span class="hidden-xs"><span class="userfirstname"></span>
+                                <span class="userlastname">Guest</span> </span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header"><img src="resources/img/user.ico" class="img-circle user_picture" alt="User Image">
                                     <p>
-                                        <span class="userfirstname">FirstName</span> <span class="userlastname">LastName</span> <small><span
-											class="useremail">email@email.com</span></small>
+                                        <span class="userfirstname"></span> <span class="userlastname">Guest</span> <small><span
+											class="useremail">Please Login</span></small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->
@@ -210,9 +241,9 @@
                     <li><a class="inside-link" href="myannotation.html"><i class="fa fa-files-o"></i>
 							<span>My Annotation</span></a></li>
                     <li class="header">SYSTEM</li>
-                    <li><a class="inside-link" href="comingsoon.html"><i class="fa fa-map-marker"></i>
+                    <li><a class="inside-link" href="msgonmap.html"><i class="fa fa-map-marker"></i>
 							<span>Msg on map</span></a></li>
-                    <li><a class="inside-link" href="comingsoon.html"><i class="fa fa-bar-chart"></i>
+                    <li><a class="inside-link" href="dataanalysis.html"><i class="fa fa-bar-chart"></i>
 							<span>Data Analysis</span></a></li>
                     <li><a class="inside-link" href="annotation.html"><i class="fa fa-book"></i>
 							<span>Corpus Annotation</span></a></li>
@@ -229,8 +260,8 @@
             <section class="content">
                 <div class="row" id="control-panel-row">
                     <div class="col-md-12" id="control-panel-col">
-                        <div class="panel panel-default" id="control-panel">
-                            <div class="panel-body">
+                        <ul class="list-unstyled list-group-unbordered" id="control-panel">
+                            <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-8 col-sm-6 col-xs-12">
                                         <div class="row">
@@ -260,7 +291,10 @@
 
                                 </div>
 
-                                <div class="row" id="advance">
+                            </li>
+
+                            <li class="list-group-item" id="advance" style="display:none;">
+                                <div class="row">
 
                                     <div class="col-md-4 col-sm-6 col-xs-12">
                                         <div class="input-group">
@@ -275,42 +309,45 @@
                                     <div class="col-md-4 col-sm-6 col-xs-12">
                                         <div class="input-group">
                                             <select class="selectpicker" id="language" multiple title="No Language Limit" data-selected-text-format="count > 3">
-                                                <option>English</option>
-                                                <option>Chinese</option>
-                                                <option>Japanese</option>
-                                                <option>Korean</option>
-                                                <option>German</option>
-                                                <option>Japanese</option>
-                                                <option>English</option>
-                                                <option>Chinese</option>
-                                                <option>Japanese</option>
+                                                <option value="en">English</option>
+                                                <option value="zh">Chinese</option>
+                                                <option value="ja">Japanese</option>
+                                                <option value="ko">Korean</option>
+                                                <option value="de">German</option>
+                                                <option value="fr">French</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 col-sm-6 col-xs-12">
                                         <div class="input-group" id="topicsParent">
-                                            <input type="text" class="form-control" id="topics" placeholder="Input interested hashtags (max 3)">
+                                            <input type="text" class="form-control" id="topics" placeholder="Input interested keywords(max 3)">
                                         </div>
 
                                     </div>
 
                                 </div>
+                            </li>
 
+                            <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col-md-8 col-sm-8 col-xs-9">
-                                    </div>
-                                    <div class="col-md-2 col-sm-2 col-xs-1">
+                                    <div class="col-md-2 col-sm-3 col-xs-4">
                                         <p id="advanceFilter">Advance Filter</p>
                                     </div>
-                                    <div class="col-md-2 col-sm-2 col-xs-1">
-                                        <button id="sendRequest" class="btn btn-info btn-xs">GO!</button>
+                                    <div class="col-md-8 col-sm-5 col-xs-2">
+                                    </div>
+
+                                    <div class="col-md-1 col-sm-2 col-xs-3">
+                                        <button id="sendRequest" class="btn btn-info btn-xs btn-flat btn-block">GO!</button>
+                                    </div>
+
+                                    <div class="col-md-1 col-sm-2 col-xs-3">
+                                        <button id="stopRealtime" class="btn btn-info btn-xs btn-flat btn-block">STOP!</button>
                                     </div>
 
                                 </div>
-
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
@@ -344,39 +381,37 @@
     <!-- Bootstrap 3.3.5 -->
     <script src="resources/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="resources/plugins/bootstrap/js/less-1.7.0.min.js"></script>
-    <!-- DataTables -->
-    <script src="resources/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="resources/plugins/datatables/dataTables.bootstrap.min.js"></script>
-    <!-- SlimScroll -->
-    <script src="resources/plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <!-- FastClick -->
+
+    <script src="resources/plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <script src="resources/plugins/fastclick/fastclick.min.js"></script>
     <!-- AdminLTE App -->
     <script src="resources/dist/js/app.min.js"></script>
     <!-- AdminLTE for demo purposes -->
+    <script src="resources/dist/js/demo.js"></script>
+
     <!-- page script -->
     <script src="resources/dist/js/serverConfig.js"></script>
     <script src="resources/dist/js/checkin.js"></script>
     <script src="resources/dist/js/examplepage.js"></script>
 
+    <script src="resources/plugins/buckets.min.js"></script>
     <script src="resources/plugins/d3.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC01nTmNbpdoTQ5eu5v9vs1PpVb-Pbpq4&libraries=geometry,places">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC01nTmNbpdoTQ5eu5v9vs1PpVb-Pbpq4&language=en&libraries=geometry,places">
     </script>
+    <script src="resources/plugins/clipper.js"></script>
+    <script src="resources/dist/js/mergePolygon.js"></script>
+    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
     <script src="resources/plugins/v3_eshapes.js" type="text/javascript"></script>
-
     <script src="resources/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="resources/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-GB.min.js"></script>
-
     <script src="resources/plugins/bootstrap-select-1.9.4/dist/js/bootstrap-select.min.js"></script>
-
-
     <script src="resources/plugins/bootstrap-tagsinput-latest/dist/bootstrap-tagsinput.js"></script>
-
-    <script src="resources/plugins/slider/js/bootstrap-slider.js"></script>
-
+    <!--    <script src="resources/plugins/slider/js/bootstrap-slider.js"></script>-->
+    <script src="resources/plugins/bootstrap-slider/bootstrap-slider.js"></script>
     <script src="resources/dist/js/hex.js"></script>
-
     <script src="resources/dist/js/dataanalysis.js"></script>
+
 
 
 </body>

@@ -14,8 +14,8 @@ import org.glassfish.hk2.utilities.reflection.Logger;
 
 import com.citydigitalpulse.webservice.dao.CollectorControllerDAO;
 import com.citydigitalpulse.webservice.dao.UserAccountDAO;
-import com.citydigitalpulse.webservice.impl.CollectorControllerDAOimpl;
-import com.citydigitalpulse.webservice.impl.userAccountDAOimpl;
+import com.citydigitalpulse.webservice.dao.impl.CollectorControllerDAOimpl;
+import com.citydigitalpulse.webservice.dao.impl.userAccountDAOimpl;
 import com.citydigitalpulse.webservice.model.collector.RegInfo;
 import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.user.Role;

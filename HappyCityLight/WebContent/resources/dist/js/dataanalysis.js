@@ -1,108 +1,382 @@
+var apiToken = "ArashiArashiFordream";
 var map;
+var proj;
 var TILE_SIZE = 256;
 var l_earth = 40075000;
 var r_earth = l_earth / (2 * Math.PI);
 var R = 10000;
-var hexArray = new Array();
-var hexPolyArray = new Array();
-var selectedShape;
-var minZoomLevel = 7;
-var maxValue = 0;
-var minValue = 0;
+var minZoomLevel = 9;
 //var hexSize = radius * TILE_SIZE / l_earth;
-var placeCenter = null;
-var regions = null;
-var regionsN = [
-    {
-        "id": 001,
-        "lat": 45.42929873257377,
-        "long": -75.38818359375,
-        "message": "人は誰もが挑戦者 迷い戸惑う闘(たたか)って",
-        "create_date": "2015-10-01",
-        "emotion": "positive",
-        "value": 16
-                }, {
-        "id": 002,
-        "lat": 45.39844997630408,
-        "long": -74.86083984375,
-        "message": "二つで一つが一つの虚しさ あるはずを失った暮らしが",
-        "create_date": "2015-10-01",
-        "emotion": "negative",
-        "value": 90
-                }, {
-        "id": 003,
-        "lat": 45.440862671781765,
-        "long": -75.2508544921875,
-        "message": "燃える夕焼け ふわり初雪",
-        "create_date": "2015-10-01",
-        "emotion": "neutral",
-        "value": 85
-                }, {
-        "id": 004,
-        "lat": 45.54483149242463,
-        "long": -75.0531005859375,
-        "message": "孤独や涙を 痛みや悲しみを",
-        "create_date": "2015-10-01",
-        "emotion": "neutral",
-        "value": 47
-                }, {
-        "id": 005,
-        "lat": 45.25555527789205,
-        "long": -75.772705078125,
-        "message": "他の空と繋ぐ “Hey！Hello！”",
-        "create_date": "2015-10-01",
-        "emotion": "positive",
-        "value": 72
-                }, {
-        "id": 006,
-        "lat": 45.30773430004869,
-        "long": -75.6298828125,
-        "message": "優しさを誇りに 気高くしなやかに",
-        "create_date": "2015-10-01",
-        "emotion": "positive",
-        "value": 66
-                }, {
-        "id": 007,
-        "lat": 45.37144349133922,
-        "long": -75.552978515625,
-        "message": "春待ち桜 月夜の花火",
-        "create_date": "2015-10-01",
-        "emotion": "neutral",
-        "value": 23
-                }, {
-        "id": 008,
-        "lat": 45.30000710263142,
-        "long": -75.970458984375,
-        "message": "君のいない部屋は　空き箱みたいに軽く",
-        "create_date": "2015-10-01",
-        "emotion": "negative",
-        "value": 43
-                }, {
-        "id": 009,
-        "lat": 45.37530235052552,
-        "long": -75.61065673828125,
-        "message": "どんなときも　離れてても 心に同じ空がある",
-        "create_date": "2015-10-01",
-        "emotion": "positive",
-        "value": 82
+
+var msgDataQueue = new buckets.Queue();
+var msgDataQueueSize = 500;
+var skip_num_ids = new Array();
+var hexArray = new Array();
+var hexBoundaryArray = new Array();
+var regionBoundary = null;
+
+var city = null;
+var N, E, W, S;
+
+var keyword, data_filter_lang_array = new Array(),
+    data_filter_source_array = new Array(),
+    data_filter_lang, data_filter_source,
+    flag_lang, flag_source;
+var location_areas;
+var realTime;
+var listenPlaceList = new Array();
+
+var allInfoboxs = new Array();
+var allMarkers = new Array();
+var infoboxNow = null;
+var markerNow = null;
+var boundaryRecArray = new Array();
+
+
+
+var infowindow, cityMarker;
+
+
+var checkMsgById = function (msg1, msg2) {
+    return msg1.num_id === msg2.num_id;
+}
+
+
+
+function drawRegionBoundary(areas) {
+    var cityBoundaryPaths = new Array();
+    if (regionBoundary != null) {
+        regionBoundary.setMap(null);
+    }
+
+    $.each(areas, function () {
+        var cityPaths = [new google.maps.LatLng(this.north, this.east), new google.maps.LatLng(this.south, this.east), new google.maps.LatLng(this.south, this.west), new google.maps.LatLng(this.north, this.west)];
+        cityBoundaryPaths.push(cityPaths);
+    });
+
+    regionBoundary = mergeRegions(cityBoundaryPaths);
+    regionBoundary.setMap(map);
+
+}
+
+
+function setLocationAreas(N, E, S, W) {
+    var area = {};
+    area["north"] = N;
+    area["south"] = S;
+    area["west"] = W;
+    area["east"] = E;
+    area["locID"] = 0;
+    var jsonArea = [];
+    jsonArea.push(area);
+    location_areas = JSON.stringify(jsonArea);
+    console.log("Set location_areas: " + location_areas);
+    return jsonArea;
+}
+
+
+
+function getListenPlaceList() {
+    if (user_id != null && logintoken != null) {
+        $.ajax({
+            type: "GET",
+            crossDomain: true,
+            url: serverURL + "collector/getlistenplacelist",
+            data: {
+                userID: user_id,
+                token: logintoken
+            },
+            dataType: "json",
+            success: function (data, textStatus) {
+                if (data.code == 200) {
+                    console.log("success in getListenPlaceList(): " + JSON.stringify(data));
+
+                    $.each(data.obj, function () {
+                        listenPlaceList.push(this.toString());
+                        //                        console.log(this.toString());
+                    });
+                    //alert(listenPlaceList.toString());
+                    map.setZoom(9);
+
+                } else {
+                    if (data.code == 400) {
+                        window.location.href = "login.html?message=Please Login Again.";
+                    }
                 }
-            ];
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("error in getListenPlaceList(): " + JSON.stringify(data));
+            }
+        });
+    } else {
+        alert("Auth error");
+    }
+
+}
+
+
+function getPlaceEdge(place) {
+    if (user_id != null && logintoken != null) {
+        $.ajax({
+            type: "GET",
+            crossDomain: true,
+            url: serverURL + "collector/getplaceinfo",
+            data: {
+                userID: user_id,
+                token: logintoken,
+                place_name: place,
+            },
+            dataType: "json",
+            success: function (data, textStatus) {
+                if (data.code == 200) {
+                    console.log("success in getPlaceEdge(): " + JSON.stringify(data));
+                    infowindow.close();
+                    map.panTo(new google.maps.LatLng(data.obj.areas[0].north, data.obj.areas[0].east));
+                    //getHexInsideRec(data.obj.areas[0]);
+
+                    var hexInfoArray = new Array();
+                    location_areas = JSON.stringify(data.obj.areas);
+                    console.log("Set location_areas: " + location_areas);
+
+
+                    $.each(data.obj.areas, function () {
+                        boundaryRecArray.push(this);
+                        $.each(getHexInsideRec(this), function () {
+                            if ($.inArray("" + this.q + this.r + this.s, hexInfoArray) <= -1) {
+                                hexInfoArray.push("" + this.q + this.r + this.s);
+                                drawHexFromHex(this);
+                                hexBoundaryArray.push(this);
+                                //                                console.log("Adding Hex: " + this.q + "," + this.r + "," + this.s);
+                            } else {
+                                console.log("Hex already exists.");
+                            }
+                        });
+                    });
+
+
+                    if ((data.obj.box_points != null) && (data.obj.box_points != [])) {
+                        console.log("box_points exists.");
+
+                        if (regionBoundary != null) {
+                            regionBoundary.setMap(null);
+                        }
+
+                        regionBoundary = new google.maps.Polyline({
+                            path: $.parseJSON(data.obj.box_points),
+                            map: map,
+                            strokeColor: "#9F353A",
+                            strokeOpacity: 0.6,
+                            strokeWeight: 1
+                        });
+
+
+                    } else {
+
+                        drawRegionBoundary(data.obj.areas);
+
+                        //alert(resultRegion.getPath().getArray().toString());
+
+                        $.ajax({
+                            type: "PUT",
+                            crossDomain: true,
+                            url: serverURL + "collector/updateareabox",
+                            data: {
+                                userID: user_id,
+                                token: logintoken,
+                                place_name: place,
+                                box_points: JSON.stringify(regionBoundary.getPath().getArray())
+                            },
+                            dataType: "json",
+                            success: function (data, textStatus) {
+                                //alert(JSON.stringify(data));
+                                console.log("Update Area Box successfully......" + data.obj.box_points);
+
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log("error: " + JSON.stringify(data));
+                            }
+                        });
+
+
+                    }
+
+
+                } else {
+                    alert(JSON.stringify(data));
+                    window.location.href = "login.html?message=Please Login Again.";
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("error in getPlaceEdge(): " + JSON.stringify(data));
+            }
+        });
+    } else {
+        alert("Auth error");
+    }
+}
+
+
+
+function getLatestData() {
+    console.log("getLatestData();");
+    $.ajax({
+        type: "GET",
+        crossDomain: true,
+        url: serverURL + "message/getlatest",
+        data: {
+            token: apiToken,
+            location_areas: location_areas,
+            city: city,
+            lang: data_filter_lang,
+            message_from: data_filter_source,
+            keyword: keyword,
+            limit: 5000,
+            skip_num_ids: skip_num_ids.toString()
+        },
+        dataType: "json",
+        success: function (data, textStatus) {
+            console.log(JSON.stringify(data));
+            if (data.code == 200) {
+                console.log("success in getLatestData();");
+                if ((data.obj != null) && (data.obj.length != 0)) {
+
+                    if (infoboxNow != null) {
+                        infoboxNow.setVisible(false);
+                    }
+                    if (markerNow != null) {
+                        markerNow.setVisible(false);
+                        console.log("remove a marker.")
+                    }
+
+                    $.each(data.obj, function (index, msgData) {
+                        if (!msgDataQueue.contains(msgData, checkMsgById) && ((msgData.emotion_text == 'positive') || (msgData.emotion_text == 'negative') || (msgData.emotion_text == 'neutral'))) {
+                            //manage msgDataQueue that stores raw datas recieved from server
+                            msgDataQueue.add(msgData);
+                            skip_num_ids.push(msgData.num_id);
+                            console.log("skip_num_ids adding: " + msgData.num_id);
+                            if (msgDataQueue.size == msgDataQueueSize) {
+                                msgDataQueue.clear();
+                                skip_num_ids = [];
+                                if (hexArray != null) {
+                                    $.each(hexArray, function () {
+                                        this.hexPolygon.setMap(null);
+                                    });
+                                    hexArray = [];
+                                }
+                            }
+
+                            updateHex(msgData);
+
+                            //set map center / marker / infobox
+                            //                            var newCenterLatlng = new google.maps.LatLng(msgData.query_location_latitude, msgData.query_location_langtitude);
+                            //                            var createAt = new Date(msgData.creat_at);
+                            //                            var placeName;
+                            //                            if (msgData.place_fullname != null) {
+                            //                                placeName = msgData.place_fullname;
+                            //                            } else if (msgData.place_name != null) {
+                            //                                placeName = msgData.place_name;
+                            //                            } else {
+                            //                                placeName = "";
+                            //                            }
+                            //
+                            //                            switch (msgData.emotion_text) {
+                            //                            case "positive":
+                            //                                var centerMarker = new google.maps.Marker({
+                            //                                    map: map,
+                            //                                    animation: google.maps.Animation.DROP,
+                            //                                    position: newCenterLatlng,
+                            //                                    icon: "resources/img/positive.png"
+                            //                                });
+                            //                                break;
+                            //                            case "neutral":
+                            //                                var centerMarker = new google.maps.Marker({
+                            //                                    map: map,
+                            //                                    animation: google.maps.Animation.DROP,
+                            //                                    position: newCenterLatlng,
+                            //                                    icon: "resources/img/neutral.png"
+                            //                                });
+                            //                                break;
+                            //                            case "negative":
+                            //                                var centerMarker = new google.maps.Marker({
+                            //                                    map: map,
+                            //                                    animation: google.maps.Animation.DROP,
+                            //                                    position: newCenterLatlng,
+                            //                                    icon: "resources/img/negative.png"
+                            //                                });
+                            //                                break;
+                            //                            default:
+                            //                                break;
+                            //                            }
+                            //
+                            //                            var content = "<div id='infobox' class='box box-widget'><div class='box-header with-border'><div class='user-block'><img class='img-circle'";
+                            //
+                            //                            if (msgData.profile_image_url != null) {
+                            //                                content += "src='" + msgData.profile_image_url + "'";
+                            //
+                            //                            } else {
+                            //                                content += "src='resources/img/userDefault.png'";
+                            //                            }
+                            //
+                            //
+                            //                            content += "alt='User Image'><span class='username'><a href='#'>" + msgData.user_name + "</a></span><span class='description'>" + placeName + " - " + createAt.getFullYear() + "/" + createAt.getMonth() + "/" + createAt.getDate() + "</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool' data-toggle='tooltip' title='Mark as read'><i class='fa fa-circle-o'></i></button><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button><button type='button' class='btn btn-box-tool btn-close' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'>";
+                            //                            if ((msgData.media_type[0] == 'photo') && (msgData.media_urls[0] != null)) {
+                            //                                content += "<img class='img-responsive' src='" + msgData.media_urls[0] + "' alt='Photo' style='width:120px;'>"
+                            //                            }
+                            //
+                            //                            content += "<p>" + msgData.text + "</p></div></div>";
+                            //
+                            //
+                            //                            var realtimeInfowindow = new InfoBox({
+                            //                                content: content,
+                            //                                disableAutoPan: false,
+                            //                                maxWidth: 120,
+                            //                                pixelOffset: new google.maps.Size(-140, 0),
+                            //                                zIndex: null
+                            //                            });
+                            //
+                            //
+                            //                            //                            map.panTo(newCenterLatlng);
+                            //                            realtimeInfowindow.open(map, centerMarker);
+                            //                            
+                            //                            infoboxNow = realtimeInfowindow;
+                            //                            markerNow = centerMarker;
+                            //                            allInfoboxs.push(realtimeInfowindow);
+                            //                            allMarkers.push(centerMarker);
+
+
+                        }
+                    });
+
+
+                } else {
+                    console.log("No data in this getLatestData()......");
+                }
+
+            } else {
+                if (data.code == 400) {
+                    window.location.href = "login.html?message=Please Login Again.";
+                }
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log("error in getLatestData(): " + JSON.stringify(data));
+        }
+    });
+}
+
+
 
 
 function getSpecificData() {
-
-    var start = $('#sandbox-container .input-daterange').datepicker().data('datepicker').pickers[0].getDate(),
-        end = $('#sandbox-container .input-daterange').datepicker().data('datepicker').pickers[1].getDate(),
-        range = $("#rangeSlider").data('slider').getValue(),
-        hashtags = $("input#topics").val(),
-        data_filter_lang_array = new Array(),
-        data_filter_source_array = new Array(),
-        flag_lang = 1,
-        flag_source = 1;
-
+    console.log("getSpecificData();");
+    //get data filter options
+    keyword = $("input#topics").val();
+    flag_lang = 1;
+    flag_source = 1;
     $("#language option").each(function () {
         if (this.selected) {
             data_filter_lang_array.push(this.value);
+            //            console.log(this.val());
         } else {
             flag_lang = 0;
         }
@@ -110,14 +384,13 @@ function getSpecificData() {
     $("#dataSource option").each(function () {
         if (this.selected) {
             data_filter_source_array.push(this.value);
+            //            console.log(this.val());
         } else {
             flag_source = 0;
         }
     });
-
-    var data_filter_lang = data_filter_lang_array.toString(),
-        data_filter_source = data_filter_source_array.toString();
-
+    data_filter_lang = data_filter_lang_array.toString();
+    data_filter_source = data_filter_source_array.toString();
     if (flag_lang == 1) {
         data_filter_lang = null;
     }
@@ -125,48 +398,16 @@ function getSpecificData() {
         data_filter_source = null;
     }
 
-    alert(start + "\n" + end + "\n" + range + "\n" + data_filter_lang + "\n" + data_filter_source + "\n" + hashtags);
-
-    $.ajax({
-        type: "GET",
-        crossDomain: true,
-        url: serverURL + "dataanalysis/get",
-        data: {
-            token:"Arashi!Arashi!For dream!",
-            location_lat_min:null,
-            location_lan_min:null,
-            location_lat_max:null,
-            location_lan_max:null,
-            city:null,
-            timestamp_start: start,
-            timestamp_end: end,
-            lang: data_filter_lang,
-            message_from: data_filter_source,
-            hashtags: hashtags
-        },
-        dataType: "json",
-        success: function (data, textStatus) {
-            if (data.code == 200) {
-                alert("success!");
-                $("#sendRequest").prop('disabled', true);
-                return regionsN;
-            } else {
-                alert(JSON.stringify(data));
-                if (data.code == 400) {
-                    window.location.href = "login.html?message=Please Login Again.";
-                }
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            // successful
-            $("#sendRequest").prop('disabled', false);
-        }
-    });
+    console.log("Search Options: " + city + " | " + range + " | " + keyword + " | " + data_filter_lang + " | " + data_filter_source);
 
 
-    return regionsN;
+    getLatestData();
+
+
 
 }
+
+
 
 
 
@@ -178,26 +419,44 @@ function checkin_afterChencin() {
 
 $(function () {
 
-    //初始化map所在div大小
-    var h = $(".wrapper").height(),
-        offsetTop = $(".main-header").height(); // Calculate the top offset
+    //initialization of some elements 
+    if ($(window).width() < 768) {
+        $("footer").hide();
+        $("#header-logo").hide();
+        $("#titleForPhone").show();
+        $('#titleForPhone').css('margin-left', $(window).width() / 2 - 82);
+        $('#map-div').css('height', ($(window).height() - $(".main-header").height()));
+    } else {
+        $("footer").show();
+        $("#header-logo").show();
+        $("#titleForPhone").hide();
+        $('#map-div').css('height', ($(window).height() - $(".main-header").height() - 51));
+    }
 
-    $('#map-div').css('height', (h - offsetTop));
 
-    var rangeSlider = $('#rangeSlider').slider({
+    $("#rangeSlider").slider({
         min: 1000,
         max: 20000,
         step: 1000,
         value: 10000,
         handle: 'square',
+        tooltip: 'show',
         formatter: function (value) {
-            return 'Current range: ' + value;
+            return 'Current range: ' + value + ' meters';
         }
     });
 
-
-
+    //calculate slider size
+    $("#rangeSlider").width(function () {
+        return $("#pac-input").width() / 2.2;
+    });
+    //select all language initially
     $('.selectpicker #language').selectpicker('selectAll');
+    //init tagsinput
+    $('#topics').tagsinput({
+        maxTags: 3,
+        maxChars: 10
+    });
 
     $('#sandbox-container .input-daterange').datepicker({
         startDate: "01/01/2010",
@@ -209,144 +468,253 @@ $(function () {
     });
 
     $('#sandbox-container .input-daterange').datepicker().data('datepicker').pickers[0].setDate('today');
+//    $(".infobox .box-footer").slimScroll({
+//        height: '350px'
+//    });
 
-    $('#topics').tagsinput({
-        maxTags: 3,
-        maxChars: 8
-    });
+    getListenPlaceList();
 
-    $("#rangeSlider").width(function () {
-        return $("#pac-input").width() / 2.2;
-    });
-
-
-
-    //设置map初始属性
-    var ottawa = new google.maps.LatLng(45.42929873257377, -75.38818359375);
-
+    //init map
     map = new google.maps.Map(document.getElementById('map'), {
-        center: ottawa,
+        center: new google.maps.LatLng(45.42929873257377, -75.38818359375),
         zoom: 9,
         mapTypeControl: false
     });
+    proj = map.getProjection();
 
-
-    var input = /** @type {!HTMLInputElement} */ (
-        document.getElementById('pac-input'));
-
-
+    //init autocomplete
+    var input = (document.getElementById('pac-input'));
     var autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.bindTo('bounds', map);
-    var infowindow = new google.maps.InfoWindow();
-    var marker = new google.maps.Marker({
+    infowindow = new google.maps.InfoWindow();
+    cityMarker = new google.maps.Marker({
         map: map,
-        anchorPoint: new google.maps.Point(0, -29)
+        anchorPoint: new google.maps.Point(0, -29),
+        draggable: true
     });
 
+    $("#rangeSlider").slider("disable");
 
 
+
+
+    range = $("#rangeSlider").data('slider').getValue();
     autocomplete.addListener('place_changed', function () {
-        infowindow.close();
-        marker.setVisible(false);
+
+        $("#rangeSlider").slider("disable");
+        if (hexBoundaryArray != null) {
+            $.each(hexBoundaryArray, function () {
+                this.hexPolygon.setMap(null);
+            });
+            hexBoundaryArray = [];
+        }
+        boundaryRecArray = [];
+
+        // get new place info
         var place = autocomplete.getPlace();
-        if (!place.geometry) {
-            window.alert("Autocomplete's returned place contains no geometry");
+        //alert(place.name);
+        if ($.inArray(place.name.toLowerCase(), listenPlaceList) > -1) {
+            //向后台请求自定义的区域边界信息并显示
+            city = place.name;
+            getPlaceEdge(place.name);
             return;
-        }
-        // If the place has a geometry, then present it on a map.
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
         } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17); // Why 17? Because it looks good.
-        }
-        marker.setIcon( /** @type {google.maps.Icon} */ ({
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(35, 35)
-        }));
-        marker.setPosition(place.geometry.location);
-        marker.setVisible(true);
+            if (!place.geometry) {
+                window.alert("Autocomplete's returned place contains no geometry");
+                return;
+            }
+            $("#rangeSlider").slider("enable");
+            // If the place has a geometry, present it on a map.
+            //            if (place.geometry.viewport) {
+            //                map.fitBounds(place.geometry.viewport);
+            //            } else {
+            //                map.setCenter(place.geometry.location);
+            //                map.setZoom(9);
+            //            }
+            //set cityMarker
+            cityMarker.setIcon( /** @type {google.maps.Icon} */ ({
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(35, 35)
+            }));
+            cityMarker.setPosition(place.geometry.location);
+            cityMarker.setVisible(true);
+            //show place name through infowindow
+            var address = '';
+            if (place.address_components) {
+                address = [(place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')].join(' ');
+            }
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            infowindow.open(map, cityMarker);
 
-        var address = '';
-        if (place.address_components) {
-            address = [
-                (place.address_components[0] && place.address_components[0].short_name || ''),
-                (place.address_components[1] && place.address_components[1].short_name || ''),
-                (place.address_components[2] && place.address_components[2].short_name || '')
-      ].join(' ');
+            city = place.name;
+            //show city boundary in form of rectangle
+            N = place.geometry.location.lat() + range * 180 / (Math.PI * r_earth);
+            S = place.geometry.location.lat() - range * 180 / (Math.PI * r_earth);
+            E = place.geometry.location.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * place.geometry.location.lat() / 180));
+            W = place.geometry.location.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * place.geometry.location.lat() / 180));
+
+
+            drawRegionBoundary(setLocationAreas(N, E, S, W));
+
         }
 
-        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-        infowindow.open(map, marker);
-        placeCenter = place.geometry.location;
+    });
+
+
+    //When finish dragging the cityCarker, update city boundary and delete autocomplete-cityName
+    cityMarker.addListener('dragend', function () {
+        var markerPlace = cityMarker.getPosition();
+        N = markerPlace.lat() + range * 180 / (Math.PI * r_earth);
+        S = markerPlace.lat() - range * 180 / (Math.PI * r_earth);
+        E = markerPlace.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
+        W = markerPlace.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
+
+        drawRegionBoundary(setLocationAreas(N, E, S, W));
+
+        infowindow.close();
+        city = null;
+    });
+
+
+    //When dragging the rangeSlider, update city boundary
+    $("#rangeSlider").on('slide', function (e) {
+        //        range = $("#rangeSlider").data('slider').getValue();
+        range = e.value;
+        var markerPlace = cityMarker.getPosition();
+        N = markerPlace.lat() + range * 180 / (Math.PI * r_earth),
+            S = markerPlace.lat() - range * 180 / (Math.PI * r_earth),
+            E = markerPlace.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180)),
+            W = markerPlace.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
+
+
+        drawRegionBoundary(setLocationAreas(N, E, S, W));
+
     });
 
 
 
 
-    //restrict zoom level to be at city level
+    //redraw hex grid when map zoom changes
     google.maps.event.addListener(map, 'zoom_changed', function () {
-            if (regions != null) {
-                if (map.getZoom() < minZoomLevel) {
-                    // get analysis data if zoom level < 9
-                    map.setZoom(minZoomLevel);
-                } else {
-                    // get original data if zoom level >=9
-                    hexArray = [];
-                    drawAllHex(map.getZoom(), regions);
-                }
-            }
+        console.log("Googlemap zoom changed.");
 
+        if (allInfoboxs != null) {
+            $.each(allInfoboxs, function () {
+                this.setVisible(false);
+            });
+            allInfoboxs = [];
         }
 
-    );
+        if (hexArray != null) {
+            $.each(hexArray, function () {
+                this.hexPolygon.setMap(null);
+            });
+            hexArray = [];
+        }
+        if (!msgDataQueue.isEmpty()) {
+            msgDataQueue.forEach(function (msgData) {
+                updateHex(msgData);
+            });
+        }
 
+        if (hexBoundaryArray != null) {
+            $.each(hexBoundaryArray, function () {
+                this.hexPolygon.setMap(null);
+            });
+            hexBoundaryArray = [];
+            console.log("hexBoundaryArrayChange: " + hexBoundaryArray.toString());
 
-    $("#sendRequest").click(function () {
-
-        if (placeCenter == null) {
-            //alert("Please select a place!");
-            return;
-        } else {
-            regions = getSpecificData();
-
-            $.each(hexPolyArray, function () {
-                this.setMap(null);
+            var hexInfoArray = new Array();
+            $.each(boundaryRecArray, function () {
+                $.each(getHexInsideRec(this), function () {
+                    if ($.inArray("" + this.q + this.r + this.s, hexInfoArray) <= -1) {
+                        hexInfoArray.push("" + this.q + this.r + this.s);
+                        drawHexFromHex(this);
+                        hexBoundaryArray.push(this);
+                        //console.log("Adding Hex: " + this.q + "," + this.r + "," + this.s);
+                    } else {
+                        //console.log("Hex already exists.");
+                    }
+                });
             });
 
-            hexPolyArray = [];
-            hexArray = [];
-            drawAllHex(map.getZoom(), regions);
-
         }
-
-
-
     });
 
 
 
-    //窗口大小改变时重新设置map所在div大小
-    $(window).resize(function () {
-        var h = $(".wrapper").height(),
-            offsetTop = $(".main-header").height(); // Calculate the top offset
+    //operations when click on GO! button
+    $("#sendRequest").click(function () {
+        if (hexBoundaryArray != null) {
+            $.each(hexBoundaryArray, function () {
+                this.hexPolygon.setMap(null);
+            });
+            hexBoundaryArray = [];
+        }
+        boundaryRecArray = [];
+        cityMarker.setMap(null);
+        infowindow.close();
+        $("#sendRequest").prop('disabled', true);
+        console.log("Real-time Visualization Start.");
+        getSpecificData();
+    });
 
-        $('#map-div').css('height', (h - offsetTop));
-
-        $(".slider").width(function () {
-            return $("#pac-input").width() / 2.2;
-        });
 
 
-    }).resize();
+
+    $("#stopRealtime").click(function () {
+        console.log("Real-time Visualization Stop.");
+        clearInterval(realTime);
+        $("#sendRequest").prop('disabled', false);
+        if (infoboxNow != null) {
+            infoboxNow.setVisible(false);
+        }
+        if (markerNow != null) {
+            markerNow.setVisible(false);
+        }
+    });
 
 
+    $(".btn-close").click(function () {
+
+    });
+
+    //slide to show/hide the advance search options
     $("#advanceFilter").click(function () {
-        $("div #advance").slideToggle("slow");
+        $("#advance").slideToggle("slow");
     });
+
+
+    //resize & show/hide elements when window size changes
+    $(window).resize(function () {
+        setTimeout(function () {
+            //footer & logo styles, map size
+            if ($(window).width() < 768) {
+                $("footer").hide();
+                $("#header-logo").hide();
+                $("#titleForPhone").show();
+                $('#titleForPhone').css('margin-left', $(window).width() / 2 - 82);
+                $('#map-div').css('height', ($(window).height() - $(".main-header").height()));
+            } else {
+                $("footer").show();
+                $("#header-logo").show();
+                $("#titleForPhone").hide();
+                $('#map-div').css('height', ($(window).height() - $(".main-header").height() - 51));
+            }
+            //slider size
+            $(".slider").width(function () {
+                return $("#pac-input").width() / 2.2;
+            });
+        }, 30);
+
+
+    });
+
 
 
 });

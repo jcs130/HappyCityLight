@@ -69,7 +69,7 @@ public class LocatedTwitterListener implements RawStreamListener {
 						System.out.println(msg.getText());
 						// 发送有具体坐标的数据
 						Tools.sendNewMessage(Config.DCI_SERVER_URL
-								+ "messageonmap/uploadnewmessage",
+								+ "message/uploadnewmessage",
 								Config.UPLOAD_TOKEN, msg);
 					}
 				} else {

@@ -29,9 +29,12 @@
 			<artifactId>javax.mail</artifactId>
 			<version>1.5.4</version>
 		</dependency>
-
-
-
+		<!-- Apache Commons Lang -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
 
 
 		<!-- Json支持 -->

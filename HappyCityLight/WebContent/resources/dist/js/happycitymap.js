@@ -10,10 +10,11 @@ var minZoomLevel = 9;
 
 var msgDataQueue = new buckets.Queue();
 var msgDataQueueSize = 500;
-var hexArray = new Array();
 var skip_num_ids = new Array();
+var hexArray = new Array();
+var hexBoundaryArray = new Array();
+var regionBoundary = null;
 
-var placeCenter = null;
 var city = null;
 var N, E, W, S;
 
@@ -21,23 +22,56 @@ var keyword, data_filter_lang_array = new Array(),
     data_filter_source_array = new Array(),
     data_filter_lang, data_filter_source,
     flag_lang, flag_source;
-
+var location_areas;
 var realTime;
+var listenPlaceList = new Array();
+
 var allInfoboxs = new Array();
 var allMarkers = new Array();
 var infoboxNow = null;
 var markerNow = null;
-var listenPlaceList = new Array();
-var cityBoundaryArray = new Array();
-var cityBoundaryPaths = new Array();
 var boundaryRecArray = new Array();
-var location_areas;
 
-var infowindow, cityMarker, cityBoundary;
+
+
+var infowindow, cityMarker;
 
 
 var checkMsgById = function (msg1, msg2) {
     return msg1.num_id === msg2.num_id;
+}
+
+
+
+function drawRegionBoundary(areas) {
+    var cityBoundaryPaths = new Array();
+    if (regionBoundary != null) {
+        regionBoundary.setMap(null);
+    }
+
+    $.each(areas, function () {
+        var cityPaths = [new google.maps.LatLng(this.north, this.east), new google.maps.LatLng(this.south, this.east), new google.maps.LatLng(this.south, this.west), new google.maps.LatLng(this.north, this.west)];
+        cityBoundaryPaths.push(cityPaths);
+    });
+
+    regionBoundary = mergeRegions(cityBoundaryPaths);
+    regionBoundary.setMap(map);
+
+}
+
+
+function setLocationAreas(N, E, S, W) {
+    var area = {};
+    area["north"] = N;
+    area["south"] = S;
+    area["west"] = W;
+    area["east"] = E;
+    area["locID"] = 0;
+    var jsonArea = [];
+    jsonArea.push(area);
+    location_areas = JSON.stringify(jsonArea);
+    console.log("Set location_areas: " + location_areas);
+    return jsonArea;
 }
 
 
@@ -58,8 +92,6 @@ function getListenPlaceList() {
                     console.log("success in getListenPlaceList(): " + JSON.stringify(data));
 
                     $.each(data.obj, function () {
-                        //alert(this);
-                        //listenPlaceList.push(JSON.stringify(this));
                         listenPlaceList.push(this.toString());
                         //                        console.log(this.toString());
                     });
@@ -98,20 +130,22 @@ function getPlaceEdge(place) {
             success: function (data, textStatus) {
                 if (data.code == 200) {
                     console.log("success in getPlaceEdge(): " + JSON.stringify(data));
+                    infowindow.close();
                     map.panTo(new google.maps.LatLng(data.obj.areas[0].north, data.obj.areas[0].east));
                     //getHexInsideRec(data.obj.areas[0]);
 
-                    var hexResultArray = new Array();
                     var hexInfoArray = new Array();
                     location_areas = JSON.stringify(data.obj.areas);
                     console.log("Set location_areas: " + location_areas);
-                    //var tempHexArray = new Array();
+
+
                     $.each(data.obj.areas, function () {
                         boundaryRecArray.push(this);
                         $.each(getHexInsideRec(this), function () {
                             if ($.inArray("" + this.q + this.r + this.s, hexInfoArray) <= -1) {
                                 hexInfoArray.push("" + this.q + this.r + this.s);
-                                hexResultArray.push(this);
+                                drawHexFromHex(this);
+                                hexBoundaryArray.push(this);
                                 //                                console.log("Adding Hex: " + this.q + "," + this.r + "," + this.s);
                             } else {
                                 console.log("Hex already exists.");
@@ -119,31 +153,15 @@ function getPlaceEdge(place) {
                         });
                     });
 
-                    $.each(hexResultArray, function () {
-                        drawHexFromHex(this);
-                        hexArray.push(this);
-                    });
-
-
-                    //close current elements
-                    if (cityBoundaryArray != null) {
-                        $.each(cityBoundaryArray, function () {
-                            this.setMap(null);
-                        });
-                        cityBoundaryArray = [];
-                    }
-                    if (cityBoundary != null) {
-                        infowindow.close();
-                        cityMarker.setVisible(false);
-                        cityBoundary.setMap(null);
-                    }
-
 
                     if ((data.obj.box_points != null) && (data.obj.box_points != [])) {
-
-                        //alert(JSON.stringify($.parseJSON(data.obj.box_points)));
                         console.log("box_points exists.");
-                        var polygoneParcelleHeig = new google.maps.Polyline({
+
+                        if (regionBoundary != null) {
+                            regionBoundary.setMap(null);
+                        }
+
+                        regionBoundary = new google.maps.Polyline({
                             path: $.parseJSON(data.obj.box_points),
                             map: map,
                             strokeColor: "#9F353A",
@@ -151,44 +169,11 @@ function getPlaceEdge(place) {
                             strokeWeight: 1
                         });
 
-                        $.each($.parseJSON(data.obj.box_points), function () {
-                            cityBoundaryPaths.push(this);
-                            //                            var tempMarker = new google.maps.Marker({
-                            //                                position: this,
-                            //                                map: map,
-                            //                            });
-                            //                            var infowindow = new google.maps.InfoWindow({
-                            //                                content: tempMarker.getPosition().toString()
-                            //                            });
-                            //
-                            //                            infowindow.open(map, tempMarker);
-
-                        });
-                        cityBoundaryArray.push(polygoneParcelleHeig);
 
                     } else {
-                        cityBoundaryPaths = [];
 
-                        $.each(data.obj.areas, function () {
-                            /*var cityBoundaryListened = new google.maps.Rectangle({
-                                strokeWeight: 0,
-                                fillColor: '#FF0000',
-                                fillOpacity: 0.2,
-                                bounds: {
-                                    north: this.north,
-                                    south: this.south,
-                                    east: this.east,
-                                    west: this.west
-                                }
-                            });*/
-                            var cityPaths = [new google.maps.LatLng(this.north, this.east), new google.maps.LatLng(this.south, this.east), new google.maps.LatLng(this.south, this.west), new google.maps.LatLng(this.north, this.west)];
-                            //cityBoundaryArray.push(cityBoundaryListened);
-                            cityBoundaryPaths.push(cityPaths);
-                        });
+                        drawRegionBoundary(data.obj.areas);
 
-                        var resultRegion = mergeRegions(cityBoundaryPaths);
-                        resultRegion.setMap(map);
-                        cityBoundaryArray.push(resultRegion);
                         //alert(resultRegion.getPath().getArray().toString());
 
                         $.ajax({
@@ -199,7 +184,7 @@ function getPlaceEdge(place) {
                                 userID: user_id,
                                 token: logintoken,
                                 place_name: place,
-                                box_points: JSON.stringify(resultRegion.getPath().getArray())
+                                box_points: JSON.stringify(regionBoundary.getPath().getArray())
                             },
                             dataType: "json",
                             success: function (data, textStatus) {
@@ -237,7 +222,7 @@ function getLatestData() {
     $.ajax({
         type: "GET",
         crossDomain: true,
-        url: serverURL + "messageonmap/getlatest",
+        url: serverURL + "message/getlatest",
         data: {
             token: apiToken,
             location_areas: location_areas,
@@ -245,7 +230,6 @@ function getLatestData() {
             lang: data_filter_lang,
             message_from: data_filter_source,
             keyword: keyword,
-            limit: 10,
             skip_num_ids: skip_num_ids.toString()
         },
         dataType: "json",
@@ -254,7 +238,7 @@ function getLatestData() {
             if (data.code == 200) {
                 console.log("success in getLatestData();");
                 if ((data.obj != null) && (data.obj.length != 0)) {
-                    var i = 0;
+
                     if (infoboxNow != null) {
                         infoboxNow.setVisible(false);
                     }
@@ -263,7 +247,7 @@ function getLatestData() {
                         console.log("remove a marker.")
                     }
 
-                    var msgData = data.obj[i++];
+                    var msgData = data.obj[0];
                     if (!msgDataQueue.contains(msgData, checkMsgById) && ((msgData.emotion_text == 'positive') || (msgData.emotion_text == 'negative') || (msgData.emotion_text == 'neutral'))) {
                         //manage msgDataQueue that stores raw datas recieved from server
                         msgDataQueue.add(msgData);
@@ -331,7 +315,7 @@ function getLatestData() {
 
 
                         content += "alt='User Image'><span class='username'><a href='#'>" + msgData.user_name + "</a></span><span class='description'>" + placeName + " - " + createAt.getFullYear() + "/" + createAt.getMonth() + "/" + createAt.getDate() + "</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool' data-toggle='tooltip' title='Mark as read'><i class='fa fa-circle-o'></i></button><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button><button type='button' class='btn btn-box-tool btn-close' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'>";
-                        if ((msgData.media_type[0] == 'photo') && (msgData.media_urls[0] != null)) {
+                        if ((msgData.media_type != null) && (msgData.media_type != []) && (msgData.media_type[0] == 'photo') && (msgData.media_urls[0] != null)) {
                             content += "<img class='img-responsive' src='" + msgData.media_urls[0] + "' alt='Photo' style='width:120px;'>"
                         }
 
@@ -355,18 +339,8 @@ function getLatestData() {
                         allInfoboxs.push(realtimeInfowindow);
                         allMarkers.push(centerMarker);
 
-                        //                    centerMarker.addListener('click', function () {
-                        //                        if (realtimeInfowindow.getVisible()) {
-                        //                            realtimeInfowindow.setVisible(false);
-                        //                        } else {
-                        //                            realtimeInfowindow.setVisible(true);
-                        //                        }
-                        //                    });
 
                     }
-                    if (i >= data.obj.length) {
-                        clearInterval(displayData);
-                    };
 
                 } else {
                     console.log("No data in this getLatestData()......");
@@ -395,7 +369,7 @@ function getSpecificData() {
     flag_source = 1;
     $("#language option").each(function () {
         if (this.selected) {
-            data_filter_lang_array.push(this.val());
+            data_filter_lang_array.push(this.value);
             //            console.log(this.val());
         } else {
             flag_lang = 0;
@@ -403,7 +377,7 @@ function getSpecificData() {
     });
     $("#dataSource option").each(function () {
         if (this.selected) {
-            data_filter_source_array.push(this.val());
+            data_filter_source_array.push(this.value);
             //            console.log(this.val());
         } else {
             flag_source = 0;
@@ -418,7 +392,7 @@ function getSpecificData() {
         data_filter_source = null;
     }
 
-    console.log("Search Options: " + city + " | " + keyword + " | " + data_filter_lang + " | " + data_filter_source);
+    console.log("Search Options: " + city + " | " + range + " | " + keyword + " | " + data_filter_lang + " | " + data_filter_source);
 
     realTime = setInterval(function () {
         getLatestData();
@@ -453,17 +427,19 @@ $(function () {
         $('#map-div').css('height', ($(window).height() - $(".main-header").height() - 51));
     }
 
-    //init rangeSlider
-    var rangeSlider = $('#rangeSlider').slider({
+
+    $("#rangeSlider").slider({
         min: 1000,
         max: 20000,
         step: 1000,
         value: 10000,
         handle: 'square',
+        tooltip: 'show',
         formatter: function (value) {
-            return 'Current range: ' + value;
+            return 'Current range: ' + value + ' meters';
         }
     });
+
     //calculate slider size
     $("#rangeSlider").width(function () {
         return $("#pac-input").width() / 2.2;
@@ -496,23 +472,24 @@ $(function () {
         anchorPoint: new google.maps.Point(0, -29),
         draggable: true
     });
-    cityBoundary = new google.maps.Rectangle();
+
+    $("#rangeSlider").slider("disable");
+
+
 
 
     range = $("#rangeSlider").data('slider').getValue();
     autocomplete.addListener('place_changed', function () {
-        //close current elements
-        if (cityBoundaryArray != null) {
-            $.each(cityBoundaryArray, function () {
-                this.setMap(null);
+
+        $("#rangeSlider").slider("disable");
+        if (hexBoundaryArray != null) {
+            $.each(hexBoundaryArray, function () {
+                this.hexPolygon.setMap(null);
             });
-            cityBoundaryArray = [];
+            hexBoundaryArray = [];
         }
-        if (cityBoundary != null) {
-            infowindow.close();
-            cityMarker.setVisible(false);
-            cityBoundary.setMap(null);
-        }
+        boundaryRecArray = [];
+
         // get new place info
         var place = autocomplete.getPlace();
         //alert(place.name);
@@ -526,13 +503,14 @@ $(function () {
                 window.alert("Autocomplete's returned place contains no geometry");
                 return;
             }
+            $("#rangeSlider").slider("enable");
             // If the place has a geometry, present it on a map.
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(9);
-            }
+            //            if (place.geometry.viewport) {
+            //                map.fitBounds(place.geometry.viewport);
+            //            } else {
+            //                map.setCenter(place.geometry.location);
+            //                map.setZoom(9);
+            //            }
             //set cityMarker
             cityMarker.setIcon( /** @type {google.maps.Icon} */ ({
                 url: place.icon,
@@ -552,35 +530,17 @@ $(function () {
             }
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             infowindow.open(map, cityMarker);
-            placeCenter = place.geometry.location;
+
             city = place.name;
             //show city boundary in form of rectangle
             N = place.geometry.location.lat() + range * 180 / (Math.PI * r_earth);
             S = place.geometry.location.lat() - range * 180 / (Math.PI * r_earth);
             E = place.geometry.location.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * place.geometry.location.lat() / 180));
             W = place.geometry.location.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * place.geometry.location.lat() / 180));
-            cityBoundary.setOptions({
-                strokeWeight: 0,
-                fillColor: '#FF0000',
-                fillOpacity: 0.2,
-                map: map,
-                bounds: {
-                    north: N,
-                    south: S,
-                    east: E,
-                    west: W
-                }
-            });
-            var area = {};
-            area["north"] = N;
-            area["south"] = S;
-            area["west"] = W;
-            area["east"] = E;
-            area["locID"] = 0;
-            var jsonArea = [];
-            jsonArea.push(area);
-            location_areas = JSON.stringify(jsonArea);
-            console.log("Set location_areas: " + location_areas);
+
+
+            drawRegionBoundary(setLocationAreas(N, E, S, W));
+
         }
 
     });
@@ -594,15 +554,8 @@ $(function () {
         E = markerPlace.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
         W = markerPlace.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
 
-        cityBoundary.setOptions({
-            bounds: {
-                north: N,
-                south: S,
-                east: E,
-                west: W
-            }
-        });
-        cityBoundary.setMap(map);
+        drawRegionBoundary(setLocationAreas(N, E, S, W));
+
         infowindow.close();
         city = null;
     });
@@ -610,22 +563,17 @@ $(function () {
 
     //When dragging the rangeSlider, update city boundary
     $("#rangeSlider").on('slide', function (e) {
-        range = $("#rangeSlider").data('slider').getValue();
+        //        range = $("#rangeSlider").data('slider').getValue();
+        range = e.value;
         var markerPlace = cityMarker.getPosition();
         N = markerPlace.lat() + range * 180 / (Math.PI * r_earth),
             S = markerPlace.lat() - range * 180 / (Math.PI * r_earth),
             E = markerPlace.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180)),
             W = markerPlace.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
 
-        cityBoundary.setOptions({
-            bounds: {
-                north: N,
-                south: S,
-                east: E,
-                west: W
-            }
-        });
-        cityBoundary.setMap(map);
+
+        drawRegionBoundary(setLocationAreas(N, E, S, W));
+
     });
 
 
@@ -634,12 +582,7 @@ $(function () {
     //redraw hex grid when map zoom changes
     google.maps.event.addListener(map, 'zoom_changed', function () {
         console.log("Googlemap zoom changed.");
-        if (hexArray != null) {
-            $.each(hexArray, function () {
-                this.hexPolygon.setMap(null);
-            });
-            hexArray = [];
-        }
+
         if (allInfoboxs != null) {
             $.each(allInfoboxs, function () {
                 this.setVisible(false);
@@ -647,20 +590,32 @@ $(function () {
             allInfoboxs = [];
         }
 
+        if (hexArray != null) {
+            $.each(hexArray, function () {
+                this.hexPolygon.setMap(null);
+            });
+            hexArray = [];
+        }
         if (!msgDataQueue.isEmpty()) {
             msgDataQueue.forEach(function (msgData) {
                 updateHex(msgData);
             });
         }
 
-        if (boundaryRecArray != null) {
-            var hexResultArray = new Array();
+        if (hexBoundaryArray != null) {
+            $.each(hexBoundaryArray, function () {
+                this.hexPolygon.setMap(null);
+            });
+            hexBoundaryArray = [];
+            console.log("hexBoundaryArrayChange: " + hexBoundaryArray.toString());
+
             var hexInfoArray = new Array();
             $.each(boundaryRecArray, function () {
                 $.each(getHexInsideRec(this), function () {
                     if ($.inArray("" + this.q + this.r + this.s, hexInfoArray) <= -1) {
                         hexInfoArray.push("" + this.q + this.r + this.s);
-                        hexResultArray.push(this);
+                        drawHexFromHex(this);
+                        hexBoundaryArray.push(this);
                         //console.log("Adding Hex: " + this.q + "," + this.r + "," + this.s);
                     } else {
                         //console.log("Hex already exists.");
@@ -668,10 +623,6 @@ $(function () {
                 });
             });
 
-            $.each(hexResultArray, function () {
-                drawHexFromHex(this);
-                hexArray.push(this);
-            });
         }
     });
 
@@ -679,16 +630,15 @@ $(function () {
 
     //operations when click on GO! button
     $("#sendRequest").click(function () {
-        //        $.each(hexArray, function () {
-        //            this.hexPolygon.setMap(null);
-        //        });
-        //        hexArray = [];
+        if (hexBoundaryArray != null) {
+            $.each(hexBoundaryArray, function () {
+                this.hexPolygon.setMap(null);
+            });
+            hexBoundaryArray = [];
+        }
         boundaryRecArray = [];
         cityMarker.setMap(null);
-        cityBoundary.setMap(null);
         infowindow.close();
-        //msgDataQueue.clear();
-        //msgDataQueue = new buckets.Queue();
         $("#sendRequest").prop('disabled', true);
         console.log("Real-time Visualization Start.");
         getSpecificData();

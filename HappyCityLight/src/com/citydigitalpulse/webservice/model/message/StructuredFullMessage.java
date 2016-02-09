@@ -23,7 +23,7 @@ public class StructuredFullMessage {
 	// 消息内容
 	private String text = "";
 	// 媒体类型
-	private List<String> media_type = new ArrayList<String>();
+	private List<String> media_types = new ArrayList<String>();
 	// 媒体地址
 	private List<String> media_urls = new ArrayList<String>();
 	private List<String> media_urls_local = new ArrayList<String>();
@@ -98,12 +98,12 @@ public class StructuredFullMessage {
 		this.text = text;
 	}
 
-	public List<String> getMedia_type() {
-		return media_type;
+	public List<String> getMedia_types() {
+		return media_types;
 	}
 
-	public void setMedia_type(List<String> media_type) {
-		this.media_type = media_type;
+	public void setMedia_types(List<String> media_types) {
+		this.media_types = media_types;
 	}
 
 	public List<String> getMedia_urls() {
@@ -254,7 +254,7 @@ public class StructuredFullMessage {
 	public String toString() {
 		return "StructuredFullMessage [num_id=" + num_id + ", raw_id_str="
 				+ raw_id_str + ", user_name=" + user_name + ", creat_at="
-				+ creat_at + ", text=" + text + ", media_type=" + media_type
+				+ creat_at + ", text=" + text + ", media_types=" + media_types
 				+ ", media_urls=" + media_urls + ", media_urls_local="
 				+ media_urls_local + ", place_type=" + place_type
 				+ ", place_name=" + place_name + ", place_fullname="

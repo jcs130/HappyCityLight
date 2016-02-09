@@ -323,7 +323,7 @@ function drawHexFromHex(hex) {
                 }
             } else {
                 //            alert(proj.fromPointToLatLng(getCenter(hex)));
-                var content = "<div id='infobox' class='box box-widget'><div class='box-header with-border'><div class='user-block'><span class='username'><a href='#'>Region</a></span><span class='description'>Public Region</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool closeInfobox' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'><p>Region Info</p></div><div class='box-footer box-comments'>";
+                var content = "<div id='infobox' class='box box-widget infobox'><div class='box-header with-border'><div class='user-block'><span class='username'><a href='#'>Region</a></span><span class='description'>Public Region</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool closeInfobox' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'><p>Region Info</p></div><div class='box-footer box-comments'>";
                 if (hex.msg != null) {
                     console.log("Display msg in the hex.");
                     $.each(hex.msg, function () {
@@ -360,6 +360,7 @@ function drawHexFromHex(hex) {
                 $(".box-tools").click(function () {
                     hex.infobox.setVisible(false);
                 });
+                
 
             }
         }

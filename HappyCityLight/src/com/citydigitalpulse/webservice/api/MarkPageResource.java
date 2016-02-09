@@ -10,8 +10,8 @@ import org.glassfish.hk2.utilities.reflection.Logger;
 
 import com.citydigitalpulse.webservice.dao.MarkingMessageDAO;
 import com.citydigitalpulse.webservice.dao.UserAccountDAO;
-import com.citydigitalpulse.webservice.impl.MarkingMessageDAOimpl;
-import com.citydigitalpulse.webservice.impl.userAccountDAOimpl;
+import com.citydigitalpulse.webservice.dao.impl.MarkingMessageDAOimpl;
+import com.citydigitalpulse.webservice.dao.impl.userAccountDAOimpl;
 import com.citydigitalpulse.webservice.model.message.*;
 import com.citydigitalpulse.webservice.model.user.Role;
 

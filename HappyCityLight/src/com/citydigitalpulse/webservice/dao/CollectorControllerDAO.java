@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.citydigitalpulse.webservice.model.collector.LocArea;
+import com.citydigitalpulse.webservice.model.collector.OfflineTask;
 import com.citydigitalpulse.webservice.model.collector.RegInfo;
 
 /**
@@ -56,5 +57,9 @@ public interface CollectorControllerDAO {
 	 * @param reg
 	 */
 	public void updateRegBoxInfo(RegInfo reg);
+
+	public int addNewOfflineTask(OfflineTask task);
+
+	public OfflineTask getOfflineTaskByTaskID(long task_id);
 
 }
