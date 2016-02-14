@@ -58,10 +58,10 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 	public ArrayList<StructuredFullMessage> getFilteredMessages(
 			long time_start, long time_end, String place_name,
 			List<LocArea> areas, List<String> lang, List<String> message_from,
-			boolean is_true_location) {
+			boolean is_true_location, List<String> keywords) {
 		// and media_type !='[]'
 		String queryOption = buildQueryOption(time_start, time_end, place_name,
-				areas, lang, message_from, is_true_location);
+				areas, lang, message_from, is_true_location, keywords);
 		String sqlString = "SELECT * FROM full_message where " + queryOption
 				+ ";";
 		System.out.println(sqlString);
@@ -128,7 +128,8 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 
 	private String buildQueryOption(long time_start, long time_end,
 			String place_name, List<LocArea> areas, List<String> lang,
-			List<String> message_from, boolean is_true_location) {
+			List<String> message_from, boolean is_true_location,
+			List<String> keywords) {
 		String res = "";
 		// 真实坐标筛选
 		if (is_true_location) {
@@ -138,6 +139,28 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 		if (time_start != 0 && time_end != 0) {
 			res += "creat_at > " + time_start + " and creat_at < " + time_end
 					+ " and ";
+		}
+		// 地点条件
+		if (areas.size() != 0) {
+			if (!"".equals(place_name)) {
+				res += " (place_name = \"" + place_name + "\" or ";
+			} else {
+				res += " ( ";
+			}
+			// 循环area增加条件
+			for (int i = 0; i < areas.size(); i++) {
+				LocArea temp = areas.get(i);
+				res += "( query_location_latitude > " + temp.getSouth()
+						+ " and query_location_latitude <" + temp.getNorth()
+						+ " and query_location_langtitude < " + temp.getEast()
+						+ " and query_location_langtitude >" + temp.getWest()
+						+ ")";
+				if (i != areas.size() - 1) {
+					res += " or ";
+				} else {
+					res += " ) ";
+				}
+			}
 		}
 		// 语言条件
 		if (lang.size() != 0) {
@@ -163,25 +186,15 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 				}
 			}
 		}
-		// 地点条件
-		if (areas.size() != 0) {
-			if (!"".equals(place_name)) {
-				res += " (place_name = \"" + place_name + "\" or ";
-			} else {
-				res += " ( ";
-			}
-			// 循环area增加条件
-			for (int i = 0; i < areas.size(); i++) {
-				LocArea temp = areas.get(i);
-				res += "( query_location_latitude > " + temp.getSouth()
-						+ " and query_location_latitude <" + temp.getNorth()
-						+ " and query_location_langtitude < " + temp.getEast()
-						+ " and query_location_langtitude >" + temp.getWest()
-						+ ")";
-				if (i != areas.size() - 1) {
-					res += " or ";
+		// 是否有关键字（模糊搜索）
+		if (keywords.size() != 0) {
+			res += " and ( MATCH(text) AGAINST (\"";
+			for (int i = 0; i < keywords.size(); i++) {
+				res += "+" + keywords.get(i);
+				if (i != keywords.size() - 1) {
+					res += " ";
 				} else {
-					res += " ) ";
+					res += "\" IN NATURAL LANGUAGE MODE))";
 				}
 			}
 		}

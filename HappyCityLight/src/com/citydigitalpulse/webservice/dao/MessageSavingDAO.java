@@ -23,5 +23,5 @@ public interface MessageSavingDAO {
 	public ArrayList<StructuredFullMessage> getFilteredMessages(
 			long time_start, long time_end, String place_name,
 			List<LocArea> areas, List<String> lang, List<String> message_from,
-			boolean is_true_location);
+			boolean is_true_location, List<String> keywords);
 }

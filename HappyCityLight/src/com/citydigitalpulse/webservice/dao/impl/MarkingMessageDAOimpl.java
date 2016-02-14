@@ -18,6 +18,7 @@ import com.citydigitalpulse.webservice.model.message.MarkMessageObj;
 import com.citydigitalpulse.webservice.model.message.MarkMsg2Web;
 import com.citydigitalpulse.webservice.model.message.MarkRecordObj;
 import com.citydigitalpulse.webservice.model.message.MediaObject;
+import com.citydigitalpulse.webservice.tool.Tools;
 
 public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 	private MySQLHelper_Mark markDB;
@@ -57,11 +58,11 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 				message.setMsg_id(rs.getLong("msg_id"));
 				message.setFull_msg_id(rs.getLong("full_msg_id"));
 				message.setText(rs.getString("text"));
-				message.setMedia_types(getListFromString(rs
+				message.setMedia_types(Tools.buildListFromString(rs
 						.getString("media_types")));
-				message.setMedia_urls(getListFromString(rs
+				message.setMedia_urls(Tools.buildListFromString(rs
 						.getString("media_urls")));
-				message.setMedia_urls_local(getListFromString(rs
+				message.setMedia_urls_local(Tools.buildListFromString(rs
 						.getString("media_urls_local")));
 				message.setLang(rs.getString("lang"));
 				System.out.println(message);
@@ -106,23 +107,23 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 		return true;
 	}
 
-	/**
-	 * 将ArrayList的toString()之后生成的字符串转化为ArrayList
-	 * 
-	 * @param string
-	 * @return
-	 */
-	private List<String> getListFromString(String listString) {
-		// 去掉首尾的中括号
-		String[] temp = listString.substring(1, listString.length() - 1).split(
-				", ");
-		ArrayList<String> res = new ArrayList<String>();
-		for (int i = 0; i < temp.length; i++) {
-			res.add(temp[i]);
-		}
-
-		return res;
-	}
+	// /**
+	// * 将ArrayList的toString()之后生成的字符串转化为ArrayList
+	// *
+	// * @param string
+	// * @return
+	// */
+	// private List<String> getListFromString(String listString) {
+	// // 去掉首尾的中括号
+	// String[] temp = listString.substring(1, listString.length() - 1).split(
+	// ", ");
+	// ArrayList<String> res = new ArrayList<String>();
+	// for (int i = 0; i < temp.length; i++) {
+	// res.add(temp[i]);
+	// }
+	//
+	// return res;
+	// }
 
 	@Override
 	public MarkMsg2Web getOneNewMsg() {
@@ -174,10 +175,11 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 			ps.setString(4, message.getText());
 			ps.setString(5, text_emotion);
 
-			ps.setString(6, message.getMedia_types().toString());
-			ps.setString(7, message.getMedia_urls().toString());
-			ps.setString(8, message.getMedia_urls_local().toString());
-			ps.setString(9, media_emotion.toString());
+			ps.setString(6, Tools.buildStringFromList(message.getMedia_types()));
+			ps.setString(7, Tools.buildStringFromList(message.getMedia_urls()));
+			ps.setString(8,
+					Tools.buildStringFromList(message.getMedia_urls_local()));
+			ps.setString(9, Tools.buildStringFromList(media_emotion));
 
 			ps.execute();
 		} catch (SQLException e) {
@@ -376,11 +378,11 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 				}
 				message.setMsg_id(rs.getLong("msg_id"));
 				message.setText(rs.getString("text"));
-				message.setMedia_urls_local(getListFromString(rs
+				message.setMedia_urls_local(Tools.buildListFromString(rs
 						.getString("media_urls_local")));
-				message.setMedia_types(getListFromString(rs
+				message.setMedia_types(Tools.buildListFromString(rs
 						.getString("media_types")));
-				message.setMedia_urls(getListFromString(rs
+				message.setMedia_urls(Tools.buildListFromString(rs
 						.getString("media_urls")));
 			}
 
@@ -433,16 +435,16 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 			// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			while (rs.next()) {
 				record = new MarkRecordObj();
-				record.setEmotion_medias(getListFromString(rs
+				record.setEmotion_medias(Tools.buildListFromString(rs
 						.getString("emotion_medias")));
 				record.setEmotion_text(rs.getString("emotion_text"));
 				// record.setMark_at(sdf.parse(rs.getString("mark_at")));
 				record.setMark_at(new Date(rs.getLong("mark_at")));
-				record.setMedia_types(getListFromString(rs
+				record.setMedia_types(Tools.buildListFromString(rs
 						.getString("media_types")));
-				record.setMedia_urls(getListFromString(rs
+				record.setMedia_urls(Tools.buildListFromString(rs
 						.getString("media_urls")));
-				record.setMedia_urls_local(getListFromString(rs
+				record.setMedia_urls_local(Tools.buildListFromString(rs
 						.getString("media_urls_local")));
 				record.setMsg_id(rs.getLong("msg_id"));
 				record.setRecord_id(rs.getInt("record_id"));

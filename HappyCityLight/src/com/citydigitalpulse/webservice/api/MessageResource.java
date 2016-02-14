@@ -211,13 +211,13 @@ public class MessageResource {
 			ArrayList<LocArea> location_area = null;
 			System.out.println(cache_messages.size());
 			ObjectMapper mapper = new ObjectMapper();
-			if("".equals(location_area_json)){
+			if (!"".equals(location_area_json)) {
 				// 将json转换为区域数组
 				location_area = mapper.readValue(location_area_json,
 						new TypeReference<List<LocArea>>() {
 						});
-			}else{
-				//无区域信息
+			} else {
+				// 无区域信息
 			}
 			// 得到所有的查询条件并且返回最新的符合条件的数据
 			ArrayList<StructuredFullMessage> cache = new ArrayList<StructuredFullMessage>(
@@ -472,6 +472,7 @@ public class MessageResource {
 					});
 			ArrayList<String> langs = new ArrayList<String>();
 			ArrayList<String> message_sources = new ArrayList<String>();
+			ArrayList<String> keyword_list = new ArrayList<String>();
 			if (!"".equals(lang)) {
 				String[] temp = lang.split(",");
 				for (int i = 0; i < temp.length; i++) {
@@ -484,6 +485,12 @@ public class MessageResource {
 					message_sources.add(temp[i].toLowerCase());
 				}
 			}
+			if (!"".equals(keyword)) {
+				String[] temp = lang.split(",");
+				for (int i = 0; i < temp.length; i++) {
+					keyword_list.add(temp[i].toLowerCase());
+				}
+			}
 			// 根据缩放级别判断返回什么信息
 			if (zoom_level >= max_zoom_level) {
 				option.setIs_true_location(true);
@@ -492,7 +499,7 @@ public class MessageResource {
 				} else {
 					res.setObj(msgSav.getFilteredMessages(time_start, time_end,
 							place_name, location_area, langs, message_sources,
-							true));
+							true, keyword_list));
 				}
 				// 返回有具体坐标的消息列表
 				res.setCode(Response.Status.OK.getStatusCode());
@@ -507,7 +514,7 @@ public class MessageResource {
 				} else {
 					res.setObj(getStatisticalData(msgSav.getFilteredMessages(
 							time_start, time_end, place_name, location_area,
-							langs, message_sources, false)));
+							langs, message_sources, false, keyword_list)));
 				}
 				// 返回数据
 				res.setCode(Response.Status.OK.getStatusCode());

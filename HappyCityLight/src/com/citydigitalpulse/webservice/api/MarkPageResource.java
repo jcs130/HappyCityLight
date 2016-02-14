@@ -84,7 +84,7 @@ public class MarkPageResource {
 	@POST
 	@Path("/sendannotatedmessage")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public ResMsg getMarkedMessage(
+	public ResMsg sendAnnotatedMessage(
 			@FormParam("userID") long userID,
 			@FormParam("token") String token,
 			@FormParam("user_email") @DefaultValue("null") String user_email,
