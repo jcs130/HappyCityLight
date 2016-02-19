@@ -1,5 +1,16 @@
+/** 
+ * Copyright (C) 2016 City Digital Pulse - All Rights Reserved
+ *  
+ * Author: Zhongli Li
+ *  
+ * Design: Zhongli Li and Shiai Zhu
+ *  
+ * Concept and supervision Abdulmotaleb El Saddik
+ *
+ */
 package com.citydigitalpulse.webservice.dao.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
@@ -11,21 +22,30 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.jasper.tagplugins.jstl.core.Redirect;
 import org.glassfish.hk2.utilities.reflection.Logger;
 
+import redis.clients.jedis.Jedis;
+
 import com.citydigitalpulse.webservice.dao.MarkingMessageDAO;
+import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.message.MarkMessageObj;
 import com.citydigitalpulse.webservice.model.message.MarkMsg2Web;
 import com.citydigitalpulse.webservice.model.message.MarkRecordObj;
 import com.citydigitalpulse.webservice.model.message.MediaObject;
 import com.citydigitalpulse.webservice.tool.Tools;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeParser;
 
 public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 	private MySQLHelper_Mark markDB;
 	// private SimpleDateFormat sdf;
 	// 缓存区
-	private static ArrayList<MarkMessageObj> cacheMessage = new ArrayList<MarkMessageObj>();
-	private static int index = 0;
+	private static String CACHE_KEY = "UnmarkedMessageTemp";
+	// private static ArrayList<MarkMessageObj> cacheMessage = new
+	// ArrayList<MarkMessageObj>();
 	private int cacheSize;
 	private int markMaxTime;
 
@@ -126,31 +146,46 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 	// }
 
 	@Override
-	public MarkMsg2Web getOneNewMsg() {
-		// String queryOption = "mark_times <" + markMaxTime;
-		// 优先获得所有只差一条的
-		String queryOption = "mark_times =2";
-		if (cacheMessage.size() == 0) {
-			// 若缓存中无数据，则获取新的数据
-			cacheMessage.addAll(getNewMarkingMsg(cacheSize, queryOption));
-		} else if (index == cacheMessage.size()) {
-			// 若缓存已满，则获取新的数据
-			cacheMessage.clear();
-			index = 0;
-			cacheMessage.addAll(getNewMarkingMsg(cacheSize, queryOption));
+	public MarkMsg2Web getOneNewMsg() throws IOException {
+		String queryOption = "mark_times <" + markMaxTime;
+		// 读取缓存中的缓存数据
+		Jedis cacheDB = RedisUtil.getJedis();
+		String jsonObj = "";
+		MarkMessageObj markobj = null;
+		ObjectMapper mapper = new ObjectMapper();
+		if (cacheDB.exists(CACHE_KEY)) {
+			jsonObj = cacheDB.lpop(CACHE_KEY);
+			if ("nil".equals(jsonObj)) {
+				ArrayList<MarkMessageObj> cacheMessage = getNewMarkingMsg(
+						cacheSize, queryOption);
+				// 将列表存入缓存
+				for (int i = 0; i < cacheMessage.size(); i++) {
+					if (i == 0) {
+						markobj = cacheMessage.get(i);
+					} else {
+						cacheDB.rpush(CACHE_KEY,
+								mapper.writeValueAsString(cacheMessage.get(i)));
+					}
+				}
+			} else {
+				// 将json转换为区域数组
+				markobj = mapper.readValue(jsonObj, MarkMessageObj.class);
+			}
+		} else {
+			ArrayList<MarkMessageObj> cacheMessage = getNewMarkingMsg(
+					cacheSize, queryOption);
+			// 将列表存入缓存
+			for (int i = 0; i < cacheMessage.size(); i++) {
+				if (i == 0) {
+					markobj = cacheMessage.get(i);
+				} else {
+					cacheDB.rpush(CACHE_KEY,
+							mapper.writeValueAsString(cacheMessage.get(i)));
+				}
+			}
 		}
-		// 如果缓存中没有足够的消息则获取标记数量为1的
-		if (cacheMessage.size() < cacheSize) {
-			queryOption = "mark_times =1";
-			cacheMessage.addAll(getNewMarkingMsg(cacheSize, queryOption));
-		}
-		// 如果缓存中没有足够的消息则获取标记数量为0的
-		if (cacheMessage.size() < cacheSize) {
-			queryOption = "mark_times =0";
-			cacheMessage.addAll(getNewMarkingMsg(cacheSize, queryOption));
-		}
-		MarkMsg2Web res = new MarkMsg2Web(cacheMessage.get(index));
-		index++;
+		MarkMsg2Web res = new MarkMsg2Web(markobj);
+		RedisUtil.returnResource(cacheDB);
 		return res;
 	}
 

@@ -1,3 +1,13 @@
+/** 
+ * Copyright (C) 2016 City Digital Pulse - All Rights Reserved
+ *  
+ * Author: Zhongli Li
+ *  
+ * Design: Zhongli Li and Shiai Zhu
+ *  
+ * Concept and supervision Abdulmotaleb El Saddik
+ *
+ */
 package com.citydigitalpulse.webservice.dao.impl;
 
 import java.sql.Connection;
@@ -164,7 +174,8 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 		}
 		// 语言条件
 		if (lang.size() != 0) {
-			res += " ( ";
+			System.out.println("lang:" + lang);
+			res += "and ( ";
 			for (int i = 0; i < lang.size(); i++) {
 				res += " lang = \"" + lang.get(i) + "\"";
 				if (i != lang.size() - 1) {
@@ -176,7 +187,8 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 		}
 		// 消息来源条件
 		if (message_from.size() != 0) {
-			res += " ( ";
+			System.out.println("message from:" + message_from);
+			res += "and ( ";
 			for (int i = 0; i < message_from.size(); i++) {
 				res += " message_from = \"" + message_from.get(i) + "\"";
 				if (i != message_from.size() - 1) {
@@ -188,6 +200,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 		}
 		// 是否有关键字（模糊搜索）
 		if (keywords.size() != 0) {
+			System.out.println("keywords:" + keywords);
 			res += " and ( MATCH(text) AGAINST (\"";
 			for (int i = 0; i < keywords.size(); i++) {
 				res += "+" + keywords.get(i);

@@ -402,58 +402,17 @@ function getSpecificData() {
 }
 
 
+//实现登陆成功后的初始化数据操作
+function checkin_afterChencin() {}
 
 
 
 //实现登陆成功后的初始化数据操作
-function checkin_afterChencin() {
+function init_map_after_load() {
 
-}
-
-
-$(function () {
-
-    //initialization of some elements 
-    if ($(window).width() < 768) {
-        $("footer").hide();
-        $("#header-logo").hide();
-        $("#titleForPhone").show();
-        $('#titleForPhone').css('margin-left', $(window).width() / 2 - 82);
-        $('#map-div').css('height', ($(window).height() - $(".main-header").height()));
-    } else {
-        $("footer").show();
-        $("#header-logo").show();
-        $("#titleForPhone").hide();
-        $('#map-div').css('height', ($(window).height() - $(".main-header").height() - 51));
-    }
-
-
-    $("#rangeSlider").slider({
-        min: 1000,
-        max: 20000,
-        step: 1000,
-        value: 10000,
-        handle: 'square',
-        tooltip: 'show',
-        formatter: function (value) {
-            return 'Current range: ' + value + ' meters';
-        }
-    });
-
-    //calculate slider size
-    $("#rangeSlider").width(function () {
-        return $("#pac-input").width() / 2.2;
-    });
-    //select all language initially
-    $('.selectpicker #language').selectpicker('selectAll');
-    //init tagsinput
-    $('#topics').tagsinput({
-        maxTags: 3,
-        maxChars: 10
-    });
-
+    $.getScript("resources/plugins/infobox.js");
+     $.getScript("resources/plugins/v3_eshapes.js");
     getListenPlaceList();
-
     //init map
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(45.42929873257377, -75.38818359375),
@@ -694,7 +653,59 @@ $(function () {
 
 
     });
+}
 
 
+$(function () {
+    //加载地图的js
+    $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAC01nTmNbpdoTQ5eu5v9vs1PpVb-Pbpq4&language=en&libraries=geometry,places")
+        .done(function () {
+            console.log("Google Map Works well");
+
+        }).fail(function () {
+            console.log("Change to the Chinese Server");
+            $.getScript("http://ditu.google.cn/maps/api/js?sensor=false&language=en&libraries=geometry,places&key=AIzaSyAC01nTmNbpdoTQ5eu5v9vs1PpVb-Pbpq4")
+        }).always(function () {
+            console.log("Map Loaded.");
+            init_map_after_load();
+        });
+    //initialization of some elements 
+    if ($(window).width() < 768) {
+        $("footer").hide();
+        $("#header-logo").hide();
+        $("#titleForPhone").show();
+        $('#titleForPhone').css('margin-left', $(window).width() / 2 - 82);
+        $('#map-div').css('height', ($(window).height() - $(".main-header").height()));
+    } else {
+        $("footer").show();
+        $("#header-logo").show();
+        $("#titleForPhone").hide();
+        $('#map-div').css('height', ($(window).height() - $(".main-header").height() - 51));
+    }
+
+
+    $("#rangeSlider").slider({
+        min: 1000,
+        max: 20000,
+        step: 1000,
+        value: 10000,
+        handle: 'square',
+        tooltip: 'show',
+        formatter: function (value) {
+            return 'Current range: ' + value + ' meters';
+        }
+    });
+
+    //calculate slider size
+    $("#rangeSlider").width(function () {
+        return $("#pac-input").width() / 2.2;
+    });
+    //select all language initially
+    $('.selectpicker #language').selectpicker('selectAll');
+    //init tagsinput
+    $('#topics').tagsinput({
+        maxTags: 3,
+        maxChars: 10
+    });
 
 });

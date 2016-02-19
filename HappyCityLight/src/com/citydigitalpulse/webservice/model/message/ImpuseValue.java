@@ -1,3 +1,13 @@
+/** 
+ * Copyright (C) 2016 City Digital Pulse - All Rights Reserved
+ *  
+ * Author: Zhongli Li
+ *  
+ * Design: Zhongli Li and Shiai Zhu
+ *  
+ * Concept and supervision Abdulmotaleb El Saddik
+ *
+ */
 package com.citydigitalpulse.webservice.model.message;
 
 import com.citydigitalpulse.webservice.model.collector.LocArea;
@@ -13,11 +23,51 @@ public class ImpuseValue {
 	private int positive_num;
 	private int negative_num;
 	private int neutral_num;
-	private int sun_num;
+	private int unknown_num;
+	private int sum_num;
 	private double impuse_value;
-	private LocArea area;
-	private double center_location_lat;
-	private double center_location_lan;
+
+	public ImpuseValue() {
+		super();
+		this.timestamp = 0;
+		this.positive_num = 0;
+		this.negative_num = 0;
+		this.neutral_num = 0;
+		this.unknown_num = 0;
+		this.sum_num = 0;
+		this.impuse_value = 0;
+	}
+
+	public ImpuseValue(long time) {
+		this();
+		this.timestamp = time;
+	}
+
+	public void addNewValue(String emotion) {
+		if (emotion == null) {
+			this.unknown_num += 1;
+		} else if ("positive".equals(emotion.toLowerCase())) {
+			this.positive_num += 1;
+		} else if ("neutral".equals(emotion.toLowerCase())) {
+			this.neutral_num += 1;
+		} else if ("negative".equals(emotion.toLowerCase())) {
+			this.negative_num += 1;
+		} else {
+			// unknown
+			this.unknown_num += 1;
+		}
+		this.sum_num += 1;
+		updateImpuse_value();
+	}
+
+	public void updateImpuse_value() {
+		int a = this.positive_num;
+		int b = this.neutral_num;
+		int c = this.negative_num;
+		int s = this.sum_num;
+		int u = this.unknown_num;
+		this.impuse_value = (2 * a + b - c) / (double) s;
+	}
 
 	public long getTimestamp() {
 		return timestamp;
@@ -51,12 +101,12 @@ public class ImpuseValue {
 		this.neutral_num = neutral_num;
 	}
 
-	public int getSun_num() {
-		return sun_num;
+	public int getSum_num() {
+		return sum_num;
 	}
 
-	public void setSun_num(int sun_num) {
-		this.sun_num = sun_num;
+	public void setSum_num(int sum_num) {
+		this.sum_num = sum_num;
 	}
 
 	public double getImpuse_value() {
@@ -67,28 +117,12 @@ public class ImpuseValue {
 		this.impuse_value = impuse_value;
 	}
 
-	public LocArea getArea() {
-		return area;
+	public int getUnknown_num() {
+		return unknown_num;
 	}
 
-	public void setArea(LocArea area) {
-		this.area = area;
-	}
-
-	public double getCenter_location_lat() {
-		return center_location_lat;
-	}
-
-	public void setCenter_location_lat(double center_location_lat) {
-		this.center_location_lat = center_location_lat;
-	}
-
-	public double getCenter_location_lan() {
-		return center_location_lan;
-	}
-
-	public void setCenter_location_lan(double center_location_lan) {
-		this.center_location_lan = center_location_lan;
+	public void setUnknown_num(int unknown_num) {
+		this.unknown_num = unknown_num;
 	}
 
 }

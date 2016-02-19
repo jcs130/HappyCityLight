@@ -1,10 +1,22 @@
+/** 
+ * Copyright (C) 2016 City Digital Pulse - All Rights Reserved
+ *  
+ * Author: Zhongli Li
+ *  
+ * Design: Zhongli Li and Shiai Zhu
+ *  
+ * Concept and supervision Abdulmotaleb El Saddik
+ *
+ */
 package com.citydigitalpulse.webservice.dao;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.citydigitalpulse.webservice.model.message.MarkMessageObj;
 import com.citydigitalpulse.webservice.model.message.MarkMsg2Web;
 import com.citydigitalpulse.webservice.model.message.MarkRecordObj;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * 用来从标记数据库中存取消息的方法类
@@ -16,14 +28,16 @@ public interface MarkingMessageDAO {
 	/**
 	 * 获取一条新的待标记信息， 需不需要在提取之后做一个标记防止重复读取？ 需不需要建立一个缓存区，一次性读取若干条消息，然后在等待全部标记完成？
 	 */
-	public ArrayList<MarkMessageObj> getNewMarkingMsg(int limit, String queryOption);
+	public ArrayList<MarkMessageObj> getNewMarkingMsg(int limit,
+			String queryOption);
 
 	/**
 	 * 从缓存区中获取一条数据
 	 * 
 	 * @return
+	 * @throws IOException
 	 */
-	public MarkMsg2Web getOneNewMsg();
+	public MarkMsg2Web getOneNewMsg() throws IOException;
 
 	/**
 	 * 对一条数据标记
@@ -33,7 +47,8 @@ public interface MarkingMessageDAO {
 	 * @param text_emotion
 	 * @param media_emotion
 	 */
-	public void recordForMessage(long user_id, long message_id, String text_emotion, ArrayList<String> media_emotion);
+	public void recordForMessage(long user_id, long message_id,
+			String text_emotion, ArrayList<String> media_emotion);
 
 	/**
 	 * 根据message id 得到message内容
@@ -84,6 +99,7 @@ public interface MarkingMessageDAO {
 
 	/**
 	 * 向数据库中添加新的待标记数据
+	 * 
 	 * @param msg_id
 	 * @param full_msg_id
 	 * @param text

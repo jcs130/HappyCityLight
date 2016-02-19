@@ -1,3 +1,13 @@
+/** 
+ * Copyright (C) 2016 City Digital Pulse - All Rights Reserved
+ *  
+ * Author: Zhongli Li
+ *  
+ * Design: Zhongli Li and Shiai Zhu
+ *  
+ * Concept and supervision Abdulmotaleb El Saddik
+ *
+ */
 package com.citydigitalpulse.webservice.api;
 
 import java.io.IOException;
@@ -27,8 +37,11 @@ import org.glassfish.hk2.utilities.reflection.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import redis.clients.jedis.Jedis;
+
 import com.citydigitalpulse.webservice.dao.UserAccountDAO;
 import com.citydigitalpulse.webservice.dao.impl.MessageSavingDAOimpl;
+import com.citydigitalpulse.webservice.dao.impl.RedisUtil;
 import com.citydigitalpulse.webservice.dao.impl.userAccountDAOimpl;
 import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.message.ImpuseValue;
@@ -50,8 +63,13 @@ public class MessageResource {
 	// 设置缓存数据的大小
 	private static int CACHE_NUMBER = 5000;
 	// 用于存储缓存数据的队列
-	private static ArrayList<StructuredFullMessage> cache_messages = new ArrayList<StructuredFullMessage>(
-			CACHE_NUMBER);
+	// private static ArrayList<StructuredFullMessage> cache_messagess = new
+	// ArrayList<StructuredFullMessage>(
+	// CACHE_NUMBER);
+	// 计划用全局缓存数据库代替
+	private String UPLOAD_CACHE_KEY = "UploadStructuredMessageTemp";// 先进后出
+	private String TAGGED_CACHE_KEY = "TaggedStructuredMessageTemp";// 先进后出
+	ObjectMapper mapper = new ObjectMapper();
 	// 监听城市列表
 	private static ArrayList<String> streamPlaceNames = new ArrayList<String>();
 	// 保存统计查询的历史数据，以后可以存到数据库中永久保存
@@ -117,7 +135,7 @@ public class MessageResource {
 		ResMsg res = new ResMsg();
 		try {
 			if (!token.equals("Imagoodboy")) {
-				System.out.println(token);
+				// System.out.println(token);
 				res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 				res.setType(Response.Status.BAD_REQUEST.name());
 				res.setMessage("Wrong Token.");
@@ -152,21 +170,29 @@ public class MessageResource {
 			msg.setReplay_to(replay_to);
 			msg.setLang(lang);
 			msg.setMessage_from(message_from);
-			// 将该信息保存到缓存队列中
-			if (cache_messages.size() < CACHE_NUMBER) {
-				// 如果缓存大小小于规定值，则直接存储
-				cache_messages.add(msg);
-				System.out.println(cache_messages.size());
+			Jedis cacheDB = RedisUtil.getJedis();
+			if (cacheDB.exists(UPLOAD_CACHE_KEY)) {
+				// 将该信息保存到缓存队列中
+				if (cacheDB.llen(UPLOAD_CACHE_KEY) < 20) {
+					// 如果缓存大小小于规定值，则直接存储
+					cacheDB.lpush(UPLOAD_CACHE_KEY,
+							mapper.writeValueAsString(msg));
+				} else {
+					// 移除队列头部的元素，然后增加新元素
+					cacheDB.rpop(UPLOAD_CACHE_KEY);
+					cacheDB.lpush(UPLOAD_CACHE_KEY,
+							mapper.writeValueAsString(msg));
+				}
 			} else {
-				// 移除队列头部的元素，然后增加新元素
-				cache_messages.remove(0);
-				cache_messages.add(msg);
+				cacheDB.lpush(UPLOAD_CACHE_KEY, mapper.writeValueAsString(msg));
 			}
+
+			RedisUtil.returnResource(cacheDB);
 			// 将该数据存储到数据库?
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());
 			res.setMessage("Upload Success.");
-			System.out.println(msg.getText());
+			// System.out.println(msg.getText());
 			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -202,14 +228,13 @@ public class MessageResource {
 
 			// 检查客户端Token
 			if (!token.equals("ArashiArashiFordream")) {
-				System.out.println(token);
+				// System.out.println(token);
 				res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 				res.setType(Response.Status.BAD_REQUEST.name());
 				res.setMessage("Token is wrong.");
 				return res;
 			}
 			ArrayList<LocArea> location_area = null;
-			System.out.println(cache_messages.size());
 			ObjectMapper mapper = new ObjectMapper();
 			if (!"".equals(location_area_json)) {
 				// 将json转换为区域数组
@@ -220,35 +245,89 @@ public class MessageResource {
 				// 无区域信息
 			}
 			// 得到所有的查询条件并且返回最新的符合条件的数据
-			ArrayList<StructuredFullMessage> cache = new ArrayList<StructuredFullMessage>(
-					CACHE_NUMBER);
 			ArrayList<StructuredFullMessage> list = new ArrayList<StructuredFullMessage>();
+			ArrayList<StructuredFullMessage> history_list = new ArrayList<StructuredFullMessage>();
+			Jedis cacheDB = RedisUtil.getJedis();
+			List<String> cache = new ArrayList<String>();
+			int begain_num = 0;
 			StructuredFullMessage temp;
-			cache.addAll(cache_messages);
+			// cache.addAll(cacheDB.lrange(UPLOAD_CACHE_KEY, 0, -1));
+			// System.out.println("Cache size=" + cache.size());
 			ArrayList<Long> skips = Tools.buildLongListFromString(skip_num_ids);
-			for (int i = cache.size() - 1; i > 0; i--) {
-				temp = cache.get(i);
-				if (!skips.contains(temp.getNum_id())) {
-					// if (isMatch(temp, message_from, keyword, city,
-					// location_lat_min, location_lat_max,
-					// location_lan_min, location_lan_max, lang)) {
-					if (isMatch(temp, message_from, keyword, location_area,
-							lang)) {
+			while (cacheDB.llen(UPLOAD_CACHE_KEY) > 0) {
+				temp = mapper.readValue(cacheDB.rpop(UPLOAD_CACHE_KEY),
+						StructuredFullMessage.class);
+				if (isMatch(temp, message_from, keyword, location_area, lang)) {
+					// 检测情绪，若正常则返回并且存储到缓存中
+					if (setEmotion(temp)) {
 						list.add(temp);
 						if (list.size() >= limit) {
-							break;
+							for (int i = list.size(); i > 0; i--) {
+								cacheDB.lpush(TAGGED_CACHE_KEY, mapper
+										.writeValueAsString(list.get(i - 1)));
+							}
+							// System.out.println("return:" + list.size());
+							RedisUtil.returnResource(cacheDB);
+							res.setObj(list);
+							res.setCode(Response.Status.OK.getStatusCode());
+							res.setType(Response.Status.OK.name());
+							res.setMessage("Get latest Message Success.");
+							return res;
 						}
 					}
 				}
 			}
-			// Update the emotion of the messages
-			// 更新情感标记
-			updateEmotions(list);
+			while ((list.size() + history_list.size()) < limit) {
+				// 将历史数据加入
+				cache.addAll(cacheDB.lrange(TAGGED_CACHE_KEY, begain_num,
+						begain_num + limit + skips.size()));
+				for (int i = 0; i < cache.size(); i++) {
+					temp = mapper.readValue(cache.get(i),
+							StructuredFullMessage.class);
+					// System.out.println(temp);
+					if (!skips.contains(temp.getNum_id())) {
+						// if (isMatch(temp, message_from, keyword, city,
+						// location_lat_min, location_lat_max,
+						// location_lan_min, location_lan_max, lang)) {
+						// System.out.println("skip:" + skips
+						// + "temp.getNum_id():" + temp.getNum_id());
+						if (isMatch(temp, message_from, keyword, location_area,
+								lang)) {
+							history_list.add(temp);
+							if ((list.size() + history_list.size()) >= limit) {
+								break;
+							}
+						}
+					} else {
+						// System.out.println("skip");
+					}
+				}
+				begain_num += limit + skips.size();
+			}
+			// 将新标记的加入内存数据库,反着加进去
+			for (int i = list.size(); i > 0; i--) {
+				if (cacheDB.llen(TAGGED_CACHE_KEY) < CACHE_NUMBER) {
+					// 如果缓存大小小于规定值，则直接存储
+					cacheDB.lpush(TAGGED_CACHE_KEY,
+							mapper.writeValueAsString(list.get(i - 1)));
+				} else {
+					// 移除队列头部的元素，然后增加新元素
+					cacheDB.rpop(TAGGED_CACHE_KEY);
+					cacheDB.lpush(TAGGED_CACHE_KEY,
+							mapper.writeValueAsString(list.get(i - 1)));
+				}
+
+			}
+			// 合并新老记录
+			list.addAll(history_list);
+			RedisUtil.returnResource(cacheDB);
+			System.out.println("return:" + list.size());
 			res.setObj(list);
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());
 			res.setMessage("Get latest Message Success.");
 			return res;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.printThrowable(e);
@@ -267,14 +346,14 @@ public class MessageResource {
 		}
 		// 语言，传入对象为列表
 		if (!"".equals(lang) && !"null".equals(lang)) {
-			System.out.println("lang: " + lang);
+			// System.out.println("lang: " + lang);
 			if (!isEquals(lang.trim().split(","), temp.getLang())) {
 				return false;
 			}
 		}
 		// 消息来源，传入对象为列表
 		if (!"".equals(message_from) && !"null".equals(message_from)) {
-			System.out.println("message_from" + message_from);
+			// System.out.println("message_from" + message_from);
 			if (!isEquals(message_from.trim().split(","),
 					temp.getMessage_from())) {
 				return false;
@@ -307,32 +386,41 @@ public class MessageResource {
 	}
 
 	private void updateEmotions(ArrayList<StructuredFullMessage> list) {
-		String emotion_text = "";
 		for (int i = 0; i < list.size(); i++) {
 			StructuredFullMessage temp = list.get(i);
 			if ("".equals(temp.getEmotion_text())) {
-				// 如果没有感情数据则通过API获取并且将情感标记存入数据库
-				if (temp.getLang().equals("en")) {
-					try {
-						emotion_text = getTextEmotion(temp.getText());
-						temp.setEmotion_text(emotion_text);
-						// 将情感标记存入数据库
-						msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
-					} catch (XPathExpressionException | IOException
-							| SAXException | ParserConfigurationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						// 临时设置为中性
-						temp.setEmotion_text("neutral");
-					}
-				} else {
-					// 不是英语调用其他方法
-					// 临时设置为中性
-					temp.setEmotion_text("neutral");
-				}
+				setEmotion(temp);
 			}
 		}
 
+	}
+
+	private boolean setEmotion(StructuredFullMessage temp) {
+		// 如果没有感情数据则通过API获取并且将情感标记存入数据库
+		if (temp.getLang().equals("en")) {
+			try {
+				String emotion_text = getTextEmotion(temp.getText());
+				temp.setEmotion_text(emotion_text);
+				// 将情感标记存入数据库
+				msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
+				// 更新缓存中的数据
+				return true;
+			} catch (XPathExpressionException | IOException | SAXException
+					| ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				// 临时设置为未知
+				temp.setEmotion_text("unknown");
+				// temp.setEmotion_text("neutral");
+				return false;
+			}
+		} else {
+			// 不是英语调用其他方法
+			// 临时设置为未知
+			temp.setEmotion_text("unknown");
+			// temp.setEmotion_text("neutral");
+			return false;
+		}
 	}
 
 	private String getTextEmotion(String text) throws XPathExpressionException,
@@ -342,7 +430,7 @@ public class MessageResource {
 		AlchemyAPI alchemyObj = AlchemyAPI
 				.GetInstanceFromString("b232c9bbb50818d45e1ecd2f14ea0bc47bdea8d1");
 		Document doc = alchemyObj.TextGetTextSentiment(text);
-		System.out.println(getStringFromDocument(doc));
+		// System.out.println(getStringFromDocument(doc));
 		// 使用 DOM解析返回的XML文档
 		emotion = doc.getElementsByTagName("type").item(0).getTextContent();
 		if (emotion.equals("neutral")) {
@@ -460,6 +548,7 @@ public class MessageResource {
 			option.setLangs(lang);
 			option.setLocation_area_json(location_area_json);
 			option.setMessage_sources(message_from);
+			option.setKeywords(keyword);
 			option.setPlace_name(place_name);
 			option.setTime_start(time_start);
 			option.setTime_end(time_end);
@@ -480,13 +569,13 @@ public class MessageResource {
 				}
 			}
 			if (!"".equals(message_from)) {
-				String[] temp = lang.split(",");
+				String[] temp = message_from.split(",");
 				for (int i = 0; i < temp.length; i++) {
 					message_sources.add(temp[i].toLowerCase());
 				}
 			}
 			if (!"".equals(keyword)) {
-				String[] temp = lang.split(",");
+				String[] temp = keyword.split(",");
 				for (int i = 0; i < temp.length; i++) {
 					keyword_list.add(temp[i].toLowerCase());
 				}
@@ -497,9 +586,12 @@ public class MessageResource {
 				if (auery_history.containsKey(option)) {
 					res.setObj(auery_history.get(option));
 				} else {
-					res.setObj(msgSav.getFilteredMessages(time_start, time_end,
-							place_name, location_area, langs, message_sources,
-							true, keyword_list));
+					ArrayList<StructuredFullMessage> queryResult = msgSav
+							.getFilteredMessages(time_start, time_end,
+									place_name, location_area, langs,
+									message_sources, true, keyword_list);
+					auery_history.put(option, queryResult);
+					res.setObj(queryResult);
 				}
 				// 返回有具体坐标的消息列表
 				res.setCode(Response.Status.OK.getStatusCode());
@@ -512,9 +604,12 @@ public class MessageResource {
 				if (auery_history.containsKey(option)) {
 					res.setObj(auery_history.get(option));
 				} else {
-					res.setObj(getStatisticalData(msgSav.getFilteredMessages(
-							time_start, time_end, place_name, location_area,
-							langs, message_sources, false, keyword_list)));
+					ArrayList<StructuredFullMessage> queryResult = msgSav
+							.getFilteredMessages(time_start, time_end,
+									place_name, location_area, langs,
+									message_sources, false, keyword_list);
+					auery_history.put(option, queryResult);
+					res.setObj(queryResult);
 				}
 				// 返回数据
 				res.setCode(Response.Status.OK.getStatusCode());
@@ -539,9 +634,97 @@ public class MessageResource {
 	 * @return
 	 */
 	private ArrayList<ImpuseValue> getStatisticalData(
-			ArrayList<StructuredFullMessage> filteredMessages) {
-		// TODO Auto-generated method stub
-		return null;
+			ArrayList<StructuredFullMessage> filteredMessages, long time_start,
+			long time_end, long detTime) {
+		int resSize = (int) Math.ceil((time_end - time_start)
+				/ (double) detTime);
+		ArrayList<ImpuseValue> res = new ArrayList<ImpuseValue>(resSize);
+		System.out.println("result size:" + resSize);
+		// 数列初始化
+		for (int i = 0; i < resSize; i++) {
+			res.add(new ImpuseValue());
+		}
+		for (int i = 0; i < filteredMessages.size(); i++) {
+			StructuredFullMessage temp = filteredMessages.get(i);
+			// 取余数得到在第几个小时
+			int num = (int) ((temp.getCreat_at() - time_start) / detTime);
+			// if (res.get(num) == null) {
+			// res.set(num, new ImpuseValue(time_start + num * detTime));
+			// }
+			if (res.get(num).getTimestamp() == 0) {
+				res.get(num).setTimestamp(time_start + num * detTime);
+			}
+			// 根据情绪累加计数器
+			res.get(num).addNewValue(temp.getEmotion_text());
+		}
+		return res;
+	}
+
+	// 从数据库中获得按照指定要求筛选的数据
+	@GET
+	@Path("/getfilteredresult")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public ResMsg getFilteredResult(
+			@QueryParam("userID") long userID,
+			@QueryParam("token") @DefaultValue("") String token,
+			@QueryParam("message_from") @DefaultValue("") String message_from,
+			@QueryParam("place_name") @DefaultValue("") String place_name,
+			@QueryParam("keyword") @DefaultValue("") String keyword,
+			@QueryParam("zoom_level") @DefaultValue("10") int zoom_level,
+			@QueryParam("unit") @DefaultValue("hour") String unit,
+			@QueryParam("time_start") @DefaultValue("0") long time_start,
+			@QueryParam("time_end") @DefaultValue("0") long time_end,
+			@QueryParam("location_areas") @DefaultValue("") String location_area_json,
+			@QueryParam("lang") @DefaultValue("") String lang) {
+		ResMsg res = new ResMsg();
+		try {
+			if (!userAccountDAO.tokenCheck(userID, token)) {
+				res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+				res.setType(Response.Status.BAD_REQUEST.name());
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			// 检察权限,若权限不足则返回错误信息
+			if (!userAccountDAO.getUserRolesByUserId(userID).contains(
+					new Role(RequreRole))) {
+				res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+				res.setType(Response.Status.BAD_REQUEST.name());
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			// 根据缩放级别判断返回什么信息
+			res = getFilteredData(userID, token, message_from, place_name,
+					keyword, zoom_level, time_start, time_end,
+					location_area_json, lang);
+			if (res.getCode() != Response.Status.OK.getStatusCode()) {
+				System.out.println("Error in querys");
+				return res;
+			} else {
+				ArrayList<StructuredFullMessage> queryResult = (ArrayList<StructuredFullMessage>) res
+						.getObj();
+				// 间隔的毫秒数
+				long detTime = 3600000;
+				if (unit.equals("hour")) {
+
+				} else if (unit.equals("day")) {
+					detTime = detTime * 24;
+				} else {
+
+				}
+				res.setObj(getStatisticalData(queryResult, time_start,
+						time_end, detTime));
+				res.setMessage("Get the Result Success.");
+				return res;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			res.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+			res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
+			res.setMessage(e.getLocalizedMessage());
+			return res;
+		}
 	}
 
 	public static ArrayList<String> getStreamPlaceNames() {

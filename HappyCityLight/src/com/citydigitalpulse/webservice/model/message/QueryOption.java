@@ -1,3 +1,13 @@
+/** 
+ * Copyright (C) 2016 City Digital Pulse - All Rights Reserved
+ *  
+ * Author: Zhongli Li
+ *  
+ * Design: Zhongli Li and Shiai Zhu
+ *  
+ * Concept and supervision Abdulmotaleb El Saddik
+ *
+ */
 package com.citydigitalpulse.webservice.model.message;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,7 +21,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class QueryOption {
 	private long time_start, time_end;
 	private String place_name;
-	private String location_area_json, langs, message_sources;
+	private String location_area_json, langs, message_sources, keywords;
 	private boolean is_true_location;
 
 	public long getTime_start() {
@@ -86,6 +96,7 @@ public class QueryOption {
 				&& rhs.getTime_end() == this.getTime_end()
 				&& rhs.getPlace_name().equals(this.getPlace_name())
 				&& rhs.getMessage_sources().equals(this.getMessage_sources())
+				&& rhs.getKeywords().equals(this.getKeywords())
 				&& rhs.is_true_location == this.is_true_location) {
 			return true;
 		} else {
@@ -100,7 +111,15 @@ public class QueryOption {
 					// if deriving: appendSuper(super.hashCode()).
 				append(time_start).append(time_end).append(location_area_json)
 				.append(message_sources).append(place_name).append(langs)
-				.append(is_true_location).toHashCode();
+				.append(keywords).append(is_true_location).toHashCode();
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
 	}
 
 }
