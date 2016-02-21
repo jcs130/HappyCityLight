@@ -70,8 +70,8 @@ public class MySQLHelper_Save implements DataSource {
 	public Connection getConnection(String username, String password)
 			throws SQLException {
 		// TODO Auto-generated method stub
-		return DriverManager.getConnection(ServerConfig.TRAINING_DATABASE_URL,
-				username, password);// 获取连接
+		return DriverManager.getConnection(
+				ServerConfig.MESSAGE_SAVING_DATABASE_URL, username, password);// 获取连接
 	}
 
 	@Override
@@ -82,7 +82,8 @@ public class MySQLHelper_Save implements DataSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}// 指定连接类型
-		return DriverManager.getConnection(ServerConfig.MESSAGE_SAVING_DATABASE_URL,
+		return DriverManager.getConnection(
+				ServerConfig.MESSAGE_SAVING_DATABASE_URL,
 				ServerConfig.MESSAGE_SAVING_DATABASE_USER_NAME,
 				ServerConfig.MESSAGE_SAVING_DATABASE_USER_PASSWORD);// 获取连接
 	}

@@ -10,28 +10,44 @@
  */
 package com.citydigitalpulse.collector.TwitterGetter.model;
 
-
 /**
- * 地图上的�?
  * 
- * @author John
+ * @author Zhongli Li
  *
  */
 public class LocPoint {
 	private double lat;
-	private double lan;
+	private double lng;
 
-	public LocPoint(double lat, double lan) {
-		this.lat = lat;
-		this.lan = lan;
+	/**
+	 * 
+	 */
+	public LocPoint() {
+		super();
+		this.lat = 0;
+		this.lng = 0;
+	}
+
+	public LocPoint(double lat, double lng) {
+		this();
+		this.setLat(lat);
+		this.setLng(lng);
 	}
 
 	public double getLat() {
 		return lat;
 	}
 
-	public double getLan() {
-		return lan;
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
 	}
 
 }

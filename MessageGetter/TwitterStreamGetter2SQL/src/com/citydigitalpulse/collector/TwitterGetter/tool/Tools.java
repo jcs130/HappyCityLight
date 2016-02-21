@@ -301,7 +301,7 @@ public class Tools {
 
 		// System.out.println("8");
 		postMethod.addParameter("media_types",
-				buildStringFromList(msg.getMedia_type()));
+				buildStringFromList(msg.getMedia_types()));
 		// System.out.println("9");
 		postMethod.addParameter("media_urls",
 				buildStringFromList(msg.getMedia_urls()));

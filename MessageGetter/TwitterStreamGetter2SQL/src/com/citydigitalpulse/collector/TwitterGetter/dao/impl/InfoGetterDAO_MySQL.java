@@ -78,8 +78,8 @@ public class InfoGetterDAO_MySQL implements InfoGetterDAO {
 	@Override
 	public List<RegInfo> getRegInfo(int type) {
 		// 根据type获取大区域的信息
-		String sqlString = "SELECT * FROM regnames where streamstate =" + type
-				+ ";";
+		String sqlString = "SELECT regname, regid FROM regnames where streamstate ="
+				+ type + ";";
 		ArrayList<RegInfo> result = new ArrayList<RegInfo>();
 		// 查询数据库，获取结果
 		Connection conn = null;

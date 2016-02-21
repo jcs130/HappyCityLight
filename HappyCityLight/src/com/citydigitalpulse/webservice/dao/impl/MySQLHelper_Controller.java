@@ -73,7 +73,8 @@ public class MySQLHelper_Controller implements DataSource {
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return DriverManager.getConnection(
-				ServerConfig.WEB_SERVER_DATABASE_URL, username, password);// 获取连接
+				ServerConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_URL, username,
+				password);// 获取连接
 	}
 
 	@Override

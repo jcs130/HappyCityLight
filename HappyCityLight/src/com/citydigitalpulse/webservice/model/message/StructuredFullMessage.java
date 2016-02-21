@@ -26,8 +26,8 @@ public class StructuredFullMessage {
 	private String raw_id_str = "";
 	// 用户名称
 	private String user_name = "";
-	//用户头像
-	private String profile_image_url="";
+	// 用户头像
+	private String profile_image_url = "";
 	// 创建时间(时间戳)
 	private long creat_at = 0;
 	// 消息内容
@@ -63,6 +63,8 @@ public class StructuredFullMessage {
 	private String message_from = "";
 	// 是否为精确位置
 	private boolean real_location = false;
+	// 时区
+	private int time_zone = 0;
 
 	public StructuredFullMessage() {
 		super();
@@ -260,10 +262,27 @@ public class StructuredFullMessage {
 		this.real_location = real_location;
 	}
 
+	public String getProfile_image_url() {
+		return profile_image_url;
+	}
+
+	public void setProfile_image_url(String profile_image_url) {
+		this.profile_image_url = profile_image_url;
+	}
+
+	public int getTime_zone() {
+		return time_zone;
+	}
+
+	public void setTime_zone(int time_zone) {
+		this.time_zone = time_zone;
+	}
+
 	@Override
 	public String toString() {
 		return "StructuredFullMessage [num_id=" + num_id + ", raw_id_str="
-				+ raw_id_str + ", user_name=" + user_name + ", creat_at="
+				+ raw_id_str + ", user_name=" + user_name
+				+ ", profile_image_url=" + profile_image_url + ", creat_at="
 				+ creat_at + ", text=" + text + ", media_types=" + media_types
 				+ ", media_urls=" + media_urls + ", media_urls_local="
 				+ media_urls_local + ", place_type=" + place_type
@@ -276,15 +295,7 @@ public class StructuredFullMessage {
 				+ ", emotion_text=" + emotion_text + ", emotion_medias="
 				+ emotion_medias + ", emotion_all=" + emotion_all
 				+ ", message_from=" + message_from + ", real_location="
-				+ real_location + "]";
-	}
-
-	public String getProfile_image_url() {
-		return profile_image_url;
-	}
-
-	public void setProfile_image_url(String profile_image_url) {
-		this.profile_image_url = profile_image_url;
+				+ real_location + ", time_zone=" + time_zone + "]";
 	}
 
 }

@@ -42,7 +42,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 			ps.setString(2, msg.getUser_name());
 			ps.setLong(3, msg.getCreat_at());
 			ps.setString(4, msg.getText());
-			ps.setString(5, Tools.buildStringFromList(msg.getMedia_type()));
+			ps.setString(5, Tools.buildStringFromList(msg.getMedia_types()));
 			ps.setString(6, Tools.buildStringFromList(msg.getMedia_urls()));
 			ps.setString(7,
 					Tools.buildStringFromList(msg.getMedia_urls_local()));
@@ -108,7 +108,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 				ps.setString(2, msg.getUser_name());
 				ps.setLong(3, msg.getCreat_at());
 				ps.setString(4, msg.getText());
-				ps.setString(5, Tools.buildStringFromList(msg.getMedia_type()));
+				ps.setString(5, Tools.buildStringFromList(msg.getMedia_types()));
 				ps.setString(6, Tools.buildStringFromList(msg.getMedia_urls()));
 				ps.setString(7,
 						Tools.buildStringFromList(msg.getMedia_urls_local()));

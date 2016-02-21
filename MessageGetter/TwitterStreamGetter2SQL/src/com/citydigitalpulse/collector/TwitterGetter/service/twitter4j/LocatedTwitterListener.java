@@ -230,14 +230,14 @@ public class LocatedTwitterListener implements RawStreamListener {
 							if (msg.getMedia_urls() == null) {
 								msg.setMedia_urls(new ArrayList<String>());
 							}
-							if (msg.getMedia_type() == null) {
-								msg.setMedia_type(new ArrayList<String>());
+							if (msg.getMedia_types() == null) {
+								msg.setMedia_types(new ArrayList<String>());
 							}
 							if (!msg.getMedia_urls().contains(
 									media.getString("media_url"))) {
 								msg.getMedia_urls().add(
 										media.getString("media_url"));
-								msg.getMedia_type()
+								msg.getMedia_types()
 										.add(media.getString("type"));
 							}
 						}
@@ -271,8 +271,8 @@ public class LocatedTwitterListener implements RawStreamListener {
 							if (msg.getMedia_urls() == null) {
 								msg.setMedia_urls(new ArrayList<String>());
 							}
-							if (msg.getMedia_type() == null) {
-								msg.setMedia_type(new ArrayList<String>());
+							if (msg.getMedia_types() == null) {
+								msg.setMedia_types(new ArrayList<String>());
 							}
 							// 获得媒体类型
 							String mediaType = media.getString("type");
@@ -282,7 +282,7 @@ public class LocatedTwitterListener implements RawStreamListener {
 									&& mediaType.equals("photo")) {
 								continue;
 							}
-							msg.getMedia_type().add(mediaType);
+							msg.getMedia_types().add(mediaType);
 							if (mediaType.equals("photo")) {
 								msg.getMedia_urls().add(
 										media.getString("media_url"));

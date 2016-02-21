@@ -50,7 +50,7 @@ import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
 import com.citydigitalpulse.webservice.model.user.Role;
 import com.citydigitalpulse.webservice.tool.Tools;
-import com.citydigitalpulse.webservice.tool.NLPPart.alchemyapi.api.AlchemyAPI;
+import com.citydigitalpulse.webservice.tool.NLPPart.NLPModel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -395,52 +395,75 @@ public class MessageResource {
 
 	}
 
+	/**
+	 * 判断情感
+	 * 
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param temp
+	 * @return
+	 */
 	private boolean setEmotion(StructuredFullMessage temp) {
-		// 如果没有感情数据则通过API获取并且将情感标记存入数据库
-		if (temp.getLang().equals("en")) {
-			try {
-				String emotion_text = getTextEmotion(temp.getText());
-				temp.setEmotion_text(emotion_text);
-				// 将情感标记存入数据库
-				msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
-				// 更新缓存中的数据
-				return true;
-			} catch (XPathExpressionException | IOException | SAXException
-					| ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if ("".equals(temp.getEmotion_text())) {
+			// 如果没有感情数据则通过API获取并且将情感标记存入数据库
+			if (temp.getLang().equals("en")) {
+				try {
+					String emotion_text = NLPModel.getTextEmotion(temp.getText());
+					temp.setEmotion_text(emotion_text);
+					// 将情感标记存入数据库
+					msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
+					// 更新缓存中的数据
+					return true;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					// 临时设置为未知
+					temp.setEmotion_text("unknown");
+					// temp.setEmotion_text("neutral");
+					return false;
+				}
+			} else {
+				// 不是英语调用其他方法
 				// 临时设置为未知
 				temp.setEmotion_text("unknown");
 				// temp.setEmotion_text("neutral");
 				return false;
 			}
+
 		} else {
-			// 不是英语调用其他方法
-			// 临时设置为未知
-			temp.setEmotion_text("unknown");
-			// temp.setEmotion_text("neutral");
-			return false;
+			return true;
 		}
 	}
 
-	private String getTextEmotion(String text) throws XPathExpressionException,
-			IOException, SAXException, ParserConfigurationException {
-		String emotion = "";
-		double score;
-		AlchemyAPI alchemyObj = AlchemyAPI
-				.GetInstanceFromString("b232c9bbb50818d45e1ecd2f14ea0bc47bdea8d1");
-		Document doc = alchemyObj.TextGetTextSentiment(text);
-		// System.out.println(getStringFromDocument(doc));
-		// 使用 DOM解析返回的XML文档
-		emotion = doc.getElementsByTagName("type").item(0).getTextContent();
-		if (emotion.equals("neutral")) {
-			score = 0;
-		} else {
-			score = Double.parseDouble(doc.getElementsByTagName("score")
-					.item(0).getTextContent());
-		}
-		return emotion;
-	}
+	/**
+	 * 使用AlchemyAPI获取情感，免费版本，100条每天
+	 * 
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param text
+	 * @return
+	 * @throws XPathExpressionException
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
+	 */
+	// private String getTextEmotion(String text) throws
+	// XPathExpressionException,
+	// IOException, SAXException, ParserConfigurationException {
+	// String emotion = "";
+	// double score;
+	// AlchemyAPI alchemyObj = AlchemyAPI
+	// .GetInstanceFromString("b232c9bbb50818d45e1ecd2f14ea0bc47bdea8d1");
+	// Document doc = alchemyObj.TextGetTextSentiment(text);
+	// // System.out.println(getStringFromDocument(doc));
+	// // 使用 DOM解析返回的XML文档
+	// emotion = doc.getElementsByTagName("type").item(0).getTextContent();
+	// if (emotion.equals("neutral")) {
+	// score = 0;
+	// } else {
+	// score = Double.parseDouble(doc.getElementsByTagName("score")
+	// .item(0).getTextContent());
+	// }
+	// return emotion;
+	// }
 
 	private static String getStringFromDocument(Document doc) {
 		try {
@@ -671,7 +694,7 @@ public class MessageResource {
 			@QueryParam("place_name") @DefaultValue("") String place_name,
 			@QueryParam("keyword") @DefaultValue("") String keyword,
 			@QueryParam("zoom_level") @DefaultValue("10") int zoom_level,
-			@QueryParam("unit") @DefaultValue("hour") String unit,
+			@QueryParam("unit") @DefaultValue("day") String unit,
 			@QueryParam("time_start") @DefaultValue("0") long time_start,
 			@QueryParam("time_end") @DefaultValue("0") long time_end,
 			@QueryParam("location_areas") @DefaultValue("") String location_area_json,

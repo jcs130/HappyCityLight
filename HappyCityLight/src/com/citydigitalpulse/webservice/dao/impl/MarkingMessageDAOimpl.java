@@ -79,11 +79,14 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 				message.setFull_msg_id(rs.getLong("full_msg_id"));
 				message.setText(rs.getString("text"));
 				message.setMedia_types(Tools.buildListFromString(rs
-						.getString("media_types")));
+						.getString("media_types").replaceAll("[", "")
+						.replaceAll("]", "")));
 				message.setMedia_urls(Tools.buildListFromString(rs
-						.getString("media_urls")));
+						.getString("media_urls").replaceAll("[", "")
+						.replaceAll("]", "")));
 				message.setMedia_urls_local(Tools.buildListFromString(rs
-						.getString("media_urls_local")));
+						.getString("media_urls_local").replaceAll("[", "")
+						.replaceAll("]", "")));
 				message.setLang(rs.getString("lang"));
 				System.out.println(message);
 				res.add(message);
@@ -414,11 +417,14 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 				message.setMsg_id(rs.getLong("msg_id"));
 				message.setText(rs.getString("text"));
 				message.setMedia_urls_local(Tools.buildListFromString(rs
-						.getString("media_urls_local")));
+						.getString("media_urls_local").replaceAll("[", "")
+						.replaceAll("]", "")));
 				message.setMedia_types(Tools.buildListFromString(rs
-						.getString("media_types")));
+						.getString("media_types").replaceAll("[", "")
+						.replaceAll("]", "")));
 				message.setMedia_urls(Tools.buildListFromString(rs
-						.getString("media_urls")));
+						.getString("media_urls").replaceAll("[", "")
+						.replaceAll("]", "")));
 			}
 
 		} catch (SQLException e) {
@@ -476,11 +482,14 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 				// record.setMark_at(sdf.parse(rs.getString("mark_at")));
 				record.setMark_at(new Date(rs.getLong("mark_at")));
 				record.setMedia_types(Tools.buildListFromString(rs
-						.getString("media_types")));
+						.getString("media_types").replaceAll("[", "")
+						.replaceAll("]", "")));
 				record.setMedia_urls(Tools.buildListFromString(rs
-						.getString("media_urls")));
+						.getString("media_urls").replaceAll("[", "")
+						.replaceAll("]", "")));
 				record.setMedia_urls_local(Tools.buildListFromString(rs
-						.getString("media_urls_local")));
+						.getString("media_urls_local").replaceAll("[", "")
+						.replaceAll("]", "")));
 				record.setMsg_id(rs.getLong("msg_id"));
 				record.setRecord_id(rs.getInt("record_id"));
 				record.setText(rs.getString("text"));
