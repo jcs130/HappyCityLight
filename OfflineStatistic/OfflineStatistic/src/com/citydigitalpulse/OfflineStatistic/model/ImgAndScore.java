@@ -63,4 +63,11 @@ public class ImgAndScore {
 		this.cofidence = cofidence;
 	}
 
+	@Override
+	public String toString() {
+		return "ImgAndScore [img_url=" + img_url + ", img_url_local="
+				+ img_url_local + ", emotion=" + emotion + ", cofidence="
+				+ cofidence + "]";
+	}
+
 }

@@ -64,7 +64,8 @@ public class ImpuseValue {
 		int c = this.negative_num;
 		int s = this.sum_num;
 		int u = this.unknown_num;
-		this.impuse_value = (2 * a + b - c) / (double) s;
+		this.impuse_value = a / (double) s * 5 + b / (double) s * 2 + c
+				/ (double) s * -5 + u / (double) s;
 	}
 
 	public long getTimestamp() {
@@ -121,6 +122,15 @@ public class ImpuseValue {
 
 	public void setUnknown_num(int unknown_num) {
 		this.unknown_num = unknown_num;
+	}
+
+	@Override
+	public String toString() {
+		return "ImpuseValue [timestamp=" + timestamp + ", positive_num="
+				+ positive_num + ", negative_num=" + negative_num
+				+ ", neutral_num=" + neutral_num + ", unknown_num="
+				+ unknown_num + ", sum_num=" + sum_num + ", impuse_value="
+				+ impuse_value + "]";
 	}
 
 }

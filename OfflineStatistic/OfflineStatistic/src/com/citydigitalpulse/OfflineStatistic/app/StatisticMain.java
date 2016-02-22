@@ -10,7 +10,6 @@
  */
 package com.citydigitalpulse.OfflineStatistic.app;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,12 +17,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
-
-import weka.filters.unsupervised.attribute.Center;
 
 import com.citydigitalpulse.OfflineStatistic.dao.impl.MySQLHelper_Controller;
 import com.citydigitalpulse.OfflineStatistic.dao.impl.MySQLHelper_Save;
@@ -34,9 +32,7 @@ import com.citydigitalpulse.OfflineStatistic.model.StatiisticsRecord;
 import com.citydigitalpulse.OfflineStatistic.model.StructuredFullMessage;
 import com.citydigitalpulse.OfflineStatistic.tool.NLPModel;
 import com.citydigitalpulse.OfflineStatistic.tool.Tools;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -46,7 +42,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class StatisticMain {
 	private MySQLHelper_Save saveDB;
 	private MySQLHelper_Controller collectorDB;
-	private ObjectMapper mapper;
 
 	public static void main(String[] args) {
 		StatisticMain sm = new StatisticMain();
@@ -56,7 +51,7 @@ public class StatisticMain {
 	private void init() {
 		this.saveDB = new MySQLHelper_Save();
 		this.collectorDB = new MySQLHelper_Controller();
-		mapper = new ObjectMapper();
+		Tools.readSettingFile();
 	}
 
 	/**
@@ -69,20 +64,20 @@ public class StatisticMain {
 		SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy_MM_dd");
 		// 读取数据库 根据时间戳和城市的时区判断具体的日期，并且加入到指定的数据库，数据库的格式为msgsaving-yyyy-mm-dd
 		// 根据ID从小到大筛选过滤
-		int limit = 5000;
-		long start_id = 0;
+		// int limit = 5000;
+		// long start_id = 0;
 		RegInfo tempReg = null;
 		String date_string = "";
 		// 用来记录删除的ID的列表
 		ArrayList<Long> del_list = new ArrayList<Long>();
 		// 用来记录内存中记录统计数据的列表
 		ArrayList<String> inMemeryRecordKey = new ArrayList<String>();
-		// 用来地区统计记录的键值对
+		// 用来地区统计记录的键值对(date_string,(reg_ig,record))
 		HashMap<String, HashMap<Integer, StatiisticsRecord>> record = new HashMap<String, HashMap<Integer, StatiisticsRecord>>();
 		while (true) {
 			// 存储查询结果的列表
 			ArrayList<StructuredFullMessage> queryResult = getFilteredMessages(
-					start_id, limit);
+					AppConfig.START_ID, AppConfig.LIMIT);
 			// 循环列表，更新情感标记，根据不同时间将数据分到不同数据库
 			for (int i = 0; i < queryResult.size(); i++) {
 				StructuredFullMessage temp = queryResult.get(i);
@@ -90,7 +85,6 @@ public class StatisticMain {
 				if (temp.getLang().equals("en")) {
 					temp.setEmotion_text(NLPModel.getTextEmotion(temp.getText()));
 				}
-
 				ArrayList<RegInfo> cotainRegs = getRegInfoByLocation(regList,
 						temp.getQuery_location_latitude(),
 						temp.getQuery_location_langtitude());
@@ -106,7 +100,9 @@ public class StatisticMain {
 					// System.out.println(table_name);
 					// 将数据插入到指定数据库，如果目标数据库不存在则创建
 					if (inMemeryRecordKey.contains(date_string)) {
-						this.insertMessage2Table(table_name, temp);
+						if (j == 0) {
+							this.insertMessage2Table(table_name, temp);
+						}
 						del_list.add(temp.getNum_id());
 					} else {
 						this.createNewSubTable(table_name);
@@ -129,20 +125,26 @@ public class StatisticMain {
 								.addNewRecord(tempReg, temp);
 					} else {
 						// 添加该区域的记录
-						StatiisticsRecord firstRecord = new StatiisticsRecord(date_string);
+						StatiisticsRecord firstRecord = new StatiisticsRecord(
+								date_string);
 						firstRecord.addNewRecord(tempReg, temp);
 						record.get(date_string).put(tempReg.getRegID(),
 								firstRecord);
 					}
 				}
-				start_id = temp.getNum_id();
+				AppConfig.START_ID = temp.getNum_id();
 			}
-			System.out.println("last_id: " + start_id);
-			if (queryResult.size() < limit) {
+			System.out.println("last_id: " + AppConfig.START_ID);
+			Tools.updateStartID();
+			if (queryResult.size() < AppConfig.LIMIT) {
 				break;
 			}
 		}
-
+		// 将剩下的统计数据存入数据库(最后一天的不全)
+		for (int i = 0; i < inMemeryRecordKey.size(); i++) {
+			saveRecord2Database(record.get(inMemeryRecordKey.get(i)));
+			record.remove(inMemeryRecordKey.get(i));
+		}
 	}
 
 	/**
@@ -152,7 +154,87 @@ public class StatisticMain {
 	private void saveRecord2Database(
 			HashMap<Integer, StatiisticsRecord> oneDayResult) {
 		// 将HashMap转化为列表，按照分数排序，再更新相应的Rank值，最后存入数据库中
+		StatiisticsRecord[] resultArray = oneDayResult.values().toArray(
+				new StatiisticsRecord[0]);
+		Arrays.sort(resultArray);
+		insertMutipalRecord(resultArray);
+	}
 
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param resultArray
+	 */
+	private void insertMutipalRecord(StatiisticsRecord[] resultArray) {
+		Connection conn = null;
+		Statement statement = null;
+		StatiisticsRecord record;
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			conn = saveDB.getConnection();
+			// 指定在事物中提交
+			conn.setAutoCommit(false);
+			statement = conn.createStatement();
+			// 循环添加新消息
+			for (int i = 0; i < resultArray.length; i++) {
+				record = resultArray[i];
+				record.sortHotTopics();
+				record.setRank(i + 1);
+				String sqlString = "INSERT INTO statiistics_record (record_key, date_timestamp_ms, local_date, place_id, place_name, place_obj, impuse_value, impuse_obj, rank, hot_topics, message_from, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE impuse_value=?,impuse_obj=?,rank=?,hot_topics=?;";
+				PreparedStatement ps = conn.prepareStatement(sqlString);
+				ps.setString(
+						1,
+						record.getRegInfo().getCountry().toLowerCase()
+								+ ","
+								+ record.getRegInfo().getRegName()
+										.toLowerCase() + ","
+								+ record.getLocal_date() + ","
+								+ record.getLanguage() + ","
+								+ record.getMessage_from());
+				ps.setLong(2, record.getDate_timestamp_ms());
+				ps.setString(3, record.getLocal_date());
+				ps.setLong(4, record.getRegInfo().getRegID());
+				ps.setString(5, record.getRegInfo().getCountry().toLowerCase()
+						+ "," + record.getRegInfo().getRegName().toLowerCase());
+				ps.setString(6, mapper.writeValueAsString(record.getRegInfo()));
+				ps.setDouble(7, record.getImpuse().getImpuse_value());
+				ps.setString(8, mapper.writeValueAsString(record.getImpuse()));
+				ps.setInt(9, record.getRank());
+				ps.setString(10,
+						mapper.writeValueAsString(record.getHot_topics()));
+				ps.setString(11, record.getMessage_from());
+				ps.setString(12, record.getLanguage());
+				ps.setDouble(13, record.getImpuse().getImpuse_value());
+				ps.setString(14, mapper.writeValueAsString(record.getImpuse()));
+				ps.setInt(15, record.getRank());
+				ps.setString(16,
+						mapper.writeValueAsString(record.getHot_topics()));
+				ps.executeUpdate();
+			}
+			// 提交更改
+			conn.commit();
+		} catch (SQLException | JsonProcessingException e) {
+			e.printStackTrace();
+			// // 有错误发生回滚修改
+			// try {
+			// conn.rollback();
+			// } catch (SQLException e1) {
+			// e1.printStackTrace();
+			// throw new RuntimeException(e1);
+			// }
+			// throw new RuntimeException(e);
+		} finally {
+			try {
+				if (statement != null) {
+					statement.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	/**
@@ -166,11 +248,12 @@ public class StatisticMain {
 			double query_location_latitude, double query_location_langtitude) {
 		ArrayList<RegInfo> res = new ArrayList<RegInfo>();
 		for (int i = 0; i < regList.size(); i++) {
+			// System.out.println(regList.get(i).getAreas().size());
 			for (int j = 0; j < regList.get(i).getAreas().size(); j++) {
 				if (query_location_latitude < regList.get(i).getAreas().get(j)
 						.getNorth()
-						&& query_location_langtitude > regList.get(i)
-								.getAreas().get(j).getSouth()
+						&& query_location_latitude > regList.get(i).getAreas()
+								.get(j).getSouth()
 						&& query_location_langtitude < regList.get(i)
 								.getAreas().get(j).getEast()
 						&& query_location_langtitude > regList.get(i)
@@ -182,7 +265,7 @@ public class StatisticMain {
 		return res;
 	}
 
-	public List<RegInfo> getRegInfo(int type) {
+	private List<RegInfo> getRegInfo(int type) {
 		// 根据type获取大区域的信息
 		String sqlString = "SELECT * FROM regnames where streamstate =" + type
 				+ ";";
@@ -202,14 +285,10 @@ public class StatisticMain {
 				reg.setCenter_lat(rs.getDouble("center_lat"));
 				reg.setCenter_lan(rs.getDouble("center_lan"));
 				reg.setTime_zone(rs.getInt("time_zone"));
-				getAreasByReg(reg);
+				reg.setAreas(getAreasByReg(reg));
 				// System.out.println(reg);
 				if (reg.getCenter_lat() == 0 || reg.getCenter_lan() == 0) {
-					List<LocPoint> box_points = mapper.readValue(
-							reg.getBox_points(),
-							new TypeReference<List<LocPoint>>() {
-							});
-					LocPoint center = getCenterPoint(box_points);
+					LocPoint center = getCenterPoint(reg.getAreas());
 					reg.setCenter_lat(center.getLat());
 					reg.setCenter_lan(center.getLng());
 					updateRegCenter(reg.getRegID(), center);
@@ -217,15 +296,6 @@ public class StatisticMain {
 				result.add(reg);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		} finally {
@@ -246,7 +316,7 @@ public class StatisticMain {
 	 * @param center
 	 */
 	private void updateRegCenter(int regID, LocPoint center) {
-		String sqlString = "UPDATE regnames SET center_lat= ? , center_lon = ? WHERE regID=?";
+		String sqlString = "UPDATE regnames SET center_lat= ? , center_lan = ? WHERE regID=?";
 		Connection conn = null;
 		try {
 			conn = collectorDB.getConnection();
@@ -273,19 +343,20 @@ public class StatisticMain {
 	/**
 	 * 
 	 * @Author Zhongli Li Email: lzl19920403@gmail.com
-	 * @param box_points
+	 * @param arrayList
 	 * @return
 	 */
-	private LocPoint getCenterPoint(List<LocPoint> box_points) {
+	private LocPoint getCenterPoint(ArrayList<LocArea> areaList) {
 		LocPoint res = new LocPoint();
 		double lan_sum = 0;
 		double lat_sum = 0;
-		for (int i = 0; i < box_points.size(); i++) {
-			lat_sum += box_points.get(i).getLat();
-			lan_sum += box_points.get(i).getLng();
+		for (int i = 0; i < areaList.size(); i++) {
+			LocArea area = areaList.get(i);
+			lat_sum += (area.getNorth() + area.getSouth()) / 2.0;
+			lan_sum += (area.getWest() + area.getEast()) / 2.0;
 		}
-		res.setLat(lat_sum / (double) box_points.size());
-		res.setLng(lan_sum / (double) box_points.size());
+		res.setLat(lat_sum / (double) areaList.size());
+		res.setLng(lan_sum / (double) areaList.size());
 		return res;
 	}
 
@@ -293,56 +364,51 @@ public class StatisticMain {
 	 * @Author Zhongli Li Email: lzl19920403@gmail.com
 	 * @param reg
 	 */
-	private void getAreasByReg(RegInfo reg) {
-		// 如果列表不为空则清空列表
-		if (reg.getAreas().size() != 0) {
-			reg.getAreas().clear();
-		} else {
-
-			// 先查询regandarea表得到大区域下面的小区与编号
-			ArrayList<Integer> areaIDs = new ArrayList<Integer>();
-			String sqlString = "SELECT * FROM regandarea where regid="
-					+ reg.getRegID() + ";";
-			// 查询数据库，获取结果
-			Connection conn = null;
-			try {
-				conn = collectorDB.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sqlString);
-				ResultSet rs = ps.executeQuery();
+	private ArrayList<LocArea> getAreasByReg(RegInfo reg) {
+		ArrayList<LocArea> areas = new ArrayList<LocArea>();
+		// 先查询regandarea表得到大区域下面的小区与编号
+		ArrayList<Integer> areaIDs = new ArrayList<Integer>();
+		String sqlString = "SELECT * FROM regandarea where regid="
+				+ reg.getRegID() + ";";
+		// 查询数据库，获取结果
+		Connection conn = null;
+		try {
+			conn = collectorDB.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				areaIDs.add(rs.getInt("areaid"));
+			}
+			// 根据编号添加具体的对象
+			for (int i = 0; i < areaIDs.size(); i++) {
+				sqlString = "SELECT * FROM interestareas where areaid="
+						+ areaIDs.get(i) + ";";
+				ps = conn.prepareStatement(sqlString);
+				rs = ps.executeQuery();
 				while (rs.next()) {
-					areaIDs.add(rs.getInt("areaid"));
-				}
-				// 根据编号添加具体的对象
-				for (int i = 0; i < areaIDs.size(); i++) {
-					sqlString = "SELECT * FROM interestareas where areaid="
-							+ areaIDs.get(i) + ";";
-					ps = conn.prepareStatement(sqlString);
-					rs = ps.executeQuery();
-					while (rs.next()) {
-						LocArea loc = new LocArea(areaIDs.get(i),
-								rs.getDouble("north"), rs.getDouble("west"),
-								rs.getDouble("south"), rs.getDouble("east"));
-						// loc.setCenterAndRange(
-						// new LocPoint(rs.getDouble("center_lat"), rs
-						// .getDouble("center_lon")), rs
-						// .getInt("range"));
-						reg.getAreas().add(loc);
-					}
-				}
-
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-
-			} finally {
-				if (conn != null) {
-					try {
-						conn.close();
-					} catch (SQLException e) {
-					}
+					LocArea loc = new LocArea(areaIDs.get(i),
+							rs.getDouble("north"), rs.getDouble("west"),
+							rs.getDouble("south"), rs.getDouble("east"));
+					// loc.setCenterAndRange(
+					// new LocPoint(rs.getDouble("center_lat"), rs
+					// .getDouble("center_lon")), rs
+					// .getInt("range"));
+					areas.add(loc);
 				}
 			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
+		return areas;
+
 	}
 
 	private ArrayList<StructuredFullMessage> getFilteredMessages(long start_id,
@@ -485,13 +551,13 @@ public class StatisticMain {
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+			// throw new RuntimeException(e);
 		} finally {
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				throw new RuntimeException(e);
+				// throw new RuntimeException(e);
 			}
 			if (conn != null) {
 				try {

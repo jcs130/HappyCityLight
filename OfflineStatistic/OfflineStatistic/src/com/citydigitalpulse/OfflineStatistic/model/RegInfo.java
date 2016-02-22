@@ -109,6 +109,10 @@ public class RegInfo {
 		this.center_lat = center_lat;
 	}
 
+	public void setAreas(ArrayList<LocArea> areas) {
+		this.areas = areas;
+	}
+
 	public double getCenter_lan() {
 		return center_lan;
 	}

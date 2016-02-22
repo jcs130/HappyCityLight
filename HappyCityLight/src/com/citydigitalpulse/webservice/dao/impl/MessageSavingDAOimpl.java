@@ -10,6 +10,7 @@
  */
 package com.citydigitalpulse.webservice.dao.impl;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,14 +22,22 @@ import org.glassfish.hk2.utilities.reflection.Logger;
 
 import com.citydigitalpulse.webservice.dao.MessageSavingDAO;
 import com.citydigitalpulse.webservice.model.collector.LocArea;
+import com.citydigitalpulse.webservice.model.collector.RegInfo;
+import com.citydigitalpulse.webservice.model.message.HotTopic;
+import com.citydigitalpulse.webservice.model.message.ImpuseValue;
+import com.citydigitalpulse.webservice.model.message.StatiisticsRecord;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
 import com.citydigitalpulse.webservice.tool.Tools;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MessageSavingDAOimpl implements MessageSavingDAO {
 	private MySQLHelper_Save saveDB;
+	private ObjectMapper mapper;
 
 	public MessageSavingDAOimpl() {
 		this.saveDB = new MySQLHelper_Save();
+		mapper = new ObjectMapper();
 	}
 
 	@Override
@@ -212,6 +221,102 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param record_id
+	 * @return
+	 */
+	public StatiisticsRecord getStatisticRecordByID(long record_id) {
+		// 根据type获取大区域的信息
+		String sqlString = "SELECT * FROM statiistics_record where record_id ="
+				+ record_id + ";";
+		StatiisticsRecord rec = null;
+		// 查询数据库，获取结果
+		Connection conn = null;
+		try {
+			conn = saveDB.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				rec = new StatiisticsRecord();
+				rec.setRecord_id(record_id);
+				rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
+				rec.setLocal_date(rs.getString("local_date"));
+				rec.setLanguage(rs.getString("language"));
+				rec.setMessage_from(rs.getString("message_from"));
+				rec.setRank(rs.getInt("rank"));
+				rec.setImpuse(mapper.readValue(rs.getString("impuse_obj"),
+						ImpuseValue.class));
+				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
+						RegInfo.class));
+				rec.setHot_topics((HotTopic[]) mapper.readValue(
+						rs.getString("hot_topics"),
+						new TypeReference<HotTopic[]>() {
+						}));
+				return rec;
+			}
+		} catch (SQLException | IOException e) {
+			throw new RuntimeException(e);
+
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return rec;
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param record_key
+	 * @return
+	 */
+	public StatiisticsRecord getStatisticRecordByKey(String record_key) {
+		// 根据type获取大区域的信息
+		String sqlString = "SELECT * FROM statiistics_record where record_key = ? ;";
+		StatiisticsRecord rec = null;
+		// 查询数据库，获取结果
+		Connection conn = null;
+		try {
+			conn = saveDB.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ps.setString(1, record_key);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				rec = new StatiisticsRecord();
+				rec.setRecord_id(rs.getLong("record_id"));
+				rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
+				rec.setLocal_date(rs.getString("local_date"));
+				rec.setLanguage(rs.getString("language"));
+				rec.setMessage_from(rs.getString("message_from"));
+				rec.setRank(rs.getInt("rank"));
+				rec.setImpuse(mapper.readValue(rs.getString("impuse_obj"),
+						ImpuseValue.class));
+				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
+						RegInfo.class));
+				rec.setHot_topics((HotTopic[]) mapper.readValue(
+						rs.getString("hot_topics"),
+						new TypeReference<HotTopic[]>() {
+						}));
+				return rec;
+			}
+		} catch (SQLException | IOException e) {
+			throw new RuntimeException(e);
+
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return rec;
 	}
 
 }

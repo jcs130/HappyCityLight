@@ -11,18 +11,16 @@
 package com.citydigitalpulse.OfflineStatistic.model;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author Zhongli Li
  *
  */
-public class HotTopic implements Comparator<HotTopic> {
+public class HotTopic implements Comparable<HotTopic> {
 	private String text;
 	private List<ImgAndScore> images;
-	private double impuse_value;
-	private ImpuseValue impuse_obj;
+	private ImpuseValue impuse;
 	private int count;
 
 	/**
@@ -32,9 +30,13 @@ public class HotTopic implements Comparator<HotTopic> {
 		super();
 		this.text = "";
 		this.images = new ArrayList<ImgAndScore>();
-		this.impuse_value = 0;
-		this.impuse_obj = new ImpuseValue();
+		this.setImpuse(new ImpuseValue());
 		this.count = 0;
+	}
+
+	public HotTopic(String topic) {
+		this();
+		this.text = topic;
 	}
 
 	public String getText() {
@@ -53,22 +55,6 @@ public class HotTopic implements Comparator<HotTopic> {
 		this.images = images;
 	}
 
-	public double getImpuse_value() {
-		return impuse_value;
-	}
-
-	public void setImpuse_value(double impuse_value) {
-		this.impuse_value = impuse_value;
-	}
-
-	public ImpuseValue getImpuse_obj() {
-		return impuse_obj;
-	}
-
-	public void setImpuse_obj(ImpuseValue impuse_obj) {
-		this.impuse_obj = impuse_obj;
-	}
-
 	public int getCount() {
 		return count;
 	}
@@ -77,12 +63,48 @@ public class HotTopic implements Comparator<HotTopic> {
 		this.count = count;
 	}
 
+	public ImpuseValue getImpuse() {
+		return impuse;
+	}
+
+	public void setImpuse(ImpuseValue impuse) {
+		this.impuse = impuse;
+	}
+
+	/**
+	 * 增加一条新记录并统计
+	 * 
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param temp
+	 */
+	public void addNewRecord(StructuredFullMessage temp) {
+		this.count++;
+		this.impuse.addNewValue(temp.getEmotion_text());
+		for (int i = 0; i < temp.getMedia_types().size(); i++) {
+			if (temp.getMedia_types().get(i).equals("photo")) {
+				ImgAndScore imgs = new ImgAndScore();
+				imgs.setImg_url(temp.getMedia_urls().get(i));
+				if (temp.getMedia_urls_local().size() > 0) {
+					imgs.setImg_url_local(temp.getMedia_urls_local().get(i));
+				}
+				this.images.add(imgs);
+			} else {
+				// The Media is not image.
+			}
+		}
+	}
 
 	@Override
-	public int compare(HotTopic o1, HotTopic o2) {
-		int val1 = o1.getCount();
-		int val2 = o2.getCount();
-		return val1 < val2 ? 0 : 1;
+	public int compareTo(HotTopic o) {
+		return (o.getCount() - this.getCount());
 	}
+
+	@Override
+	public String toString() {
+		return "HotTopic [text=" + text + ", images=" + images + ", impuse="
+				+ impuse + ", count=" + count + "]";
+	}
+	
+	
 
 }

@@ -50,4 +50,9 @@ public class LocPoint {
 		this.lng = lng;
 	}
 
+	@Override
+	public String toString() {
+		return "LocPoint [lat=" + lat + ", lng=" + lng + "]";
+	}
+
 }

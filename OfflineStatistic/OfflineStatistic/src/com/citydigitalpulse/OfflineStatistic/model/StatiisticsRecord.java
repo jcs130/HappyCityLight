@@ -10,28 +10,30 @@
  */
 package com.citydigitalpulse.OfflineStatistic.model;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import com.citydigitalpulse.OfflineStatistic.tool.Tools;
 
 /**
  * @author Zhongli Li
  *
  */
-public class StatiisticsRecord implements Comparator<StatiisticsRecord> {
+public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
+	private long record_id;
 	// 标准Unix timestamp
 	private long date_timestamp_ms;
 	// 加上时区之后的日期，方便进行更合理的多城市比较
 	private String local_date;
 	private RegInfo regInfo;
-	private double impuse_value;
-	private ImpuseValue impuse_obj;
+	private ImpuseValue impuse;
 	private int rank;
-	private List<HotTopic> hot_topics;
+	private HotTopic[] hot_topics;
 	private String message_from;
 	private String language;
 	private HashMap<String, HotTopic> temp_topics;
+
 	/**
 	 * 
 	 */
@@ -40,11 +42,9 @@ public class StatiisticsRecord implements Comparator<StatiisticsRecord> {
 		this.date_timestamp_ms = 0;
 		this.local_date = "";
 		this.regInfo = new RegInfo();
-		this.impuse_value = 0;
-		this.impuse_obj = new ImpuseValue();
+		this.setImpuse(new ImpuseValue());
 		this.rank = 0;
-		this.hot_topics = new ArrayList<HotTopic>();
-		this.temp_topics=new HashMap<String, HotTopic>();
+		this.temp_topics = new HashMap<String, HotTopic>();
 		this.message_from = "all";
 		this.language = "all";
 	}
@@ -55,6 +55,22 @@ public class StatiisticsRecord implements Comparator<StatiisticsRecord> {
 	public StatiisticsRecord(String date_string) {
 		this();
 		this.local_date = date_string;
+	}
+
+	public RegInfo getRegInfo() {
+		return regInfo;
+	}
+
+	public void setRegInfo(RegInfo regInfo) {
+		this.regInfo = regInfo;
+	}
+
+	public HotTopic[] getHot_topics() {
+		return hot_topics;
+	}
+
+	public void setHot_topics(HotTopic[] hot_topics) {
+		this.hot_topics = hot_topics;
 	}
 
 	public long getDate_timestamp_ms() {
@@ -89,36 +105,20 @@ public class StatiisticsRecord implements Comparator<StatiisticsRecord> {
 		this.message_from = message_from;
 	}
 
+	public ImpuseValue getImpuse() {
+		return impuse;
+	}
+
+	public void setImpuse(ImpuseValue impuse) {
+		this.impuse = impuse;
+	}
+
 	public String getLanguage() {
 		return language;
 	}
 
 	public void setLanguage(String language) {
 		this.language = language;
-	}
-
-	public List<HotTopic> getHot_topics() {
-		return hot_topics;
-	}
-
-	public void setHot_topics(List<HotTopic> hot_topics) {
-		this.hot_topics = hot_topics;
-	}
-
-	public double getImpuse_value() {
-		return impuse_value;
-	}
-
-	public void setImpuse_value(double impuse_value) {
-		this.impuse_value = impuse_value;
-	}
-
-	public ImpuseValue getImpuse_obj() {
-		return impuse_obj;
-	}
-
-	public void setImpuse_obj(ImpuseValue impuse_obj) {
-		this.impuse_obj = impuse_obj;
 	}
 
 	/**
@@ -135,23 +135,57 @@ public class StatiisticsRecord implements Comparator<StatiisticsRecord> {
 			this.regInfo.setCountry(tempReg.getCountry());
 			this.regInfo.setRegName(tempReg.getRegName());
 			this.regInfo.setTime_zone(tempReg.getTime_zone());
+			this.regInfo.setAreas(tempReg.getAreas());
 		}
 		if (this.date_timestamp_ms == 0) {
 			this.date_timestamp_ms = temp.getCreat_at();
 		}
-		this.impuse_obj.addNewValue(temp.getEmotion_text());
-		this.impuse_value = impuse_obj.getImpuse_value();
-		//如果
+		this.impuse.addNewValue(temp.getEmotion_text());
+		// 如果hashtag不在屏蔽列表中，则统计
+		List<String> filiteredTopic = Tools.hashtagFiliter(temp.getHashtags());
+		for (int i = 0; i < filiteredTopic.size(); i++) {
+			String hashtag = filiteredTopic.get(i);
+			if (temp_topics.containsKey(hashtag)) {
+				temp_topics.get(hashtag).addNewRecord(temp);
+			} else {
+				HotTopic firstTopic = new HotTopic(hashtag);
+				firstTopic.addNewRecord(temp);
+				temp_topics.put(hashtag, firstTopic);
+			}
+		}
+	}
+
+	public void sortHotTopics() {
+		hot_topics = temp_topics.values().toArray(new HotTopic[0]);
+		Arrays.sort(hot_topics);
 	}
 
 	/*
 	 * 实现大小比较
 	 */
 	@Override
-	public int compare(StatiisticsRecord o1, StatiisticsRecord o2) {
-		double val1 = o1.getImpuse_value();
-		double val2 = o2.getImpuse_value();
-		return val1 < val2 ? 0 : 1;
+	public int compareTo(StatiisticsRecord o) {
+		return (int) (o.getImpuse().getImpuse_value() * 1000 - this.impuse
+				.getImpuse_value() * 1000);
+	}
+
+	public long getRecord_id() {
+		return record_id;
+	}
+
+	public void setRecord_id(long record_id) {
+		this.record_id = record_id;
+	}
+
+	@Override
+	public String toString() {
+		return "StatiisticsRecord [record_id=" + record_id
+				+ ", date_timestamp_ms=" + date_timestamp_ms + ", local_date="
+				+ local_date + ", regInfo=" + regInfo + ", impuse=" + impuse
+				+ ", rank=" + rank + ", hot_topics="
+				+ Arrays.toString(hot_topics) + ", message_from="
+				+ message_from + ", language=" + language + ", temp_topics="
+				+ temp_topics + "]";
 	}
 
 }

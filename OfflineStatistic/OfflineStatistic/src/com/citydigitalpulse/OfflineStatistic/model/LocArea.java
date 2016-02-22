@@ -63,4 +63,10 @@ public class LocArea {
 		return locID;
 	}
 
+	@Override
+	public String toString() {
+		return "LocArea [north=" + north + ", south=" + south + ", west="
+				+ west + ", east=" + east + ", locID=" + locID + "]";
+	}
+
 }

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-import com.citydigitalpulse.OfflineStatistic.app.ServerConfig;
+import com.citydigitalpulse.OfflineStatistic.app.AppConfig;
 
 
 public class MySQLHelper_Controller implements DataSource {
@@ -74,7 +74,7 @@ public class MySQLHelper_Controller implements DataSource {
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return DriverManager.getConnection(
-				ServerConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_URL, username, password);// 获取连接
+				AppConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_URL, username, password);// 获取连接
 	}
 
 	@Override
@@ -86,9 +86,9 @@ public class MySQLHelper_Controller implements DataSource {
 			e.printStackTrace();
 		}// 指定连接类型
 		return DriverManager.getConnection(
-				ServerConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_URL,
-				ServerConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_USER_NAME,
-				ServerConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_USER_PASSWORD);// 获取连接
+				AppConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_URL,
+				AppConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_USER_NAME,
+				AppConfig.MESSAGE_GETTER_CONTROLLER_DATABASE_USER_PASSWORD);// 获取连接
 	}
 
 }

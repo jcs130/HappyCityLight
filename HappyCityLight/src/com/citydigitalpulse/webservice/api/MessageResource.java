@@ -47,6 +47,7 @@ import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.message.ImpuseValue;
 import com.citydigitalpulse.webservice.model.message.QueryOption;
 import com.citydigitalpulse.webservice.model.message.ResMsg;
+import com.citydigitalpulse.webservice.model.message.StatiisticsRecord;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
 import com.citydigitalpulse.webservice.model.user.Role;
 import com.citydigitalpulse.webservice.tool.Tools;
@@ -407,7 +408,8 @@ public class MessageResource {
 			// 如果没有感情数据则通过API获取并且将情感标记存入数据库
 			if (temp.getLang().equals("en")) {
 				try {
-					String emotion_text = NLPModel.getTextEmotion(temp.getText());
+					String emotion_text = NLPModel.getTextEmotion(temp
+							.getText());
 					temp.setEmotion_text(emotion_text);
 					// 将情感标记存入数据库
 					msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
@@ -532,7 +534,70 @@ public class MessageResource {
 		return false;
 	}
 
-	// 从数据库中获得按照指定要求筛选的数据
+	@GET
+	@Path("/getonestatisticrecord")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public ResMsg getOneStatisticRecord(@QueryParam("userID") long userID,
+			@QueryParam("token") @DefaultValue("") String token,
+			@QueryParam("record_id") @DefaultValue("0") long record_id,
+			@QueryParam("record_key") @DefaultValue("") String record_key) {
+		ResMsg res = new ResMsg();
+
+		if (!userAccountDAO.tokenCheck(userID, token)) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Token expaired. Please login again.");
+			return res;
+		}
+		// 检察权限,若权限不足则返回错误信息
+		if (!userAccountDAO.getUserRolesByUserId(userID).contains(
+				new Role(RequreRole))) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Primition decline.");
+			return res;
+		}
+		StatiisticsRecord record = null;
+		// 优先根据记录ID查询
+		if (record_id != 0) {
+			record = msgSav.getStatisticRecordByID(record_id);
+		}
+		// 如果没结果则按照ID查询
+		if (record == null && !"".equals(record_key)) {
+			record = msgSav.getStatisticRecordByKey(record_key);
+		}
+		if (record == null) {
+			res.setCode(Response.Status.NOT_FOUND.getStatusCode());
+			res.setType(Response.Status.NOT_FOUND.name());
+			res.setMessage("Record not found");
+			return res;
+		} else {
+			// 返回数据
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Get Record Success.");
+			res.setObj(record);
+			return res;
+		}
+
+	}
+
+	/**
+	 * 从数据库中获得按照指定要求筛选的数据
+	 * 
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param userID
+	 * @param token
+	 * @param message_from
+	 * @param place_name
+	 * @param keyword
+	 * @param zoom_level
+	 * @param time_start
+	 * @param time_end
+	 * @param location_area_json
+	 * @param lang
+	 * @return
+	 */
 	@GET
 	@Path("/getfiltereddata")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -651,7 +716,7 @@ public class MessageResource {
 	}
 
 	/**
-	 * 奖统计好的数据发送回前台
+	 * 将统计好的数据发送回前台
 	 * 
 	 * @param filteredMessages
 	 * @return
