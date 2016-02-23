@@ -11,8 +11,10 @@
 package com.citydigitalpulse.webservice.api;
 
 import java.io.IOException;
-import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,17 +27,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPathExpressionException;
 
 import org.glassfish.hk2.utilities.reflection.Logger;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import redis.clients.jedis.Jedis;
 
@@ -44,15 +37,20 @@ import com.citydigitalpulse.webservice.dao.impl.MessageSavingDAOimpl;
 import com.citydigitalpulse.webservice.dao.impl.RedisUtil;
 import com.citydigitalpulse.webservice.dao.impl.userAccountDAOimpl;
 import com.citydigitalpulse.webservice.model.collector.LocArea;
-import com.citydigitalpulse.webservice.model.message.ImpuseValue;
+import com.citydigitalpulse.webservice.model.message.EmotionObj;
+import com.citydigitalpulse.webservice.model.message.HotTopic;
+import com.citydigitalpulse.webservice.model.message.PulseValue;
 import com.citydigitalpulse.webservice.model.message.QueryOption;
+import com.citydigitalpulse.webservice.model.message.RegStatisticInfo;
 import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.message.StatiisticsRecord;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
 import com.citydigitalpulse.webservice.model.user.Role;
 import com.citydigitalpulse.webservice.tool.Tools;
 import com.citydigitalpulse.webservice.tool.NLPPart.NLPModel;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 //即时显示界面的API
@@ -64,17 +62,43 @@ public class MessageResource {
 	// 设置缓存数据的大小
 	private static int CACHE_NUMBER = 5000;
 	// 用于存储缓存数据的队列
-	// private static ArrayList<StructuredFullMessage> cache_messagess = new
-	// ArrayList<StructuredFullMessage>(
-	// CACHE_NUMBER);
+	private static ArrayList<StructuredFullMessage> cache_messagess = new ArrayList<StructuredFullMessage>(
+			CACHE_NUMBER);
 	// 计划用全局缓存数据库代替
-	private String UPLOAD_CACHE_KEY = "UploadStructuredMessageTemp";// 先进后出
-	private String TAGGED_CACHE_KEY = "TaggedStructuredMessageTemp";// 先进后出
-	ObjectMapper mapper = new ObjectMapper();
+	// private String UPLOAD_CACHE_KEY = "UploadStructuredMessageTemp";// 先进后出
+	private static String TAGGED_CACHE_KEY = "TaggedStructuredMessageTemp";// 先进后出
+	static ObjectMapper mapper = new ObjectMapper();
 	// 监听城市列表
 	private static ArrayList<String> streamPlaceNames = new ArrayList<String>();
 	// 保存统计查询的历史数据，以后可以存到数据库中永久保存
 	private static HashMap<QueryOption, Object> auery_history = new HashMap<QueryOption, Object>();
+
+	static {
+		Jedis cacheDB = RedisUtil.getJedis();
+		// 如果内存无数据，则同步缓存数据库中的数据
+		if (cache_messagess.size() == 0 && cacheDB.llen(TAGGED_CACHE_KEY) > 0) {
+			List<String> cache = cacheDB.lrange(TAGGED_CACHE_KEY, 0, -1);
+			for (int i = 0; i < cache.size(); i++) {
+				try {
+					cache_messagess.add(mapper.readValue(cache.get(i),
+							StructuredFullMessage.class));
+				} catch (JsonParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			System.out.println("Data Loaded.");
+		} else {
+			System.out.println("Have data.");
+		}
+		RedisUtil.returnResource(cacheDB);
+	}
 
 	/**
 	 * 用于从爬虫程序上传最新数据的API
@@ -171,23 +195,38 @@ public class MessageResource {
 			msg.setReplay_to(replay_to);
 			msg.setLang(lang);
 			msg.setMessage_from(message_from);
+			if (msg.getLang().equals("en")) {
+				EmotionObj emotion = NLPModel.getTextEmotion(msg.getText());
+				msg.setEmotion_text(emotion.getEmotion());
+				msg.setEmotion_text_value(emotion.getValue());
+			} else {
+				msg.setEmotion_text("unknown");
+				msg.setEmotion_text_value(0);
+			}
+			// 存入内存
+			if (cache_messagess.size() < CACHE_NUMBER) {
+				cache_messagess.add(msg);
+			} else {
+				cache_messagess.remove(0);
+				cache_messagess.add(msg);
+			}
+			// 将数据存入数据库
 			Jedis cacheDB = RedisUtil.getJedis();
-			if (cacheDB.exists(UPLOAD_CACHE_KEY)) {
+			if (cacheDB.exists(TAGGED_CACHE_KEY)) {
 				// 将该信息保存到缓存队列中
-				if (cacheDB.llen(UPLOAD_CACHE_KEY) < 20) {
+				if (cacheDB.llen(TAGGED_CACHE_KEY) < CACHE_NUMBER) {
 					// 如果缓存大小小于规定值，则直接存储
-					cacheDB.lpush(UPLOAD_CACHE_KEY,
+					cacheDB.rpush(TAGGED_CACHE_KEY,
 							mapper.writeValueAsString(msg));
 				} else {
 					// 移除队列头部的元素，然后增加新元素
-					cacheDB.rpop(UPLOAD_CACHE_KEY);
-					cacheDB.lpush(UPLOAD_CACHE_KEY,
+					cacheDB.lpop(TAGGED_CACHE_KEY);
+					cacheDB.rpush(TAGGED_CACHE_KEY,
 							mapper.writeValueAsString(msg));
 				}
 			} else {
-				cacheDB.lpush(UPLOAD_CACHE_KEY, mapper.writeValueAsString(msg));
+				cacheDB.lpush(TAGGED_CACHE_KEY, mapper.writeValueAsString(msg));
 			}
-
 			RedisUtil.returnResource(cacheDB);
 			// 将该数据存储到数据库?
 			res.setCode(Response.Status.OK.getStatusCode());
@@ -219,14 +258,6 @@ public class MessageResource {
 			@QueryParam("skip_num_ids") @DefaultValue("") String skip_num_ids) {
 		ResMsg res = new ResMsg();
 		try {
-			// System.out.println("message_from:" + message_from + " keyword:"
-			// + keyword + " city:" + city + " location_lat_min:"
-			// + location_lat_min + " location_lat_max:"
-			// + location_lat_max + " location_lan_min:"
-			// + location_lan_min + " location_lan_max:"
-			// + location_lan_max + " lang:" + lang + " limit:" + limit
-			// + " skip_num_ids" + skip_num_ids);
-
 			// 检查客户端Token
 			if (!token.equals("ArashiArashiFordream")) {
 				// System.out.println(token);
@@ -247,81 +278,25 @@ public class MessageResource {
 			}
 			// 得到所有的查询条件并且返回最新的符合条件的数据
 			ArrayList<StructuredFullMessage> list = new ArrayList<StructuredFullMessage>();
-			ArrayList<StructuredFullMessage> history_list = new ArrayList<StructuredFullMessage>();
-			Jedis cacheDB = RedisUtil.getJedis();
-			List<String> cache = new ArrayList<String>();
-			int begain_num = 0;
 			StructuredFullMessage temp;
-			// cache.addAll(cacheDB.lrange(UPLOAD_CACHE_KEY, 0, -1));
-			// System.out.println("Cache size=" + cache.size());
 			ArrayList<Long> skips = Tools.buildLongListFromString(skip_num_ids);
-			while (cacheDB.llen(UPLOAD_CACHE_KEY) > 0) {
-				temp = mapper.readValue(cacheDB.rpop(UPLOAD_CACHE_KEY),
-						StructuredFullMessage.class);
-				if (isMatch(temp, message_from, keyword, location_area, lang)) {
-					// 检测情绪，若正常则返回并且存储到缓存中
-					if (setEmotion(temp)) {
+			for (int i = cache_messagess.size() - 1; i > 0; i--) {
+				temp = cache_messagess.get(i);
+				if (!skips.contains(temp.getNum_id())) {
+					if (isMatch(temp, message_from, keyword, location_area,
+							lang)) {
+						setEmotion(temp);
+						System.out.println("Emotion score:"
+								+ temp.getEmotion_text_value());
 						list.add(temp);
 						if (list.size() >= limit) {
-							for (int i = list.size(); i > 0; i--) {
-								cacheDB.lpush(TAGGED_CACHE_KEY, mapper
-										.writeValueAsString(list.get(i - 1)));
-							}
-							// System.out.println("return:" + list.size());
-							RedisUtil.returnResource(cacheDB);
-							res.setObj(list);
-							res.setCode(Response.Status.OK.getStatusCode());
-							res.setType(Response.Status.OK.name());
-							res.setMessage("Get latest Message Success.");
-							return res;
+							break;
 						}
 					}
-				}
-			}
-			while ((list.size() + history_list.size()) < limit) {
-				// 将历史数据加入
-				cache.addAll(cacheDB.lrange(TAGGED_CACHE_KEY, begain_num,
-						begain_num + limit + skips.size()));
-				for (int i = 0; i < cache.size(); i++) {
-					temp = mapper.readValue(cache.get(i),
-							StructuredFullMessage.class);
-					// System.out.println(temp);
-					if (!skips.contains(temp.getNum_id())) {
-						// if (isMatch(temp, message_from, keyword, city,
-						// location_lat_min, location_lat_max,
-						// location_lan_min, location_lan_max, lang)) {
-						// System.out.println("skip:" + skips
-						// + "temp.getNum_id():" + temp.getNum_id());
-						if (isMatch(temp, message_from, keyword, location_area,
-								lang)) {
-							history_list.add(temp);
-							if ((list.size() + history_list.size()) >= limit) {
-								break;
-							}
-						}
-					} else {
-						// System.out.println("skip");
-					}
-				}
-				begain_num += limit + skips.size();
-			}
-			// 将新标记的加入内存数据库,反着加进去
-			for (int i = list.size(); i > 0; i--) {
-				if (cacheDB.llen(TAGGED_CACHE_KEY) < CACHE_NUMBER) {
-					// 如果缓存大小小于规定值，则直接存储
-					cacheDB.lpush(TAGGED_CACHE_KEY,
-							mapper.writeValueAsString(list.get(i - 1)));
 				} else {
-					// 移除队列头部的元素，然后增加新元素
-					cacheDB.rpop(TAGGED_CACHE_KEY);
-					cacheDB.lpush(TAGGED_CACHE_KEY,
-							mapper.writeValueAsString(list.get(i - 1)));
+					// System.out.println("skip");
 				}
-
 			}
-			// 合并新老记录
-			list.addAll(history_list);
-			RedisUtil.returnResource(cacheDB);
 			System.out.println("return:" + list.size());
 			res.setObj(list);
 			res.setCode(Response.Status.OK.getStatusCode());
@@ -386,53 +361,48 @@ public class MessageResource {
 		return true;
 	}
 
-	private void updateEmotions(ArrayList<StructuredFullMessage> list) {
-		for (int i = 0; i < list.size(); i++) {
-			StructuredFullMessage temp = list.get(i);
-			if ("".equals(temp.getEmotion_text())) {
-				setEmotion(temp);
-			}
-		}
-
-	}
+	// private void updateEmotions(ArrayList<StructuredFullMessage> list) {
+	// for (int i = 0; i < list.size(); i++) {
+	// StructuredFullMessage temp = list.get(i);
+	// if ("".equals(temp.getEmotion_text())) {
+	// setEmotion(temp);
+	// }
+	// }
+	//
+	// }
 
 	/**
-	 * 判断情感
 	 * 
 	 * @Author Zhongli Li Email: lzl19920403@gmail.com
 	 * @param temp
 	 * @return
 	 */
 	private boolean setEmotion(StructuredFullMessage temp) {
-		if ("".equals(temp.getEmotion_text())) {
-			// 如果没有感情数据则通过API获取并且将情感标记存入数据库
-			if (temp.getLang().equals("en")) {
-				try {
-					String emotion_text = NLPModel.getTextEmotion(temp
-							.getText());
-					temp.setEmotion_text(emotion_text);
-					// 将情感标记存入数据库
-					msgSav.updateTextEmotion(temp.getNum_id(), emotion_text);
-					// 更新缓存中的数据
-					return true;
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					// 临时设置为未知
-					temp.setEmotion_text("unknown");
-					// temp.setEmotion_text("neutral");
-					return false;
-				}
-			} else {
-				// 不是英语调用其他方法
+		// 如果没有感情数据则通过API获取并且将情感标记存入数据库
+		if (temp.getLang().equals("en")) {
+			try {
+				EmotionObj emotionObj = NLPModel.getTextEmotion(temp.getText());
+				temp.setEmotion_text(emotionObj.getEmotion());
+				temp.setEmotion_text_value(emotionObj.getValue());
+				// // 将情感标记存入数据库
+				// msgSav.updateTextEmotion(temp.getNum_id(),
+				// 更新缓存中的数据
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
 				// 临时设置为未知
-				temp.setEmotion_text("unknown");
-				// temp.setEmotion_text("neutral");
+				// temp.setEmotion_text("unknown");
+				temp.setEmotion_text_value(0);
+				temp.setEmotion_text("neutral");
 				return false;
 			}
-
 		} else {
-			return true;
+			// 不是英语调用其他方法
+			// 临时设置为未知
+			// temp.setEmotion_text("unknown");
+			temp.setEmotion_text_value(0);
+			temp.setEmotion_text("neutral");
+			return false;
 		}
 	}
 
@@ -467,22 +437,22 @@ public class MessageResource {
 	// return emotion;
 	// }
 
-	private static String getStringFromDocument(Document doc) {
-		try {
-			DOMSource domSource = new DOMSource(doc);
-			StringWriter writer = new StringWriter();
-			StreamResult result = new StreamResult(writer);
-
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer transformer = tf.newTransformer();
-			transformer.transform(domSource, result);
-
-			return writer.toString();
-		} catch (TransformerException ex) {
-			ex.printStackTrace();
-			return null;
-		}
-	}
+	// private static String getStringFromDocument(Document doc) {
+	// try {
+	// DOMSource domSource = new DOMSource(doc);
+	// StringWriter writer = new StringWriter();
+	// StreamResult result = new StreamResult(writer);
+	//
+	// TransformerFactory tf = TransformerFactory.newInstance();
+	// Transformer transformer = tf.newTransformer();
+	// transformer.transform(domSource, result);
+	//
+	// return writer.toString();
+	// } catch (TransformerException ex) {
+	// ex.printStackTrace();
+	// return null;
+	// }
+	// }
 
 	/**
 	 * 两个数组（队列）进行比较
@@ -491,16 +461,16 @@ public class MessageResource {
 	 * @param hashtags
 	 * @return
 	 */
-	private boolean isEquals(String[] split, List<String> dest) {
-		for (int i = 0; i < dest.size(); i++) {
-			for (int j = 0; j < split.length; j++) {
-				if (dest.get(i).toLowerCase().equals(split[j].toLowerCase())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	// private boolean isEquals(String[] split, List<String> dest) {
+	// for (int i = 0; i < dest.size(); i++) {
+	// for (int j = 0; j < split.length; j++) {
+	// if (dest.get(i).toLowerCase().equals(split[j].toLowerCase())) {
+	// return true;
+	// }
+	// }
+	// }
+	// return false;
+	// }
 
 	/**
 	 * 查询数组中是否有某元素
@@ -557,6 +527,12 @@ public class MessageResource {
 			res.setMessage("Primition decline.");
 			return res;
 		}
+		if (record_id == 0 && record_key.equals("")) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Missing Input");
+			return res;
+		}
 		StatiisticsRecord record = null;
 		// 优先根据记录ID查询
 		if (record_id != 0) {
@@ -572,6 +548,15 @@ public class MessageResource {
 			res.setMessage("Record not found");
 			return res;
 		} else {
+			ArrayList<HotTopic> shortList = new ArrayList<HotTopic>();
+			// 缩减关键词列表的长度
+			for (int i = 0; i < record.getHot_topics().length; i++) {
+				shortList.add(record.getHot_topics()[i]);
+				if (i == 20) {
+					break;
+				}
+			}
+			record.setHot_topics(shortList.toArray(new HotTopic[0]));
 			// 返回数据
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());
@@ -579,7 +564,121 @@ public class MessageResource {
 			res.setObj(record);
 			return res;
 		}
+	}
 
+	@GET
+	@Path("/getregionranks")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public ResMsg getRegionRanks(@QueryParam("userID") long userID,
+			@QueryParam("token") @DefaultValue("") String token,
+			@QueryParam("date") @DefaultValue("") String date_str) {
+		ResMsg res = new ResMsg();
+		if (!userAccountDAO.tokenCheck(userID, token)) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Token expaired. Please login again.");
+			return res;
+		}
+		// 检察权限,若权限不足则返回错误信息
+		if (!userAccountDAO.getUserRolesByUserId(userID).contains(
+				new Role(RequreRole))) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Primition decline.");
+			return res;
+		}
+		if (date_str.equals("")) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Missing Date Input, format: yyyy_MM_dd");
+			return res;
+		}
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+			sdf.parse(date_str);
+		} catch (ParseException e) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Date Format Error. format: yyyy_MM_dd");
+			return res;
+		}
+		List<RegStatisticInfo> records = msgSav
+				.getStatisticRecordsByDate(date_str);
+		if (records.size() == 0) {
+			res.setCode(Response.Status.NOT_FOUND.getStatusCode());
+			res.setType(Response.Status.NOT_FOUND.name());
+			res.setMessage("Record not found");
+			return res;
+		} else {
+			// 对数组进行排序
+			RegStatisticInfo[] infoArray = records
+					.toArray(new RegStatisticInfo[0]);
+			Arrays.sort(infoArray);
+			// 返回数据
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Get Record Success.");
+			res.setObj(infoArray);
+			return res;
+		}
+	}
+
+	@GET
+	@Path("/gethistoryinfo")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public ResMsg getHistoryImpiseInfos(@QueryParam("userID") long userID,
+			@QueryParam("token") @DefaultValue("") String token,
+			@QueryParam("place_id") @DefaultValue("") String place_id_str,
+			@QueryParam("date_start") @DefaultValue("") String date_start,
+			@QueryParam("date_end") @DefaultValue("") String date_end) {
+		ResMsg res = new ResMsg();
+		int place_id = 0;
+		if (!userAccountDAO.tokenCheck(userID, token)) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Token expaired. Please login again.");
+			return res;
+		}
+		// 检察权限,若权限不足则返回错误信息
+		if (!userAccountDAO.getUserRolesByUserId(userID).contains(
+				new Role(RequreRole))) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Primition decline.");
+			return res;
+		}
+		if (date_start.equals("") || date_end.equals("")) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Missing Date Input, format: yyyy_MM_dd");
+			return res;
+		}
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+			sdf.parse(date_start);
+			sdf.parse(date_end);
+			place_id = Integer.parseInt(place_id_str);
+		} catch (ParseException e) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Data Format Error. Date format: yyyy_MM_dd");
+			return res;
+		}
+		List<RegStatisticInfo> records = msgSav.getPlaceHistoryInfos(place_id,
+				date_start, date_end);
+		if (records.size() == 0) {
+			res.setCode(Response.Status.NOT_FOUND.getStatusCode());
+			res.setType(Response.Status.NOT_FOUND.name());
+			res.setMessage("Record not found");
+			return res;
+		} else {
+			// 返回数据
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Get Record Success.");
+			res.setObj(records);
+			return res;
+		}
 	}
 
 	/**
@@ -616,6 +715,13 @@ public class MessageResource {
 			@QueryParam("lang") @DefaultValue("") String lang) {
 		ResMsg res = new ResMsg();
 		int max_zoom_level = 10;
+		// 如果缺少参数则返回错误
+		if ("".equals(location_area_json) || time_start == 0 || time_end == 0) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Missing Input Values.");
+			return res;
+		}
 		try {
 			if (!userAccountDAO.tokenCheck(userID, token)) {
 				res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -708,8 +814,8 @@ public class MessageResource {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.printThrowable(e);
-			res.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-			res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
 			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
@@ -721,29 +827,30 @@ public class MessageResource {
 	 * @param filteredMessages
 	 * @return
 	 */
-	private ArrayList<ImpuseValue> getStatisticalData(
+	private ArrayList<PulseValue> getStatisticalData(
 			ArrayList<StructuredFullMessage> filteredMessages, long time_start,
 			long time_end, long detTime) {
 		int resSize = (int) Math.ceil((time_end - time_start)
 				/ (double) detTime);
-		ArrayList<ImpuseValue> res = new ArrayList<ImpuseValue>(resSize);
+		ArrayList<PulseValue> res = new ArrayList<PulseValue>(resSize);
 		System.out.println("result size:" + resSize);
 		// 数列初始化
 		for (int i = 0; i < resSize; i++) {
-			res.add(new ImpuseValue());
+			res.add(new PulseValue());
 		}
 		for (int i = 0; i < filteredMessages.size(); i++) {
 			StructuredFullMessage temp = filteredMessages.get(i);
 			// 取余数得到在第几个小时
 			int num = (int) ((temp.getCreat_at() - time_start) / detTime);
 			// if (res.get(num) == null) {
-			// res.set(num, new ImpuseValue(time_start + num * detTime));
+			// res.set(num, new PulseValue(time_start + num * detTime));
 			// }
 			if (res.get(num).getTimestamp() == 0) {
 				res.get(num).setTimestamp(time_start + num * detTime);
 			}
 			// 根据情绪累加计数器
-			res.get(num).addNewValue(temp.getEmotion_text());
+			res.get(num).addNewValue(temp.getEmotion_text(),
+					temp.getEmotion_text_value());
 		}
 		return res;
 	}
@@ -788,6 +895,7 @@ public class MessageResource {
 				System.out.println("Error in querys");
 				return res;
 			} else {
+				@SuppressWarnings("unchecked")
 				ArrayList<StructuredFullMessage> queryResult = (ArrayList<StructuredFullMessage>) res
 						.getObj();
 				// 间隔的毫秒数

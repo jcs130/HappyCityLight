@@ -20,7 +20,7 @@ import java.util.List;
 public class HotTopic implements Comparable<HotTopic> {
 	private String text;
 	private List<ImgAndScore> images;
-	private ImpuseValue impuse;
+	private PulseValue pulse;
 	private int count;
 
 	/**
@@ -30,7 +30,7 @@ public class HotTopic implements Comparable<HotTopic> {
 		super();
 		this.text = "";
 		this.images = new ArrayList<ImgAndScore>();
-		this.setImpuse(new ImpuseValue());
+		this.setPulse(new PulseValue());
 		this.count = 0;
 	}
 
@@ -63,12 +63,12 @@ public class HotTopic implements Comparable<HotTopic> {
 		this.count = count;
 	}
 
-	public ImpuseValue getImpuse() {
-		return impuse;
+	public PulseValue getPulse() {
+		return pulse;
 	}
 
-	public void setImpuse(ImpuseValue impuse) {
-		this.impuse = impuse;
+	public void setPulse(PulseValue pulse) {
+		this.pulse = pulse;
 	}
 
 	/**
@@ -79,7 +79,8 @@ public class HotTopic implements Comparable<HotTopic> {
 	 */
 	public void addNewRecord(StructuredFullMessage temp) {
 		this.count++;
-		this.impuse.addNewValue(temp.getEmotion_text());
+		this.pulse.addNewValue(temp.getEmotion_text(),
+				temp.getEmotion_text_value());
 		for (int i = 0; i < temp.getMedia_types().size(); i++) {
 			if (temp.getMedia_types().get(i).equals("photo")) {
 				ImgAndScore imgs = new ImgAndScore();
@@ -97,6 +98,12 @@ public class HotTopic implements Comparable<HotTopic> {
 	@Override
 	public int compareTo(HotTopic o) {
 		return (o.getCount() - this.getCount());
+	}
+
+	@Override
+	public String toString() {
+		return "HotTopic [text=" + text + ", images=" + images + ", pulse="
+				+ pulse + ", count=" + count + "]";
 	}
 
 }

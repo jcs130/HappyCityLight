@@ -26,7 +26,7 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 	// 加上时区之后的日期，方便进行更合理的多城市比较
 	private String local_date;
 	private RegInfo regInfo;
-	private ImpuseValue impuse;
+	private PulseValue pulse;
 	private int rank;
 	private HotTopic[] hot_topics;
 	private String message_from;
@@ -41,7 +41,7 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 		this.date_timestamp_ms = 0;
 		this.local_date = "";
 		this.regInfo = new RegInfo();
-		this.setImpuse(new ImpuseValue());
+		this.setPulse(new PulseValue());
 		this.rank = 0;
 		this.temp_topics = new HashMap<String, HotTopic>();
 		this.message_from = "all";
@@ -104,12 +104,12 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 		this.message_from = message_from;
 	}
 
-	public ImpuseValue getImpuse() {
-		return impuse;
+	public PulseValue getPulse() {
+		return pulse;
 	}
 
-	public void setImpuse(ImpuseValue impuse) {
-		this.impuse = impuse;
+	public void setPulse(PulseValue pulse) {
+		this.pulse = pulse;
 	}
 
 	public String getLanguage() {
@@ -130,8 +130,8 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 	 */
 	@Override
 	public int compareTo(StatiisticsRecord o) {
-		return (int) (o.getImpuse().getImpuse_value() * 1000 - this.impuse
-				.getImpuse_value() * 1000);
+		return (int) (o.getPulse().getPulse_value() * 1000 - this.pulse
+				.getPulse_value() * 1000);
 	}
 
 	public long getRecord_id() {

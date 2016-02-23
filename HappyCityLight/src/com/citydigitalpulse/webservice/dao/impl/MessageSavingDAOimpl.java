@@ -15,7 +15,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.glassfish.hk2.utilities.reflection.Logger;
@@ -24,7 +26,8 @@ import com.citydigitalpulse.webservice.dao.MessageSavingDAO;
 import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.collector.RegInfo;
 import com.citydigitalpulse.webservice.model.message.HotTopic;
-import com.citydigitalpulse.webservice.model.message.ImpuseValue;
+import com.citydigitalpulse.webservice.model.message.PulseValue;
+import com.citydigitalpulse.webservice.model.message.RegStatisticInfo;
 import com.citydigitalpulse.webservice.model.message.StatiisticsRecord;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
 import com.citydigitalpulse.webservice.tool.Tools;
@@ -78,71 +81,86 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 			long time_start, long time_end, String place_name,
 			List<LocArea> areas, List<String> lang, List<String> message_from,
 			boolean is_true_location, List<String> keywords) {
-		// and media_type !='[]'
-		String queryOption = buildQueryOption(time_start, time_end, place_name,
-				areas, lang, message_from, is_true_location, keywords);
-		String sqlString = "SELECT * FROM full_message where " + queryOption
-				+ ";";
-		System.out.println(sqlString);
-		Connection conn = null;
-		try {
-			conn = saveDB.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sqlString);
-			ArrayList<StructuredFullMessage> res = new ArrayList<StructuredFullMessage>();
-			StructuredFullMessage msg;
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				msg = new StructuredFullMessage();
-				msg.setNum_id(rs.getLong("num_id"));
-				msg.setRaw_id_str(rs.getString("raw_id_str"));
-				msg.setUser_name(rs.getString("user_name"));
-				msg.setText(rs.getString("text"));
-				msg.setCreat_at(rs.getLong("creat_at"));
-				msg.setEmotion_text(rs.getString("emotion_text"));
-				msg.setMedia_types(Tools.buildListFromString(rs
-						.getString("media_types")));
-				msg.setMedia_urls(Tools.buildListFromString(rs
-						.getString("media_urls")));
-				msg.setMedia_urls_local(Tools.buildListFromString(rs
-						.getString("media_urls_local")));
-				msg.setEmotion_medias(Tools.buildListFromString(rs
-						.getString("emotion_medias")));
-				msg.setEmotion_all(rs.getString("emotion_all"));
-				msg.setPlace_type(rs.getString("place_type"));
-				msg.setPlace_name(rs.getString("place_name"));
-				msg.setPlace_fullname(rs.getString("place_fullname"));
-				msg.setCountry(rs.getString("country"));
-				msg.setProvince(rs.getString("province"));
-				msg.setCity(rs.getString("city"));
-				msg.setQuery_location_latitude(rs
-						.getDouble("query_location_latitude"));
-				msg.setQuery_location_langtitude(rs
-						.getDouble("query_location_langtitude"));
-				msg.setReal_location(rs.getBoolean("is_real_location"));
-				msg.setHashtags(Tools.buildListFromString(rs
-						.getString("hashtags")));
-				msg.setReplay_to(rs.getString("replay_to"));
-				msg.setLang(rs.getString("lang"));
-				msg.setMessage_from(rs.getString("message_from"));
-				res.add(msg);
-			}
-			// System.out.println("Get new Datas");
-			return res;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			Logger.printThrowable(e);
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
+		long dayTime = 3600000 * 24;
+		String table_name = "";
+		String date_string = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+		ArrayList<StructuredFullMessage> res = new ArrayList<StructuredFullMessage>();
+		for (long i = time_start; i <= time_end; i += dayTime) {
+			date_string = sdf.format(new Date(i));
+			table_name = "part_message_" + date_string;
+			// and media_type !='[]'
+			String queryOption = buildQueryOption(time_start, time_end,
+					place_name, areas, lang, message_from, is_true_location,
+					keywords);
+			String sqlString = "SELECT * FROM " + table_name + " where "
+					+ queryOption + ";";
+			System.out.println(sqlString);
+			Connection conn = null;
+			try {
+				conn = saveDB.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sqlString);
+
+				StructuredFullMessage msg;
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {
+					msg = new StructuredFullMessage();
+					msg.setNum_id(rs.getLong("num_id"));
+					msg.setRaw_id_str(rs.getString("raw_id_str"));
+					msg.setUser_name(rs.getString("user_name"));
+					msg.setText(rs.getString("text"));
+					msg.setCreat_at(rs.getLong("creat_at"));
+					msg.setEmotion_text(rs.getString("emotion_text"));
+					msg.setEmotion_text_value(rs
+							.getDouble("emotion_text_value"));
+					msg.setMedia_types(Tools.buildListFromString(rs
+							.getString("media_types")));
+					msg.setMedia_urls(Tools.buildListFromString(rs
+							.getString("media_urls")));
+					msg.setMedia_urls_local(Tools.buildListFromString(rs
+							.getString("media_urls_local")));
+					msg.setEmotion_medias(Tools.buildListFromString(rs
+							.getString("emotion_medias")));
+					msg.setEmotion_all(rs.getString("emotion_all"));
+					msg.setPlace_type(rs.getString("place_type"));
+					msg.setPlace_name(rs.getString("place_name"));
+					msg.setPlace_fullname(rs.getString("place_fullname"));
+					msg.setCountry(rs.getString("country"));
+					msg.setProvince(rs.getString("province"));
+					msg.setCity(rs.getString("city"));
+					msg.setQuery_location_latitude(rs
+							.getDouble("query_location_latitude"));
+					msg.setQuery_location_langtitude(rs
+							.getDouble("query_location_langtitude"));
+					msg.setReal_location(rs.getBoolean("is_real_location"));
+					msg.setHashtags(Tools.buildListFromString(rs
+							.getString("hashtags")));
+					msg.setReplay_to(rs.getString("replay_to"));
+					msg.setLang(rs.getString("lang"));
+					msg.setMessage_from(rs.getString("message_from"));
+					res.add(msg);
+				}
+			} catch (SQLException e) {
+				if (e.getErrorCode() == 1146) {
+					System.out
+							.println("Table:" + table_name + " is not exist.");
+				} else {
 					e.printStackTrace();
-					Logger.printThrowable(e);
 					throw new RuntimeException(e);
+				}
+			} finally {
+				if (conn != null) {
+					try {
+						conn.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+						Logger.printThrowable(e);
+						throw new RuntimeException(e);
+					}
 				}
 			}
 		}
+		return res;
 	}
 
 	private String buildQueryOption(long time_start, long time_end,
@@ -247,8 +265,8 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 				rec.setLanguage(rs.getString("language"));
 				rec.setMessage_from(rs.getString("message_from"));
 				rec.setRank(rs.getInt("rank"));
-				rec.setImpuse(mapper.readValue(rs.getString("impuse_obj"),
-						ImpuseValue.class));
+				rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
+						PulseValue.class));
 				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
 						RegInfo.class));
 				rec.setHot_topics((HotTopic[]) mapper.readValue(
@@ -295,8 +313,8 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 				rec.setLanguage(rs.getString("language"));
 				rec.setMessage_from(rs.getString("message_from"));
 				rec.setRank(rs.getInt("rank"));
-				rec.setImpuse(mapper.readValue(rs.getString("impuse_obj"),
-						ImpuseValue.class));
+				rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
+						PulseValue.class));
 				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
 						RegInfo.class));
 				rec.setHot_topics((HotTopic[]) mapper.readValue(
@@ -317,6 +335,105 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 			}
 		}
 		return rec;
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param date_str
+	 * @return
+	 */
+	public ArrayList<RegStatisticInfo> getStatisticRecordsByDate(String date_str) {
+		String sqlString = "SELECT * FROM statiistics_record where local_date = ? ;";
+		ArrayList<RegStatisticInfo> res = new ArrayList<RegStatisticInfo>();
+		Connection conn = null;
+		StatiisticsRecord rec;
+		try {
+			conn = saveDB.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ps.setString(1, date_str);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				rec = new StatiisticsRecord();
+				rec.setRecord_id(rs.getLong("record_id"));
+				rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
+				rec.setLocal_date(rs.getString("local_date"));
+				rec.setLanguage(rs.getString("language"));
+				rec.setMessage_from(rs.getString("message_from"));
+				rec.setRank(rs.getInt("rank"));
+				rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
+						PulseValue.class));
+				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
+						RegInfo.class));
+				rec.setHot_topics((HotTopic[]) mapper.readValue(
+						rs.getString("hot_topics"),
+						new TypeReference<HotTopic[]>() {
+						}));
+				res.add(new RegStatisticInfo(rec));
+			}
+		} catch (SQLException | IOException e) {
+			throw new RuntimeException(e);
+
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param place_id
+	 * @param date_start
+	 * @param date_end
+	 * @return
+	 */
+	public ArrayList<RegStatisticInfo> getPlaceHistoryInfos(int place_id,
+			String date_start, String date_end) {
+		String sqlString = "SELECT * FROM statiistics_record where place_id = ? and (local_date between ? and ? ) order by local_date ASC;";
+		ArrayList<RegStatisticInfo> res = new ArrayList<RegStatisticInfo>();
+		Connection conn = null;
+		StatiisticsRecord rec;
+		try {
+			conn = saveDB.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ps.setInt(1, place_id);
+			ps.setString(2, date_start);
+			ps.setString(3, date_end);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				rec = new StatiisticsRecord();
+				rec.setRecord_id(rs.getLong("record_id"));
+				rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
+				rec.setLocal_date(rs.getString("local_date"));
+				rec.setLanguage(rs.getString("language"));
+				rec.setMessage_from(rs.getString("message_from"));
+				rec.setRank(rs.getInt("rank"));
+				rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
+						PulseValue.class));
+				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
+						RegInfo.class));
+				rec.setHot_topics((HotTopic[]) mapper.readValue(
+						rs.getString("hot_topics"),
+						new TypeReference<HotTopic[]>() {
+						}));
+				res.add(new RegStatisticInfo(rec));
+			}
+			return res;
+		} catch (SQLException | IOException e) {
+			throw new RuntimeException(e);
+
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
 	}
 
 }

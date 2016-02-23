@@ -10,10 +10,6 @@
  */
 package com.citydigitalpulse.webservice.model.message;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -39,7 +35,9 @@ public class MarkMsg2Web {
 		this.lang = markMessageObj.getLang();
 		this.medias = new ArrayList<MediaObject>();
 		for (int i = 0; i < markMessageObj.getMedia_types().size(); i++) {
-			medias.add(new MediaObject(markMessageObj.getMedia_types().get(i), markMessageObj.getMedia_urls().get(i),markMessageObj.getMedia_urls_local().get(i)));
+			medias.add(new MediaObject(markMessageObj.getMedia_types().get(i),
+					markMessageObj.getMedia_urls().get(i), markMessageObj
+							.getMedia_urls_local().get(i)));
 		}
 		this.media_num = medias.size();
 	}
@@ -86,8 +84,9 @@ public class MarkMsg2Web {
 
 	@Override
 	public String toString() {
-		return "MarkMsg2Web [msg_id=" + msg_id + ", text=" + text + ", lang=" + lang + ", media_num=" + media_num
-				+ ", medias=" + medias + "]";
+		return "MarkMsg2Web [msg_id=" + msg_id + ", text=" + text + ", lang="
+				+ lang + ", media_num=" + media_num + ", medias=" + medias
+				+ "]";
 	}
 
 }

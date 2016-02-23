@@ -153,6 +153,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 				// loc.setCenterAndRange(new
 				// LocPoint(rs.getDouble("center_lat"),
 				// rs.getDouble("center_lon")), rs.getInt("range"));
+				result.add(loc);
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

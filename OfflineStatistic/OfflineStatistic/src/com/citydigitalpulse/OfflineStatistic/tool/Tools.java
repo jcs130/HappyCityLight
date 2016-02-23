@@ -20,6 +20,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -122,18 +124,18 @@ public class Tools {
 		}
 		// 如果不在屏蔽列表中，则添加
 		for (int i = 0; i < hashtags.size(); i++) {
-			if (!banHashtags.contains(hashtags.get(i))) {
+			if (!banHashtags.contains(hashtags.get(i).toLowerCase())) {
 				res.add(hashtags.get(i));
 			}
 		}
 		return res;
 	}
 
-	public static void readSettingFile() {
+	public static void readSplitSettingFile() {
 		BufferedReader br;
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(
-					"settings.txt")));
+					"split_settings.txt")));
 			for (String line = br.readLine(); line != null; line = br
 					.readLine()) {
 				String[] sets = line.split(" ");
@@ -153,12 +155,63 @@ public class Tools {
 	/**
 	 * @Author Zhongli Li Email: lzl19920403@gmail.com
 	 */
-	public static void updateStartID() {
+	public static void updateSplitStartID() {
 		try {
-			FileWriter fw = new FileWriter("settings.txt", false);
+			FileWriter fw = new FileWriter("split_settings.txt", false);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write("limit " + AppConfig.LIMIT + "\r\n");
 			bw.write("start_id " + AppConfig.START_ID + "\r\n");
+			bw.close();
+			fw.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void readStatisticSettingFile() {
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(
+					"statistic_settings.txt")));
+			for (String line = br.readLine(); line != null; line = br
+					.readLine()) {
+				String[] sets = line.split(" ");
+				if (sets[0].equals("limit")) {
+					AppConfig.LIMIT = Integer.parseInt(sets[1]);
+				}
+				if (sets[0].equals("start_date")) {
+					AppConfig.START_DATE = new SimpleDateFormat(
+							AppConfig.date_format).parse(sets[1]);
+				}
+				if (sets[0].equals("end_date")) {
+					AppConfig.END_DATE = new SimpleDateFormat(
+							AppConfig.date_format).parse(sets[1]);
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 */
+	public static void updateStatisticStartDate() {
+		try {
+			FileWriter fw = new FileWriter("statistic_settings.txt", false);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write("limit " + AppConfig.LIMIT + "\r\n");
+			bw.write("start_date "
+					+ new SimpleDateFormat(AppConfig.date_format)
+							.format(AppConfig.START_DATE) + "\r\n");
+			bw.write("end_date "
+					+ new SimpleDateFormat(AppConfig.date_format)
+							.format(AppConfig.START_DATE) + "\r\n");
 			bw.close();
 			fw.close();
 		} catch (Exception e) {

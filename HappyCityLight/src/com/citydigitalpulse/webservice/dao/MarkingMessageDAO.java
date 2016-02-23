@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import com.citydigitalpulse.webservice.model.message.MarkMessageObj;
 import com.citydigitalpulse.webservice.model.message.MarkMsg2Web;
 import com.citydigitalpulse.webservice.model.message.MarkRecordObj;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * 用来从标记数据库中存取消息的方法类

@@ -10,6 +10,8 @@
  */
 package com.citydigitalpulse.webservice.tool.NLPPart;
 
+import com.citydigitalpulse.webservice.model.message.EmotionObj;
+
 import uk.ac.wlv.sentistrength.SentiStrength;
 
 /**
@@ -23,7 +25,7 @@ public class NLPModel {
 	// 这是静态初始化块
 	static {
 		String ssthInitialisation[] = { "sentidata", "lib/SentStrength_Data/",
-				"trinary" };
+				"scale" };
 		sentiStrength.initialise(ssthInitialisation); // Initialise
 	}
 
@@ -34,19 +36,22 @@ public class NLPModel {
 	 * @param text
 	 * @return
 	 */
-	public static String getTextEmotion(String text) {
-		String emotion = "";
+	public static EmotionObj getTextEmotion(String text) {
+		EmotionObj res = new EmotionObj();
+		res.setScale(5);
 		String[] result_text = sentiStrength.computeSentimentScores(text)
 				.split(" ");
+		System.out.println("emotion result: pos:" + result_text[0]+" neg: "+result_text[1]);
 		// 解析返回的字符串得到感情
 		int score = Integer.parseInt(result_text[2]);
+		res.setValue(score);
 		if (score > 0) {
-			emotion = "positive";
+			res.setEmotion("positive");
 		} else if (score < 0) {
-			emotion = "negative";
+			res.setEmotion("negative");
 		} else {
-			emotion = "neutral";
+			res.setEmotion("neutral");
 		}
-		return emotion;
+		return res;
 	}
 }

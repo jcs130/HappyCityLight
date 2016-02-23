@@ -32,7 +32,7 @@ public class SentiStrengthTest {
 		// Create an array of command line parameters to send (not text or file
 		// to process)
 		String ssthInitialisation[] = { "sentidata", "lib/SentStrength_Data/",
-				"trinary" };
+				"scale" };
 		sentiStrength.initialise(ssthInitialisation); // Initialise
 		// can now calculate sentiment scores quickly without having to
 		// initialise again

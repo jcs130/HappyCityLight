@@ -27,7 +27,7 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 	// 加上时区之后的日期，方便进行更合理的多城市比较
 	private String local_date;
 	private RegInfo regInfo;
-	private ImpuseValue impuse;
+	private PulseValue pulse;
 	private int rank;
 	private HotTopic[] hot_topics;
 	private String message_from;
@@ -42,7 +42,7 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 		this.date_timestamp_ms = 0;
 		this.local_date = "";
 		this.regInfo = new RegInfo();
-		this.setImpuse(new ImpuseValue());
+		this.setPulse(new PulseValue());
 		this.rank = 0;
 		this.temp_topics = new HashMap<String, HotTopic>();
 		this.message_from = "all";
@@ -105,12 +105,12 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 		this.message_from = message_from;
 	}
 
-	public ImpuseValue getImpuse() {
-		return impuse;
+	public PulseValue getPulse() {
+		return pulse;
 	}
 
-	public void setImpuse(ImpuseValue impuse) {
-		this.impuse = impuse;
+	public void setPulse(PulseValue pulse) {
+		this.pulse = pulse;
 	}
 
 	public String getLanguage() {
@@ -140,7 +140,11 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 		if (this.date_timestamp_ms == 0) {
 			this.date_timestamp_ms = temp.getCreat_at();
 		}
-		this.impuse.addNewValue(temp.getEmotion_text());
+		if (this.pulse.getTimestamp() == 0) {
+			this.pulse.setTimestamp(temp.getCreat_at());
+		}
+		this.pulse.addNewValue(temp.getEmotion_text(),
+				temp.getEmotion_text_value());
 		// 如果hashtag不在屏蔽列表中，则统计
 		List<String> filiteredTopic = Tools.hashtagFiliter(temp.getHashtags());
 		for (int i = 0; i < filiteredTopic.size(); i++) {
@@ -165,8 +169,8 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 	 */
 	@Override
 	public int compareTo(StatiisticsRecord o) {
-		return (int) (o.getImpuse().getImpuse_value() * 1000 - this.impuse
-				.getImpuse_value() * 1000);
+		return (int) (o.getPulse().getPulse_value() * 1000 - this.pulse
+				.getPulse_value() * 1000);
 	}
 
 	public long getRecord_id() {
@@ -181,7 +185,7 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 	public String toString() {
 		return "StatiisticsRecord [record_id=" + record_id
 				+ ", date_timestamp_ms=" + date_timestamp_ms + ", local_date="
-				+ local_date + ", regInfo=" + regInfo + ", impuse=" + impuse
+				+ local_date + ", regInfo=" + regInfo + ", pulse=" + pulse
 				+ ", rank=" + rank + ", hot_topics="
 				+ Arrays.toString(hot_topics) + ", message_from="
 				+ message_from + ", language=" + language + ", temp_topics="

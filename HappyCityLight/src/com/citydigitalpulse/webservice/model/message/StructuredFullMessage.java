@@ -55,6 +55,7 @@ public class StructuredFullMessage {
 	private String lang = "";
 	// 文字机器标记情感
 	private String emotion_text = "";
+	private double emotion_text_value = 0;
 	// 媒体机器标记情感
 	private List<String> emotion_medias = new ArrayList<String>();
 	// 总体情感
@@ -278,6 +279,14 @@ public class StructuredFullMessage {
 		this.time_zone = time_zone;
 	}
 
+	public double getEmotion_text_value() {
+		return emotion_text_value;
+	}
+
+	public void setEmotion_text_value(double emotion_text_value) {
+		this.emotion_text_value = emotion_text_value;
+	}
+
 	@Override
 	public String toString() {
 		return "StructuredFullMessage [num_id=" + num_id + ", raw_id_str="
@@ -292,10 +301,11 @@ public class StructuredFullMessage {
 				+ query_location_latitude + ", query_location_langtitude="
 				+ query_location_langtitude + ", hashtags=" + hashtags
 				+ ", replay_to=" + replay_to + ", lang=" + lang
-				+ ", emotion_text=" + emotion_text + ", emotion_medias="
-				+ emotion_medias + ", emotion_all=" + emotion_all
-				+ ", message_from=" + message_from + ", real_location="
-				+ real_location + ", time_zone=" + time_zone + "]";
+				+ ", emotion_text=" + emotion_text + ", emotion_text_value="
+				+ emotion_text_value + ", emotion_medias=" + emotion_medias
+				+ ", emotion_all=" + emotion_all + ", message_from="
+				+ message_from + ", real_location=" + real_location
+				+ ", time_zone=" + time_zone + "]";
 	}
 
 }

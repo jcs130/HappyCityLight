@@ -18,7 +18,7 @@ import java.sql.SQLException;
 
 import com.citydigitalpulse.OfflineStatistic.dao.impl.MySQLHelper_Save;
 import com.citydigitalpulse.OfflineStatistic.model.HotTopic;
-import com.citydigitalpulse.OfflineStatistic.model.ImpuseValue;
+import com.citydigitalpulse.OfflineStatistic.model.PulseValue;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
 import com.citydigitalpulse.OfflineStatistic.model.StatiisticsRecord;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -67,8 +67,8 @@ public class dbTest {
 				rec.setLanguage(rs.getString("language"));
 				rec.setMessage_from(rs.getString("message_from"));
 				rec.setRank(rs.getInt("rank"));
-				rec.setImpuse(mapper.readValue(rs.getString("impuse_obj"),
-						ImpuseValue.class));
+				rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
+						PulseValue.class));
 				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
 						RegInfo.class));
 				rec.setHot_topics((HotTopic[]) mapper.readValue(

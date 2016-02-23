@@ -20,24 +20,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
-import org.apache.jasper.tagplugins.jstl.core.Redirect;
 import org.glassfish.hk2.utilities.reflection.Logger;
 
 import redis.clients.jedis.Jedis;
 
 import com.citydigitalpulse.webservice.dao.MarkingMessageDAO;
-import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.message.MarkMessageObj;
 import com.citydigitalpulse.webservice.model.message.MarkMsg2Web;
 import com.citydigitalpulse.webservice.model.message.MarkRecordObj;
 import com.citydigitalpulse.webservice.model.message.MediaObject;
 import com.citydigitalpulse.webservice.tool.Tools;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeParser;
 
 public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 	private MySQLHelper_Mark markDB;
@@ -78,15 +72,15 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 				message.setMsg_id(rs.getLong("msg_id"));
 				message.setFull_msg_id(rs.getLong("full_msg_id"));
 				message.setText(rs.getString("text"));
-				message.setMedia_types(Tools.buildListFromString(rs
-						.getString("media_types").replaceAll("[", "")
-						.replaceAll("]", "")));
-				message.setMedia_urls(Tools.buildListFromString(rs
-						.getString("media_urls").replaceAll("[", "")
-						.replaceAll("]", "")));
-				message.setMedia_urls_local(Tools.buildListFromString(rs
-						.getString("media_urls_local").replaceAll("[", "")
-						.replaceAll("]", "")));
+				message.setMedia_types(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_types"))));
+				message.setMedia_urls(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_urls"))));
+				message.setMedia_urls_local(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_urls_local"))));
 				message.setLang(rs.getString("lang"));
 				System.out.println(message);
 				res.add(message);
@@ -116,6 +110,7 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 	 * @param testURL
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private boolean isURLAvailable(URL testURL) {
 		InputStream in;
 		try {
@@ -416,15 +411,15 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 				}
 				message.setMsg_id(rs.getLong("msg_id"));
 				message.setText(rs.getString("text"));
-				message.setMedia_urls_local(Tools.buildListFromString(rs
-						.getString("media_urls_local").replaceAll("[", "")
-						.replaceAll("]", "")));
-				message.setMedia_types(Tools.buildListFromString(rs
-						.getString("media_types").replaceAll("[", "")
-						.replaceAll("]", "")));
-				message.setMedia_urls(Tools.buildListFromString(rs
-						.getString("media_urls").replaceAll("[", "")
-						.replaceAll("]", "")));
+				message.setMedia_urls_local(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_urls_local"))));
+				message.setMedia_types(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_types"))));
+				message.setMedia_urls(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_urls"))));
 			}
 
 		} catch (SQLException e) {
@@ -476,20 +471,21 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 			// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			while (rs.next()) {
 				record = new MarkRecordObj();
-				record.setEmotion_medias(Tools.buildListFromString(rs
-						.getString("emotion_medias")));
+				record.setEmotion_medias(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("emotion_medias"))));
 				record.setEmotion_text(rs.getString("emotion_text"));
 				// record.setMark_at(sdf.parse(rs.getString("mark_at")));
 				record.setMark_at(new Date(rs.getLong("mark_at")));
-				record.setMedia_types(Tools.buildListFromString(rs
-						.getString("media_types").replaceAll("[", "")
-						.replaceAll("]", "")));
-				record.setMedia_urls(Tools.buildListFromString(rs
-						.getString("media_urls").replaceAll("[", "")
-						.replaceAll("]", "")));
-				record.setMedia_urls_local(Tools.buildListFromString(rs
-						.getString("media_urls_local").replaceAll("[", "")
-						.replaceAll("]", "")));
+				record.setMedia_types(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_types"))));
+				record.setMedia_urls(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_urls"))));
+				record.setMedia_urls_local(Tools
+						.buildListFromString(removeArraySymple(rs
+								.getString("media_urls_local"))));
 				record.setMsg_id(rs.getLong("msg_id"));
 				record.setRecord_id(rs.getInt("record_id"));
 				record.setText(rs.getString("text"));
@@ -594,5 +590,15 @@ public class MarkingMessageDAOimpl implements MarkingMessageDAO {
 		}
 		updateRecordCount(user_id, count);
 		return count;
+	}
+
+	private String removeArraySymple(String old) {
+		String res = "";
+		if (old.charAt(0) == '[' && old.charAt(old.length() - 1) == ']') {
+			res = old.substring(1, old.length() - 1);
+		} else {
+			res = old;
+		}
+		return res;
 	}
 }
