@@ -1,31 +1,35 @@
 var apiToken = "ArashiArashiFordream";
-var map;
-var proj;
+//constraints used for computation
 var TILE_SIZE = 256;
+//var TILE_SIZE = 128;
 var l_earth = 40075000;
 var r_earth = l_earth / (2 * Math.PI);
 var R = 10000;
+//variables for setting googlemap
+var map;
+var proj;
 var minZoomLevel = 9;
-//var hexSize = radius * TILE_SIZE / l_earth;
-
+//msg queue for saving msgs (repetation filtered) recieved from backend
 var msgDataQueue = new buckets.Queue();
 var msgDataQueueSize = 500;
-var skip_num_ids = new Array();
-var hexArray = new Array();
-var hexBoundaryArray = new Array();
-var regionBoundary = null;
-
+//array for saving ids only of msgs recieved from backend, helps compute more quickly
+var nonRepeatIds = new Array();
+//variable for saving city name
 var city = null;
 var N, E, W, S;
-
+//variables for getting data filter options
 var keyword, data_filter_lang_array = new Array(),
     data_filter_source_array = new Array(),
     data_filter_lang, data_filter_source,
     flag_lang, flag_source;
+
 var location_areas;
 var realTime;
 var listenPlaceList = new Array();
 
+var hexArray = new Array();
+var hexBoundaryArray = new Array();
+var regionBoundary = null;
 var allInfoboxs = new Array();
 var allMarkers = new Array();
 var infoboxNow = null;
@@ -34,15 +38,16 @@ var boundaryRecArray = new Array();
 
 
 
+
 var infowindow, cityMarker;
 
-
+//Set the condition to decide if two messages are the same (used for buckets.js)
 var checkMsgById = function (msg1, msg2) {
     return msg1.num_id === msg2.num_id;
 }
 
 
-
+//
 function drawRegionBoundary(areas) {
     var cityBoundaryPaths = new Array();
     if (regionBoundary != null) {
@@ -230,7 +235,7 @@ function getLatestData() {
             lang: data_filter_lang,
             message_from: data_filter_source,
             keyword: keyword,
-            skip_num_ids: skip_num_ids.toString()
+            skip_num_ids: nonRepeatIds.toString()
         },
         dataType: "json",
         success: function (data, textStatus) {
@@ -251,11 +256,11 @@ function getLatestData() {
                     if (!msgDataQueue.contains(msgData, checkMsgById) && ((msgData.emotion_text == 'positive') || (msgData.emotion_text == 'negative') || (msgData.emotion_text == 'neutral'))) {
                         //manage msgDataQueue that stores raw datas recieved from server
                         msgDataQueue.add(msgData);
-                        skip_num_ids.push(msgData.num_id);
-                        console.log("skip_num_ids adding: " + msgData.num_id);
+                        nonRepeatIds.push(msgData.num_id);
+                        console.log("nonRepeatIds adding: " + msgData.num_id);
                         if (msgDataQueue.size == msgDataQueueSize) {
                             msgDataQueue.clear();
-                            skip_num_ids = [];
+                            nonRepeatIds = [];
                             if (hexArray != null) {
                                 $.each(hexArray, function () {
                                     this.hexPolygon.setMap(null);
@@ -402,17 +407,19 @@ function getSpecificData() {
 }
 
 
-//实现登陆成功后的初始化数据操作
-function checkin_afterChencin() {}
 
 
 
 //实现登陆成功后的初始化数据操作
+function checkin_afterChencin() {
+
+}
+
+
 function init_map_after_load() {
-
-    $.getScript("resources/plugins/infobox.js");
-     $.getScript("resources/plugins/v3_eshapes.js");
+    //...........................
     getListenPlaceList();
+
     //init map
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(45.42929873257377, -75.38818359375),
@@ -525,16 +532,15 @@ function init_map_after_load() {
         //        range = $("#rangeSlider").data('slider').getValue();
         range = e.value;
         var markerPlace = cityMarker.getPosition();
-        N = markerPlace.lat() + range * 180 / (Math.PI * r_earth),
-            S = markerPlace.lat() - range * 180 / (Math.PI * r_earth),
-            E = markerPlace.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180)),
-            W = markerPlace.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
+        N = markerPlace.lat() + range * 180 / (Math.PI * r_earth);
+        S = markerPlace.lat() - range * 180 / (Math.PI * r_earth);
+        E = markerPlace.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
+        W = markerPlace.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
 
 
         drawRegionBoundary(setLocationAreas(N, E, S, W));
 
     });
-
 
 
 
@@ -605,7 +611,7 @@ function init_map_after_load() {
 
 
 
-
+    //operations when click on STOP! button
     $("#stopRealtime").click(function () {
         console.log("Real-time Visualization Stop.");
         clearInterval(realTime);
@@ -619,9 +625,6 @@ function init_map_after_load() {
     });
 
 
-    $(".btn-close").click(function () {
-
-    });
 
     //slide to show/hide the advance search options
     $("#advanceFilter").click(function () {
@@ -653,22 +656,27 @@ function init_map_after_load() {
 
 
     });
+
 }
 
 
+
 $(function () {
+
     //加载地图的js
     $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAC01nTmNbpdoTQ5eu5v9vs1PpVb-Pbpq4&language=en&libraries=geometry,places")
         .done(function () {
-            console.log("Google Map Works well");
-
-        }).fail(function () {
-            console.log("Change to the Chinese Server");
-            $.getScript("http://ditu.google.cn/maps/api/js?sensor=false&language=en&libraries=geometry,places&key=AIzaSyAC01nTmNbpdoTQ5eu5v9vs1PpVb-Pbpq4")
-        }).always(function () {
             console.log("Map Loaded.");
             init_map_after_load();
-        });
+        }).fail(function () {
+            console.log("Change to the Chinese Server");
+            $.getScript("http://ditu.google.cn/maps/api/js?sensor=false&language=en&libraries=geometry,places&key=AIzaSyAC01nTmNbpdoTQ5eu5v9vs1PpVb-Pbpq4").done(function () {
+                console.log("Map Loaded.");
+                init_map_after_load();
+            });
+        }).always(function () {});
+
+
     //initialization of some elements 
     if ($(window).width() < 768) {
         $("footer").hide();
@@ -707,5 +715,9 @@ $(function () {
         maxTags: 3,
         maxChars: 10
     });
+
+
+
+
 
 });

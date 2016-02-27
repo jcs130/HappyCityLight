@@ -1,0 +1,79 @@
+.annotation-img {
+    width: 50px;
+    height: 50px;
+}
+
+.content {
+    position: relative;
+    padding: 0;
+}
+
+#map-div {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+#control-panel-row {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    height: auto;
+    width: 100%;
+    z-index: 5;
+}
+
+#control-panel-col {
+    height: 100%;
+    border: none;
+}
+
+.list-unstyled .list-group-item {
+    padding: 1% 1%;
+    background: rgba(122, 130, 136, 0.3)!important;
+}
+
+#searchPlace {
+    height: 100%;
+    width: auto;
+    opacity: 1;
+}
+
+.label-info {
+    background-color: #5bc0de;
+}
+
+.bootstrap-tagsinput {
+    width: auto !important;
+}
+
+#ex1Slider .slider-selection {
+    background: #EEE;
+}
+
+.input-group {
+    width: 100%;
+}
+
+#advanceFilter {
+    color: #2E5C6E;
+}
+
+#advanceFilter:hover {
+    color: #BF6766;
+    cursor: pointer;
+}
+
+#infobox {
+    max-width: 350px;
+}
+
+#infobox .box-footer {
+    max-height: 350px;
+    overflow: auto;
+}

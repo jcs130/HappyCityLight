@@ -2,4 +2,4 @@
 //var serverURL = "http://zhongliapp.aliapp.com/api/";
 //var serverURL = "http://citypulse1.eecs.uottawa.ca/api/";
 var serverURL = "api/";
-var default_homepage = "msgonmap.html";
+var default_homepage = "dataanalysis.html";

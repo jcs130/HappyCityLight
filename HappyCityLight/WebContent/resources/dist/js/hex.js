@@ -228,12 +228,22 @@ function getHexInsideRec(rec) {
         if (this.s == s) {
             temp.push(this);
         } else if (this.s == (s + 1)) {
-            if (temp.length == 2) {
-                if ((temp[1].q - temp[0].q) > 1) {
+            //            if (temp.length == 2) {
+            //                if ((temp[1].q - temp[0].q) > 1) {
+            //                    //console.log("(" + temp[0].q + "," + temp[0].r + "," + temp[0].s + ") <-> (" + temp[1].q + "," + temp[1].r + "," + temp[1].s + ")");
+            //                    for (var q = temp[0].q + 1; q < temp[1].q; q++) {
+            //                        //                        console.log("Adding: " + q + "," + (-q - temp[0].s) + "," + temp[0].s);
+            //                        resultHexArray.push(new Hex(q, (-q - temp[0].s), temp[0].s, 0, 0, 0, new Array(), null, null));
+            //                    }
+            //                }
+            //            }
+            var len = temp.length;
+            for (var i = 0; i < len - 1; i++) {
+                if ((temp[i + 1].q - temp[i].q) > 1) {
                     //console.log("(" + temp[0].q + "," + temp[0].r + "," + temp[0].s + ") <-> (" + temp[1].q + "," + temp[1].r + "," + temp[1].s + ")");
-                    for (var q = temp[0].q + 1; q < temp[1].q; q++) {
+                    for (var q = temp[i].q + 1; q < temp[i + 1].q; q++) {
                         //                        console.log("Adding: " + q + "," + (-q - temp[0].s) + "," + temp[0].s);
-                        resultHexArray.push(new Hex(q, (-q - temp[0].s), temp[0].s, 0, 0, 0, new Array(), null, null));
+                        resultHexArray.push(new Hex(q, (-q - temp[i].s), temp[i].s, 0, 0, 0, new Array(), null, null));
                     }
                 }
             }
@@ -263,8 +273,8 @@ function getHexInsideRec(rec) {
 
 function getColorFromHex(hex) {
     if ((hex.positive == 0) && (hex.neutral == 0) && (hex.negative == 0)) {
-        //        return d3.rgb(208, 90, 110);
-        return d3.rgb(222, 222, 222);
+        return d3.rgb(208, 90, 110);
+        //        return d3.rgb(222, 222, 222);
     }
 
     var red = d3.rgb(238, 44, 44); //浅蓝
@@ -360,7 +370,7 @@ function drawHexFromHex(hex) {
                 $(".box-tools").click(function () {
                     hex.infobox.setVisible(false);
                 });
-                
+
 
             }
         }

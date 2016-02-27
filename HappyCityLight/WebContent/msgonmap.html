@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Digital City Impulse</title>
+    <title>Digital City Pulse</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -13,154 +13,39 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Theme style -->
+    <!-- AdminLTE Template Style -->
     <link rel="stylesheet" href="resources/dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-          page. However, you can choose any other skin. Make sure you
-          apply the skin class to the body tag so the changes take effect.
-    -->
     <link rel="stylesheet" href="resources/dist/css/skins/skin-blue.min.css">
-
-
-    <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="resources/plugins/iCheck/all.css">
-
-
+    <!-- DCP All Page Style Style -->
+    <link rel="stylesheet" href="resources/dist/css/DCPall.css">
+    <!--------------------------------------------------------------------------------------------------------->
+    <!-- bootstrap-datepicker-->
     <link href="resources/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet">
-
-
+    <!-- bootstrap-select-->
     <link href="resources/plugins/bootstrap-select-1.9.4/dist/css/bootstrap-select.min.css" rel="stylesheet">
-
-
+    <!-- bootstrap-tagsinput-->
     <link href="resources/plugins/bootstrap-tagsinput-latest/dist/bootstrap-tagsinput.css" rel="stylesheet">
-
-    <!--    <link href="resources/plugins/slider/css/slider.css" rel="stylesheet">-->
+    <!-- bootstrap-slider-->
     <link href="resources/plugins/bootstrap-slider/bootstrap-slider.css" rel="stylesheet">
-    <link href="resources/plugins/animate.css" rel="stylesheet">
 
-
-    <style>
-        .annotation-img {
-            width: 50px;
-            height: 50px;
-        }
-    </style>
-    <style>
-        .content {
-            position: relative;
-            padding: 0;
-        }
-        
-        #map-div {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-        }
-        
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-        
-        #control-panel-row {
-            position: absolute;
-            left: 15px;
-            top: 15px;
-            height: auto;
-            width: 100%;
-            z-index: 5;
-        }
-        
-        #control-panel-col {
-            height: 100%;
-            border: none;
-        }
-        
-        .list-unstyled .list-group-item {
-            padding: 1% 1%;
-            background: rgba(122, 130, 136, 0.3)!important;
-        }
-        
-        #searchPlace {
-            height: 100%;
-            width: auto;
-            opacity: 1;
-        }
-        
-        .label-info {
-            background-color: #5bc0de;
-        }
-        
-        .bootstrap-tagsinput {
-            width: auto !important;
-        }
-        
-        #ex1Slider .slider-selection {
-            background: #EEE;
-        }
-        
-        .input-group {
-            width: 100%;
-        }
-        
-        #advanceFilter {
-            color: #2E5C6E;
-        }
-        
-        #advanceFilter:hover {
-            color: #BF6766;
-            cursor: pointer;
-        }
-        
-        #titleForPhone {
-            background-color: #3c8dbc;
-            color: #fff;
-            border-bottom: 0 solid transparent;
-            float: none;
-            -webkit-transition: width .3s ease-in-out;
-            -o-transition: width .3s ease-in-out;
-            transition: width .3s ease-in-out;
-            display: block;
-            float: left;
-            height: 50px;
-            font-size: 20px;
-            line-height: 50px;
-            text-align: center;
-            width: 80px;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            padding: 0;
-            font-weight: 300;
-            overflow: hidden;
-        }
-        
-        #infobox {
-            max-width: 350px;
-        }
-        
-        #infobox .box-footer {
-            max-height: 350px;
-            overflow: auto;
-        }
-    </style>
-
-
-
-
+    <!-- Style for This Page -->
+    <link rel="stylesheet" href="resources/dist/css/msgonmap.css">
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+
+
+<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
     <div class="wrapper">
 
         <!-- Main Header -->
         <header class="main-header">
-
             <!-- Logo -->
-            <a href="index.html" class="logo inside-link" id="header-logo">
+            <a href="dashboard.html" class="logo inside-link" id="header-logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>DCI</b></span>
+                <span class="logo-mini"><b>DCP</b></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>DigitalCityImpulse</b></span>
+                <span class="logo-lg"><b>DigitalCityPulse</b></span>
             </a>
 
             <!-- Header Navbar -->
@@ -169,7 +54,7 @@
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span>
                 </a>
                 <a id="titleForPhone">
-                    <span><b>DCI</b></span>
+                    <span><b>DCP</b></span>
                 </a>
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
@@ -183,26 +68,27 @@
                                 <!-- The user image in the navbar-->
                                 <img src="resources/img/user.ico" class="user-image user_picture" alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs"><span class="userfirstname"></span>
-                                <span class="userlastname">Guest</span> </span>
+                                <span class="hidden-xs"><b class="userfirstname">FirstName</b> <b class="userlastname">LastName</b></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header"><img src="resources/img/user.ico" class="img-circle user_picture" alt="User Image">
                                     <p>
-                                        <span class="userfirstname"></span> <span class="userlastname">Guest</span> <small><span
-											class="useremail">Please Login</span></small>
+                                        <span class="userfirstname">FirstName</span>
+                                        <span class="userlastname">LastName</span>
+                                        <small><span class="useremail">email@email.com</span></small>
+                                        <!-- <small>Member since <span id=membersince>time</span></small> -->
                                     </p>
                                 </li>
-                                <!-- Menu Body -->
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
+                                    <!--
                                     <div class="pull-left">
-                                        <!-- 										<a href="#" class="btn btn-default btn-flat">Profile</a> -->
-                                    </div>
+    <a href="#" class="btn btn-default btn-flat">Profile</a>
+</div>
+-->
                                     <div class="pull-right">
-                                        <a class="btn btn-default btn-flat" id="btn-signout">Sign
-											out</a>
+                                        <a class="btn btn-default btn-flat" id="btn-signout">Sign out</a>
                                     </div>
                                 </li>
                             </ul>
@@ -211,13 +97,12 @@
                 </div>
             </nav>
         </header>
+
         <!-- Left side column. contains the logo and sidebar -->
         <aside class="main-sidebar">
-
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
-
-                <!-- Sidebar user panel (optional) -->
+                <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="pull-left image">
                         <img src="resources/img/user.ico" class="img-circle user_picture" alt="User Image">
@@ -226,30 +111,31 @@
                         <p>
                             <span class="userfirstname">FirstName</span> <span class="userlastname">LastName</span>
                         </p>
-                        <!-- Status -->
-                        <!-- 						<a href="#"><i class="fa fa-circle text-success"></i> Online</a> -->
                     </div>
                 </div>
 
-
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu">
-                    <li class="header"></li>
-                    <li><a class="inside-link" href="comingsoon.html"><i class="fa fa-th-large"></i>
-							<span>Dashboard</span></a></li>
                     <li class="header">USER</li>
-                    <!-- Optionally, you can add icons to the links -->
-                    <li><a class="inside-link" href="comingsoon.html"><i class="fa fa-map-pin"></i>
-							<span>My Regions</span></a></li>
-                    <li><a class="inside-link" href="comingsoon.html"><i class="fa fa-area-chart"></i>
+                    <li><a class="inside-link" href="dashboard.html"><i class="fa fa-th-large"></i>
+							<span>Dashboard</span></a></li>
+                    <li><a class="inside-link" href="myanalysis.html"><i class="fa fa-area-chart"></i>
 							<span>My Analysis</span></a></li>
                     <li><a class="inside-link" href="myannotation.html"><i class="fa fa-files-o"></i>
 							<span>My Annotation</span></a></li>
                     <li class="header">SYSTEM</li>
-                    <li><a class="inside-link" href="msgonmap.html"><i class="fa fa-map-marker"></i>
-							<span>Msg on map</span></a></li>
-                    <li><a class="inside-link" href="dataanalysis.html"><i class="fa fa-bar-chart"></i>
-							<span>Data Analysis</span></a></li>
+                    <li class="active"><a class="inside-link" href="msgonmap.html"><i class="fa fa-map-marker"></i>
+							<span>Message on Map</span></a></li>
+                    <li class="treeview">
+                        <a>
+                            <i class="fa fa-bar-chart"></i> <span>Data Analysis</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu" style="display: none;">
+                            <li><a href="dataanalysis.html"><i class="fa fa-circle-o"></i> City Ranking Analysis</a></li>
+                            <li><a href="userdefinedanalysis.html"><i class="fa fa-circle-o"></i> User-defined Analysis</a></li>
+                        </ul>
+                    </li>
                     <li><a class="inside-link" href="annotation.html"><i class="fa fa-book"></i>
 							<span>Corpus Annotation</span></a></li>
                 </ul>
@@ -364,55 +250,64 @@
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
+
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
                 <b>Version</b> Beta 1.1.0
             </div>
-            <strong>Thanks to <a href="http://almsaeedstudio.com">Almsaeed
-					Studio</a>.
+            <strong>Copyright (C) 2016 City Digital Pulse - <a href="http://www.mcrlab.net/">MCRLab</a> - All Rights Reserved
 			</strong>
         </footer>
-
-
-        <!-- Add the sidebar's background. This div must be placed
-           immediately after the control sidebar -->
 
     </div>
     <!-- ./wrapper -->
 
+
+
+
+
+
+    <!----------------- REQUIRED JS SCRIPTS --------------------->
     <!-- jQuery 2.1.4 -->
     <script src="resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <script src="resources/plugins/jQuery/jquery.cookie.js" type="text/javascript"></script>
+
     <!-- Bootstrap 3.3.5 -->
     <script src="resources/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="resources/plugins/bootstrap/js/less-1.7.0.min.js"></script>
-    <!-- FastClick -->
+    <!-- FastClick & Slimscroll -->
+    <script src="resources/plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <script src="resources/plugins/fastclick/fastclick.min.js"></script>
-    <!-- AdminLTE App -->
+    <!-- AdminLTE Template Script -->
     <script src="resources/dist/js/app.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <!-- page script -->
+    <script src="resources/dist/js/demo.js"></script>
+    <!-- DCP All Page Script -->
     <script src="resources/dist/js/serverConfig.js"></script>
     <script src="resources/dist/js/checkin.js"></script>
     <script src="resources/dist/js/examplepage.js"></script>
-
-    <script src="resources/plugins/buckets.min.js"></script>
-    <script src="resources/plugins/d3.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC01nTmNbpdoTQ5eu5v9vs1PpVb-Pbpq4&language=en&libraries=geometry,places">
-    </script>
-    <script src="resources/plugins/clipper.js"></script>
-    <script src="resources/dist/js/mergePolygon.js"></script>
-    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
-    <script src="resources/plugins/v3_eshapes.js" type="text/javascript"></script>
+    <script src="resources/dist/js/DCPall.js"></script>
+    <!--------------------------------------------------------------------------------------------------------->
+    <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
+    <!-- bootstrap-datepicker -->
     <script src="resources/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="resources/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-GB.min.js"></script>
+    <!-- bootstrap-select -->
     <script src="resources/plugins/bootstrap-select-1.9.4/dist/js/bootstrap-select.min.js"></script>
+    <!-- bootstrap-select -->
     <script src="resources/plugins/bootstrap-tagsinput-latest/dist/bootstrap-tagsinput.js"></script>
-    <!--    <script src="resources/plugins/slider/js/bootstrap-slider.js"></script>-->
+    <!-- bootstrap-slider -->
     <script src="resources/plugins/bootstrap-slider/bootstrap-slider.js"></script>
+    <!-- buckets -->
+    <script src="resources/plugins/buckets.min.js"></script>
+    <!-- d3 -->
+    <script src="resources/plugins/d3.js"></script>
+    <!-- clipper -->
+    <script src="resources/plugins/clipper.js"></script>
+
+    <!--Script for This Page-->
+    <script src="resources/dist/js/mergePolygon.js"></script>
     <script src="resources/dist/js/hex.js"></script>
     <script src="resources/dist/js/happycitymap.js"></script>
-
 
 
 </body>

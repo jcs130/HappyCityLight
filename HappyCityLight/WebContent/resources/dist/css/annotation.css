@@ -1,83 +1,87 @@
-
-.example-modal .modal {
-	position: relative;
-	top: auto;
-	bottom: auto;
-	right: auto;
-	left: auto;
-	display: block;
-	z-index: 1;
+body .modal {
+    /* Workaround for https://github.com/twbs/bootstrap/issues/14839. */
+    -webkit-overflow-scrolling: auto;
 }
 
 .example-modal .modal {
-	background: transparent !important;
+    position: relative;
+    top: auto;
+    bottom: auto;
+    right: auto;
+    left: auto;
+    display: block;
+    z-index: 1;
 }
 
+.example-modal .modal {
+    background: transparent !important;
+}
 
-<!-- Owl Carousel button style -->
-
-#owl-demo .owl-item div {
-	padding: 5px;
+<!-- Owl Carousel button style --> #owl-demo .owl-item div {
+    padding: 5px;
 }
 
 #owl-demo .owl-item img {
-	display: block;
-	width: 100%;
-	height: auto;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+    display: block;
+    width: 100%;
+    height: auto;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 
-.btn-positive, .btn-positive:hover {
-	background-color: #9ACD32;
+.btn-positive,
+.btn-positive:hover {
+    background-color: #9ACD32;
 }
 
-.btn-neutral, .btn-neutral:hover {
-	background-color: #FFD700;
+.btn-neutral,
+.btn-neutral:hover {
+    background-color: #FFD700;
 }
 
-.btn-negative, .btn-negative:hover {
-	background-color: #FF6347;
+.btn-negative,
+.btn-negative:hover {
+    background-color: #FF6347;
 }
-
-
 
 #msg-text {
-	font-size: x-large;
+    font-size: x-large;
 }
 
-.btn-emo>.fa, .btn-emo>.glyphicon, .btn-emo>.ion {
-	font-size: large;
+.btn-emo>.fa,
+.btn-emo>.glyphicon,
+.btn-emo>.ion {
+    font-size: large;
 }
 
-@media ( max-width : 768px) {
-	#msg-text {
-		font-size: large;
-	}
+@media ( max-width: 768px) {
+    #msg-text {
+        font-size: large;
+    }
 }
 
-@media ( max-width : 350px) {
-	.btn-emo {
-		min-width: 40px;
-		height: 60px;
-	}
-	.btn-emo>.fa, .btn-emo>.glyphicon, .btn-emo>.ion {
-		font-size: medium;
-	}
-	.pull-center {
-		text-align: center;
-	}
-	.pull-center>.btnnn {
-		float: none;
-		display: inline-block;
-		*display: inline;
-		*zoom: 1;
-	}
+@media ( max-width: 350px) {
+    .btn-emo {
+        min-width: 40px;
+        height: 60px;
+    }
+    .btn-emo>.fa,
+    .btn-emo>.glyphicon,
+    .btn-emo>.ion {
+        font-size: medium;
+    }
+    .pull-center {
+        text-align: center;
+    }
+    .pull-center>.btnnn {
+        float: none;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+    }
 }
-
-
 
 body.modal-open {
-	overflow: hidden;
+    overflow: hidden;
 }
