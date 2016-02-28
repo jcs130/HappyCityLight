@@ -43,10 +43,16 @@ public class NLP_PreProessing {
 		ot.writeRecords2Arff(records,
 				"data/training_data_combined_before_remove_useless_part.arff",
 				true);
+		ot.writeRecords2Arff(records,
+				"data/training_data_normal_before_remove_useless_part.arff",
+				false);
 		// 去掉句子的多余成分(人称代词等)
 		ot.removeUselessPart(records);
 		ot.writeRecords2Arff(records,
 				"data/training_data_combined_after_remove_useless_part.arff",
+				true);
+		ot.writeRecords2Arff(records,
+				"data/training_data_normal_after_remove_useless_part.arff",
 				false);
 	}
 
