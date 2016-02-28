@@ -35,8 +35,8 @@ public class NLP_PreProessing {
 		HashMap<Integer, TaggedMessage> records = null;
 		ot.init();
 		records = ot.loadRecordsFromFile("data/mark_records.txt");
-		//去掉StopWords并添加其他Feature
-		
+		//去掉句子的多余成分(人称代词等)
+		//识别句子中的否定词，否定词列表
 		// 将数据写入ARFF格式
 		ot.writeRecords2Arff(records, "data/training_data2.arff");
 	}

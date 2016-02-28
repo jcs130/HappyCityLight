@@ -6,6 +6,7 @@ import java.util.List;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.Tokenizer;
 import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -72,7 +73,7 @@ public class TaggedMessage {
 		String full_tweet = addSpace(raw_message);
 		// System.out.println(full_tweet);
 		// 首先进行分句
-		String[] sentences = sentence_etector_en.sentDetect(raw_message);
+		String[] sentences = sentence_etector_en.sentDetect(full_tweet);
 		for (int i = 0; i < sentences.length; i++) {
 			// 对没有表情符号的句子进行分词
 			List<TaggedToken> taggedTokens = ARK_POStagger_en
@@ -273,32 +274,32 @@ public class TaggedMessage {
 			// - nominal
 			vals[3] = data.attribute("emotion").indexOfValue(line[4]);
 		}
-		return new Instance(1.0, vals);
+		return new DenseInstance(1.0, vals);
 	}
 
 	public static Instances getWekaInstances(boolean numericClass) {
-		FastVector atts;
-		FastVector attVals;
+		ArrayList<Attribute> atts;
+		ArrayList<String> attVals;
 		// 1. set up attributes
-		atts = new FastVector();
+		atts = new ArrayList<Attribute>();
 		// - string
-		atts.addElement(new Attribute("text", (FastVector) null));
+		atts.add(new Attribute("text",(ArrayList<String>) null));
 		// - string
-		atts.addElement(new Attribute("structure", (FastVector) null));
+		atts.add(new Attribute("structure", (ArrayList<String>) null));
 		// - string
-		atts.addElement(new Attribute("emojis", (FastVector) null));
+		atts.add(new Attribute("emojis", (ArrayList<String>) null));
 		if (numericClass) {
 			/**************** 1.输出计算后的情绪值 ***************/
 			// - numeric
-			atts.addElement(new Attribute("emotion"));
+			atts.add(new Attribute("emotion"));
 		} else {
 			/**************** 2.输出计算后的情绪文字，向量表示 ******/
 			// - nominal
-			attVals = new FastVector();
-			attVals.addElement("positive");
-			attVals.addElement("neutral");
-			attVals.addElement("negative");
-			atts.addElement(new Attribute("emotion", attVals));
+			attVals = new ArrayList<String>();
+			attVals.add("positive");
+			attVals.add("neutral");
+			attVals.add("negative");
+			atts.add(new Attribute("emotion", attVals));
 		}
 
 		// 2. create Instances object
