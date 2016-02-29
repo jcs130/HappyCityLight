@@ -1,0 +1,70 @@
+repugnance,dg
+repulsion,dg
+revulsion,dg
+horror,dg
+nausea,dg
+disgust,dg
+disgusting,dg
+disgustful,dg
+distasteful,dg
+foul,dg
+loathly,dg
+loathsome,dg
+repellent,dg
+repellant,dg
+revolting,dg
+wicked,dg
+yucky,dg
+disgusted,dg
+fed up,dg
+sick,dg
+sick of,dg
+tired of,dg
+nauseating,dg
+nauseous,dg
+noisome,dg
+loathsome,dg
+offensive,dg
+sickening,dg
+vile,dg
+nauseated,dg
+queasy,dg
+sick,dg
+sickish,dg
+hideous,dg
+repulsive,dg
+abhorrent,dg
+detestable,dg
+obscene,dg
+repugnant,dg
+repulsive,dg
+disgust,dg
+revolt,dg
+nauseate,dg
+sicken,dg
+churn up,dg
+disgust,dg
+turn off,dg
+revolt,dg
+repel,dg
+sicken,dg
+nauseate,dg
+disgust,dg
+revolt,dg
+nauseate,dg
+sicken,dg
+churn up,dg
+disgust,dg
+turn off,dg
+revolt,dg
+repel,dg
+repulse,dg
+disgustedly,dg
+disgustingly,dg
+distastefully,dg
+revoltingly,dg
+sickeningly,dg
+detestably,dg
+repulsively,dg
+abominably,dg
+odiously,dg

@@ -1,0 +1,2697 @@
+@relation training_data
+
+@attribute text string
+@attribute emojis string
+@attribute emotion {positive,neutral,negative}
+
+@data
+'was best have ever experienced','',positive
+good,'',neutral
+'tingling of','',neutral
+'almost past','',neutral
+'hate fucking','',negative
+'just came back from','',neutral
+'had in hanging out with and','',positive
+'thank who made feel at','',positive
+'😃 love :',😃,positive
+'best , and planned for and on','',positive
+'thank so much for who came','',positive
+'😃 recieved many because could not bring much on back and cute and',😃,positive
+thank,'',positive
+'had wonderful yummy , and treats','',positive
+'brought cute new ,','',positive
+'is so adorable','',positive
+'played fun and caught up on old','',positive
+'had thank','',positive
+'here are','',neutral
+thank,'',positive
+'miss so much and can not wait see , and in','',negative
+'love yo','',positive
+'so many about who re talking , where re going , what doing','',negative
+'just have send \" \" and puts on','',positive
+'yet know about not even know , and does not','',neutral
+'do not care how pretty are or what wear','',neutral
+'are amazing','',positive
+'and love','',positive
+'is falling apart and do not mean','',negative
+'becoming broken and now that have had counted of drawn , just feel like compltely useless','',negative
+'started callin xd fun','',positive
+'want get know and know more about','',neutral
+'featured about deep-fried few ago , which is appaling enough by','',negative
+'speaking of deep-fried , did know there was in where take , wrap in , and then deep-fry','',negative
+'how awesome is','',positive
+'had lovely with and','',positive
+'been seeing so many good and refilling','',positive
+'visiting was like warm','',positive
+'is also making feel more happy than feel at','',positive
+'oh and also , listening of \" \" and loving','',positive
+'was awesome','',positive
+'did of','',neutral
+'well , of','',neutral
+'was pretty fast , but was too fast for , and had blocked easy','',neutral
+'know was is moving , do','',neutral
+'made of what sold last','',neutral
+'also got of including from of that were not even','',positive
+'is how most and go','',neutral
+'what ridiculously awesome had','',positive
+'must have been good and have did','',positive
+'and has agreed let take of','',neutral
+'really starting lose','',negative
+'last watched bleak on while watching clouzot\'s terse , relentless of on','',neutral
+'in few vacant read : and of','',neutral
+'is , and hard is naught but','',neutral
+': just heard on died','',negative
+'here for','',neutral
+'screened at in for and seemed fairly stunned by','',positive
+strange,'',positive
+burn,'',neutral
+'is and more grim for muted and washed-out','',negative
+'get and watch alongside , or new','',neutral
+'here is recent of and talks about latest , and of : from','',neutral
+'\" most wonderful got was jpg that gets','',positive
+'but comes close second','',neutral
+'\" what fabulous for on','',positive
+fantastic,'',positive
+'well , great','',positive
+'just that is making into','',neutral
+'and are doing precisely & quot','',neutral
+'as are truly honoured','',positive
+'of for when like comes from like','',positive
+'\" think wonderful remake','',positive
+'has creative right carry into chooses','',neutral
+'\" always be','',neutral
+'can say is , knowing from close pretty sure even will be very proud of makes','',positive
+'is coming together awesome','',positive
+'will also be very technical as out in with and','',neutral
+'stand by what said in do not know if going be filming ever again','',neutral
+'but of came across as really angry , drunken','',negative
+'do not know when or if will end up seeing again but please know that can understand if do not want see again','',neutral
+'if wants give be more than happy answer','',positive
+hey,'',neutral
+lol,'',positive
+'came with and danced away most of went which was awsome','',positive
+'there was only few of single there but was cool','',positive
+'which is of slow got dance with of who graduated last awsome danced alot together luvs','',positive
+'was really cold tho','',neutral
+'was awsome was really cool','',positive
+'too much and not enough rock for but was good was just happy getting out on and getting on lol','',positive
+'also got see once knew was was pretty cool','',positive
+'haha did and were so close together','',positive
+'need bigger lmao','',neutral
+'just loved last','',positive
+ha,'',positive
+'then , , , and could not find someplace good eat was open in so went in giant and bought haha','',positive
+'were in still','',neutral
+'was ammusing hehehe but yea overall have not had much fun in very long','',positive
+'done telling about wonderful lol','',positive
+'be puting up soon','',neutral
+'was born , , at','',neutral
+'can not believe is finally here','',positive
+'after on , cleaned , played and with , then went sit and talk with while moved in','',neutral
+'except not look like seems think has of in','',neutral
+'😃 is really exciting be big , thinks is sooooo cool',😃,positive
+'will be putting more up probably sometime so keep out for amazing','',neutral
+'go high','',neutral
+'want go when graduate and take up in or','',neutral
+'on is do what was born do love there love teach who want be taught','',positive
+'there is amazing like second','',positive
+'about if want know else about just let know','',neutral
+'luckily won','',positive
+'then , in','',neutral
+'was pertty goood','',positive
+'annnd beat','',neutral
+'was pretty good','',positive
+'and about guess','',neutral
+'always happy with','',positive
+'had good with at','',positive
+'was sooo cute','',neutral
+heh,'',positive
+anyway,'',neutral
+'do not know why','',neutral
+'however do miss','',negative
+'- and hostin','',neutral
+'even maybe means will not see again','',neutral
+'so went spend at','',neutral
+'woke up once during and was like , \" oh crap , no , go back \" and managed get back somehow','',negative
+o_,'',neutral
+'so in there were where were kinda unsure , but was still happy for of hope','',positive
+'odd though , as do not usually care for dressy','',positive
+'but hey','',neutral
+'totally did not want wake up , can say','',neutral
+'so yeah , just had share','',neutral
+;,'',neutral
+', and else while was doing','',neutral
+wtf,'',negative
+'finally reading amazing of &','',positive
+'got for','',neutral
+'not very far along but quite enjoying','',positive
+'in at hot and should be awesome but did not sleep little last','',positive
+'seriously took fall asleep for like then in between of little','',neutral
+'do not want go on or at','',neutral
+'think and of attending is worth seeing again','',negative
+'could have danced with','',neutral
+'miss so much','',negative
+'ve never missed so much as','',negative
+'sitting here in and crying and very embarassing but can not help because just want and run away and want hold for whole and rock sleep','',negative
+'just have imagine or up for now','',neutral
+'want go','',neutral
+miss,'',negative
+'well finishing up first at , really awesome','',positive
+'schedule for is like prep not exactly sure what is but work whole there','',neutral
+'get after too and can eat is awesome','',positive
+'got on','',neutral
+'messed up in which sucks','',negative
+'oh well too too bad but making nervous','',negative
+'truly horrifying of at of','',negative
+'well , not so much , but really rather amusing','',positive
+'just stood there in','',positive
+'various on are stacked about , waiting be used for','',neutral
+'ve left of on , having just finished and','',neutral
+', , \" love \"','',neutral
+'','',neutral
+'slight parallel find amusing : played in last , just as am playing in','',positive
+'n is really fun , liking','',positive
+of,'',neutral
+'and by','',neutral
+awesome,'',positive
+'had bought with on','',neutral
+'spent of on last in early am','',neutral
+'spoke with , and feel is real','',neutral
+heh,'',neutral
+'in of , say that are wrong , is , and are','',neutral
+'','',neutral
+'actually , think dropped in bottomless last','',neutral
+'so and went go','',neutral
+'broke like whoa , but still working','',neutral
+'ve been talking on almost daily , and re very excited see little growing inside of','',positive
+'would be so awesome','',positive
+in,'',positive
+'have not even seen in and have in too much wrap around little','',positive
+'missing in with , and sad that had leave early','',negative
+miss,'',negative
+'other than of still trying move upstairs , and looks like will be','',neutral
+'hope is well in','',neutral
+'can honestly say of live in changed while in','',neutral
+'remember being so impressed , with of other in , and had withen own , regardless of of','',neutral
+'which was such when compared small belonged','',neutral
+'began help serve at local & , for at , for other','',neutral
+'remember doing endless for almost did','',neutral
+'see , whole that was trying develop own , attending with other , and did with own','',neutral
+'and sadly','',negative
+'has been given in','',neutral
+'simply by just listening speak , and more often just being in has been known have is looking for just on','',neutral
+'was too much for carry , own plus elses','',negative
+'and then happened','',neutral
+'','',neutral
+'is first in','',neutral
+'now and then','',neutral
+'get of real loud and makes jump','',positive
+'is afraid','',negative
+'hope that can learn play well and really do hope is enjoying','',positive
+'is may cause of','',negative
+'as long as is happy','',positive
+'perhaps nice hot and of would help','',neutral
+'decided go work','',neutral
+but,'',neutral
+'was of fun','',positive
+'was friggen','',positive
+', , and trying catch damn','',positive
+'did not catch by by imagine : taking off of with while \" just wanna have fun \" in','',positive
+'went shooting in regular out in behind','',neutral
+'look at','',neutral
+'add and and through and real','',positive
+'is leaving for again and , well , know how goes','',neutral
+'as put , not like where of will die , so really put into for know will be safe and come in , but scary thought still kinda lingers in of','',negative
+'hates , , talks behind backs , and treats like','',negative
+'truly wants murder , and then gets pissed off when do not agree with','',negative
+ugh,'',negative
+'ya , say up','',negative
+'😃 was perfect crappy',😃,negative
+'well know','',neutral
+'basically , just want focus on staying busy and staying happy','',positive
+'so , if would like contribute \" make smile \" \" , let\'s','',positive
+'after went and got ready go','',neutral
+'rode on w/ and','',neutral
+'was sooo fun','',positive
+lol,'',positive
+'hehehehhe 😉 neeeways',😉,positive
+'after went and walked around','',neutral
+'😃 at',😃,neutral
+'were totally awesome','',positive
+lol,'',positive
+'won by several of','',positive
+yay,'',positive
+lol,'',positive
+'after went where had best of','',positive
+'was so awesome','',positive
+'cant even explain in how much fun had','',positive
+'😉 hehehehe',😉,positive
+'can honestly say was best ever','',positive
+'soooo sad b/c was last','',negative
+'at least had','',positive
+lol,'',positive
+'but yea','',neutral
+'dont know what else say except that love spending w/','',positive
+'😃 * sighs * lol',😃,positive
+'and hanging out w/ and was totally awesome 2','',positive
+love,'',positive
+'broadcasting from','',neutral
+'exciting ,','',positive
+'so ,','',neutral
+'where did leave off','',neutral
+'will start with little about how small really is so was going work , headed of around pick up for , and then bring back where starts','',neutral
+'as was preparing leave , over at yelled out for wait , approached and said hello','',neutral
+'so just took with and came on','',neutral
+'had great catching up , and went out together as well','',positive
+'but certainly strange how randomly run in have not seen in , in little in','',positive
+fun,'',positive
+'and was by far best play have ever seen','',positive
+'was also incredibly simple , cutting normally huge down only','',positive
+'like remind why ve chosen as','',neutral
+'was lucky enough be able stay with cut down on , and see different of','',positive
+'was sooooo much fun','',positive
+'saw most of major on own , and went almost was there','',neutral
+was,'',negative
+horrible,'',negative
+'horribly acted , horribly directed , weak','',negative
+'and long','',negative
+of,'',negative
+'wanted leave at , but was really enjoying should have been so stayed','',positive
+'guess good took from was that know now that are just as capable as are of producing really awful','',negative
+'while in also saw at','',neutral
+'now was amazing','',positive
+'were incredible , and of was played by , from fresh of','',positive
+'in was hilarious , and made love even more','',positive
+'also saw for first , and was fun','',positive
+loved,'',positive
+'loved free','',positive
+especially,'',neutral
+'soooo many , including in of that had conspicuous communist','',neutral
+'now maybe was just reading too much into , or maybe had spent too much in eastern talking about','',neutral
+'and funniest , said were donated by','',positive
+curious,'',positive
+'next in , watch out for','',neutral
+'now have make : before began had actually never seen entire from finish','',neutral
+'of would change from , for there was where had over in , leading up dramatic at of','',positive
+'then there were , everywhere , singing-clapping-dancing-taking , and of pale and pasty with cock-eyed and drinking','',positive
+'of fun','',positive
+'did not have of , but of would always go or of that was playing watch','',neutral
+'so french for , when played , drank with passionate , was colorful and hilarious take without fighting','',positive
+'interesting was latent that emerged during','',positive
+'now explaining : before began , if waved german in , would probably be called nazi and at very least labeled as radical right','',neutral
+'and for what worth agree with , makes nervous too','',negative
+so,'',neutral
+'were genuinely excited about supporting national , and taking in','',positive
+'now newfound certainly was not shared by','',positive
+'and of no can laboriously dissect better than','',neutral
+'in had also been at lead of , which started at of','',neutral
+'given dark of such can well imagine of , and trying put into of historical','',neutral
+'after of beautiful and great , traveled with good australian in','',positive
+'was good of from , , was playing in at there','',neutral
+'now was ridiculous of fun','',positive
+'is sweaty , dirty , polluted','',negative
+'take of , and add : everywhere , in , cooled by wall-mounted , a.k.a.','',neutral
+'now imagine from of pitter pattering on as stroll down','',negative
+'now add of poorly placed ancient','',neutral
+'and really is lovely , in own','',positive
+'but back back was more than enough','',neutral
+'now was really amazing','',positive
+'took about get out there , and then climbed around and played on for about , taking of magnificent old that is literally clinging','',neutral
+'and then watched in with other as went down in of , over','',positive
+'is so amazing in , feels like could really reach up and touch , so close','',positive
+'just fyi','',neutral
+'not bad','',neutral
+'was amazing','',positive
+'saw of , and were treated incredibly well by at','',positive
+'stayed in tiny called , and brought incredible new','',positive
+'did could make feel welcome , from putting up in beautiful , refusing let pay for , and making sure that on was as enchanting as always make out be','',positive
+'will go somewhere special','',neutral
+'next , last of , piled into , and took off that will henceforth be labeling','',neutral
+'imagine most incredible , shaped , with unimaginably blue , and giant underneath , of long and wide , adding','',positive
+'had brought along of fresh and broke fast on overlooking whole gorgeous','',neutral
+'was really interesting staying with in little , and getting experience of what was about','',positive
+'oh and is incredible','',positive
+'but not feta','',neutral
+'has do with','',neutral
+'really of that in of and technical , are still fascinated by thousand year-old of','',positive
+'after returning from last few in passed very quickly','',neutral
+'flew by and before knew , was at and was graced by best , who had come for last','',neutral
+'so spent next in of working final , partying , and showing that had come love so much over last','',positive
+'say or is expensive ;','',neutral
+'but did not let discourage','',neutral
+'had in','',positive
+'went on , went located in old , very cool , and had good relaxing and enjoying amazing','',positive
+'is incredibly beautiful , tucked into and right on','',positive
+'think most important can say about , is of : dirty , are rude , is insurmountable , is incomprehensible , will be stolen , that hate','',negative
+'called of and for','',neutral
+'is breathtaking , and seeing in destroys cliche and makes fall in with','',positive
+'are absolutely lovely','',positive
+'encountered so many genuinely wonderful , helpful , content','',positive
+'from trying order in is tres terrible asking or talking , were always pleasantly surprised at how open and welcoming were','',positive
+'and seem really enjoy','',positive
+'know how beautiful is , and appreciate','',positive
+'and , is gorgeous','',positive
+'and are out in','',neutral
+'there was fabulous of there','',positive
+'favorite about were','',positive
+'there were over , and of and','',neutral
+'thought : \" strange , what\'s about','',positive
+'found out when headed over of that were situated in , and plopped down','',neutral
+'looked around and noticed there were of over , in , taking','',neutral
+'so did same','',neutral
+'what other would use provide napping in','',neutral
+'','',positive
+'really had in','',positive
+'went , went , and on fabulous','',positive
+'most interesting learned on was when stormed , there were only left in','',positive
+', old , from','',neutral
+'is highest in , and from northerly , have entire out at','',neutral
+'pretty breathtaking','',positive
+'on there was always of impromptu with and and other with of and merry','',positive
+'on are of favorite from','',positive
+'what incredible incredible','',positive
+'thus , is at','',neutral
+'ve returned ready for fresh , collecting new on of','',neutral
+'was also lucky enough be hired direct for high , which went up last','',positive
+'was titled , and went extremely well','',positive
+'was nice for get stretch and earn little at same','',positive
+'and though european is over for starts','',neutral
+'excited about , and and that await there','',positive
+'there was pack in','',neutral
+'hope of are well ; that have made through , and are excited about upcoming rapidly approaching','',positive
+'wish fabulous , and warm and safe','',positive
+'best till meet again','',neutral
+'first of','',neutral
+'seem fine','',neutral
+'but just sucks , and ve accepted','',negative
+'of seem quite amazing , and know for be amazing','',positive
+'so , all-in-all , pretty good , right','',positive
+'honestly , while was dating , barely saw in','',neutral
+'unless and break up , is which is unlikely , so should not even hope on','',neutral
+'also found out , will , in , be','',negative
+'is going be hardest will ever do academically , anyway','',neutral
+'nothing strong such as cannot handle with little of and mental talks','',neutral
+'can handle high \" also , have so many , and of are true , caring , trustworthy who love and are supporting','',positive
+'can come through triumphantly and with','',positive
+'have looked forward even before last ended','',neutral
+'is be happy','',positive
+'is try new and succeed','',positive
+'is when get test : , , and','',neutral
+'is first of loving','',positive
+'also found out , will , in , be','',negative
+'have recieved in of','',neutral
+'ah , well','',neutral
+'\" can deal with ,','',neutral
+'can handle high \" also , have so many , and of are true , caring , trustworthy who love and are supporting','',positive
+'can come through triumphantly and with','',positive
+'is where happens','',neutral
+'is be happy','',positive
+'is try new and succeed','',positive
+'is first where am truly','',neutral
+'is first of loving','',positive
+'look forward learning and discovering even more of who am , and loving of','',positive
+'cannot believe of','',positive
+'need just','',neutral
+kill,'',negative
+'think really like talk right now','',neutral
+'at least punched in that is \"','',neutral
+'even worse , copied so poorly that last of on far right of is cut off , so as try read in for trying coherently complete and make of , which is often impossible because so much is left out','',negative
+'again , makes so angry','',negative
+'like , or or more','',neutral
+'or in','',neutral
+'','',negative
+'pay and , and and','',neutral
+'so guess counts for','',neutral
+'* cries * such is spose','',negative
+'am in such bad and playing in , getting angry at for that are really quite trivial','',negative
+'forgot how demeaning are','',negative
+'have not','',neutral
+'was asking that was completely baffled by and were just spouting','',positive
+'sometimes wonder how in made in , and wonder how going make through','',positive
+'mean , already need graduate which , for non , is about more than major and more than more for non major','',neutral
+'need find good where can go pray and','',neutral
+'do not feel like ever have of where can talk and cry and figure out','',negative
+'always tear up in too , for different','',negative
+'love brings together','',positive
+'ok feeling somewhat better now','',neutral
+', highly reccomend in , especially if have enjoying immensely and has effectively distracted from almost','',positive
+'think spent better of reading','',neutral
+'spose off for now','',neutral
+'small remind , in of , dying','',negative
+'someday will be more than expensive , , velvety inside of','',negative
+'rickety sitting on could fall , could catch stray on in , could be nailed by drunk , inattentive , careless , or simply unfortunate on','',negative
+'are unlikely , but happen','',neutral
+'is new , but constantly have ponder what desire take , achieve , or feel in','',neutral
+rebuilt,'',neutral
+saved,'',neutral
+wrote,'',neutral
+'or do simply want live and be remembered under large in well kept , forgotten after immediate , , and grand','',negative
+'could live in suburban with , few , , and in','',neutral
+'or should sink into trying acquire more and live in of with in , with huge , can go on and on','',neutral
+'does really exist','',neutral
+'should start devoting , if there is such , in hopes of making','',neutral
+'there would be constant that there is at of','',negative
+'past were able produce amazing of feeling and thought','',positive
+'were very limited','',neutral
+'at are somewhat melancholy , but can be completely forgotten at of , , or','',negative
+'first that come are \" in closing \" or \" conclude \" , and then quickly write of what just finished writing','',neutral
+'am now proud of','',positive
+', sorted out at on','',neutral
+'now have sweet little , totally depends on and do whats best','',positive
+'funny old , but think am closer understanding and now','',neutral
+'had long hard at over last , and be honest wept','',negative
+'wept for made where put before of','',negative
+'wept for said \" f*ck \" of \" thank \"','',negative
+'still have of , strong and , but have quit , havent drunk for of and am feeling better about','',positive
+'is going really well , and am getting out of going and coming','',positive
+'in awaits from or or nuclear telling worst , crushing hopes of better','',negative
+'can buy','',neutral
+'can get there and back on of','',neutral
+'are essentially same','',neutral
+theoretically,'',neutral
+'have same so why can not come up with of','',neutral
+'is amazing and can be sculpted for','',positive
+'however most do not exert mental required expand of thought','',neutral
+'have ever met without fully developed','',neutral
+'listlessly at and of thought do not delve deep','',neutral
+'do know how lucky are - find without looking','',positive
+'more often find bring down or worry about','',negative
+'single from can make of and worry worthless','',negative
+'whatever thought can be imagined - has taken that extreme','',neutral
+'is finding between and','',neutral
+'am not saying am other then happy - but strive for','',positive
+'of balanced into','',neutral
+balanced,'',neutral
+'comes from within - is regulating','',positive
+'but when try become own mental - ingesting alter - screw up','',neutral
+'stop producing because there is already too much in','',neutral
+'is lazy - if provide for - stops providing for','',neutral
+'so while is true','',neutral
+'\" within \" - only be truly happy is create and not rely on other or','',positive
+'bring is only temporary','',positive
+'yet often temporary is more intense then balanced','',positive
+'is however usually accompanied by and equal - is of balancing out in endless of','',negative
+'first is mad because have not called back in','',negative
+'second of is laughing hysterically because had put on because learned how open get out and seems be jewish because likes down','',positive
+'third starts asking why have only posted , so , is for','',neutral
+'figure have extra so budget certain','',neutral
+'almost bought cool shiney \" up \"','',neutral
+'ok , was out on when bought and wiped out','',neutral
+'tend think not','',neutral
+'called and inquired about','',neutral
+'on , will not affect','',neutral
+'started questioning because drives for and knows what safe is','',negative
+'','',negative
+'got less than back','',neutral
+'','',negative
+'made for at','',neutral
+'saw what meant when started eating','',neutral
+'as far as can tell , was','',positive
+'complimented on','',positive
+'killin is great and want marry for , liked , hahaha','',positive
+'well , what can say , has great , and best cooking , does not even cook','',neutral
+'great and think of','',positive
+'need figure what going throw out so can move from of of occupy','',neutral
+'are from','',neutral
+'by listening and asking why are feeling particular can discover need or has been satisfied','',neutral
+'for , if feel sad because have not seen in long need for has not been met','',negative
+'on , if feel happy because have spent with then need for has been met','',positive
+'how many have felt angry and as insulted , judged , criticized , blamed or physically hurt','',negative
+'live in that has encourages stuff and that is by most illiterate','',negative
+'so , what can do','',neutral
+'can become of what is going on inside','',neutral
+', of , has for that incorporates identifying and needs into','',neutral
+'also calls \"','',neutral
+'is about long and thick around','',neutral
+'by stating and needs avoid blaming and criticizing','',negative
+'can then go on making instead of help satisfy now recognized need','',neutral
+'when are angry or upset with can also use on','',negative
+'if are not correct will correct and will be closer identifying need have and finding resolve','',neutral
+'can make of and be on out for','',neutral
+'for , if feel furious may be better take and calm down','',negative
+'then when are calm , focus on sharing and needs with','',neutral
+'many in past have reacted like when feel angry or frustrated with or','',negative
+'for more on here','',neutral
+'- had of good vanila at , lets just say was satisfying','',positive
+'- was fun with best , managed run out of by and had for at','',positive
+'- at was awesome , did not want leave','',positive
+'was , , , great','',positive
+', beautiful , and manage pull off by of','',positive
+'- felt sick eating crappy , but now back into bad of , , and eating on','',negative
+'- was coming for in , and decided come along , so now abit booking and , will be depressed when','',negative
+'- help out with at , with conservative , had of taking of and whole','',neutral
+'- going on next can not wait get pissed with','',negative
+'sorry for rather crappy , will try do proper later','',negative
+yay,'',positive
+'- might be going hskp as will be , occational really hope pick , had enough of','',neutral
+'do not know what in is for but >> ve been sick and on of ._. ; do not know why','',negative
+'talked earlier on for first since added and yeah , was fun guess','',positive
+'have not been quite in , woke up early because brought , and then went back','',neutral
+'called few ago on and were at so guess was out of','',neutral
+'do not know why , just drained of and want cry constantly and for do not know why','',negative
+'','',neutral
+'do not know what happened , woke up feeling down and miserable and worse','',negative
+'losing out of love do and never good','',negative
+'do not even feel like doing right now and having force update','',neutral
+'was funny , mentioned if got out about have escape avoid , holy/hold , and and yeah xd suggested could try and make but then suggested could sneak into and steal','',positive
+'was hilarious','',positive
+'but not be taken literally , re just insane','',neutral
+'chatting with on , seem have in common with n.n fun','',positive
+'','',neutral
+'said will be back','',neutral
+'can live with , wish had do though ._. ; feel lonely','',negative
+yep,'',neutral
+'dunno what else say though except shocking that updating early','',positive
+'other than that also got from get adopted up since and etc meh , miss','',negative
+'t_t eheh','',neutral
+'but heh , basically','',neutral
+'well short anyway','',neutral
+'yet white that even has and saying hey , hold on second','',neutral
+'yes , that many around traditionally wear','',neutral
+listen,'',neutral
+'let\'s clarify','',neutral
+'is often interpreted as being , where heads are completely covered so as see only , or in at','',neutral
+'is called','',neutral
+'in actually means or','',neutral
+'is actual','',neutral
+'requires be modest , henceforth many of wear , or','',neutral
+', or legal makes clear are not obliged wear - but rather is cultural within more conservative or radical of just like has right','',neutral
+'most certainly raised even more anti-muslim but also more anti-french even amongst own non-christian','',negative
+'have passed similar , much of large turkish-muslim','',negative
+', famous for true amongst , have began treading in murky','',neutral
+'not on','',neutral
+', but edgy is not so happy about','',negative
+'and afraid could get ugly','',negative
+'clearly stated that feels should go -- but that should be over of and from within','',neutral
+'not mention many are saying should thank for','',neutral
+'what do know is that there are many , many who absolutely voluntarily and willingly cover with for religious','',neutral
+'is also true that many in wear','',neutral
+'says , -- look like sexy french with hanging out','',neutral
+'has similar','',neutral
+'now has large female turkish coming study here so can wear what wish','',neutral
+'is very secular , and indeed seen by most european as of of want being taught in increasing of and madressa\'s within','',neutral
+'is accepted and tolerated , as are which is extremely small of','',neutral
+'too have yet seriously and of indigenous white - who have opened from of worst economically and socially oppressed','',negative
+'has swing','',neutral
+'too need understand and of secular who now have deal with strict within own','',negative
+'if western can run around naked , can eastern completely cover','',neutral
+'there is and white','',neutral
+'and look at other','',neutral
+'extremely sad say that looks as though will be on as of past','',negative
+'essentially , is toggling with what , musically , wants pursue whether be or not , whereas in of , have decided leave','',neutral
+'with , of new that never were will be posted shortly for of who want hear','',neutral
+'sorry for , and can not speak for else , but rather have now than later','',negative
+'individual are under \" \"','',neutral
+'will receive of and/or of new involving from past or pseudo-present','',neutral
+'well , arrived','',neutral
+'bad is that got that , , passed away last','',negative
+'knew was not doing well has not been for now , but kept rallying , so was not at , but still sad','',negative
+'think was waiting for leave for here','',neutral
+', , is of and is very traditional in','',neutral
+'and came over collect great-nephew ,','',neutral
+'wanted b stay at least for so that had off play with','',neutral
+'still are not sure what is going on with transplanted as appears be \" peeling like \" , but and and such are leveling out and is feeling better','',positive
+'hey , how has been lately','',neutral
+'and there has been so much going on','',neutral
+'do know','',neutral
+'so last was long and was sooo sweeeet','',positive
+'came back from and was surprisingly nice spend with again','',positive
+'lol just kidding','',positive
+'anyways , on got see of favourite and was really fun as well 😃 go',😃,positive
+'and believe that gave amazing for specific and there\'s turning down','',positive
+'please just pray for and and other who are going not sure who yet so shall keep on','',neutral
+lol,'',positive
+'just feel like re getting caught in of hehe what funny and just wanted urge not forget about checking up on other','',positive
+'sometimes , need is little or get going again','',neutral
+'😄 lol wow',😄,positive
+'besides from random by hope know what trying get at , because know for , how is need help through','',neutral
+'first of , would like say that am proud of','',positive
+'what completed in , was not possible last','',neutral
+'walked into first only find','',neutral
+'asked if did not taking over , and of complied','',neutral
+'so rang , introduced and took over','',neutral
+'allowed finish up from before began new of','',neutral
+'was very short so gave go along with','',neutral
+'ran smoothly under most suprisingly actually liked being thrown into without having prior','',positive
+'on other , did know was teach full for &','',neutral
+'began by explaining what \" \" meant','',neutral
+'give better of how \" \" works , presented with that wrote on','',neutral
+'after was done reading , had tell what was had created','',neutral
+'was into','',neutral
+'gave brief on and before began','',neutral
+'after certain , would have go over just make sure were following along','',neutral
+'after , asked take out of','',neutral
+'answered on , then shared out as','',neutral
+'wow , hardly ever have','',positive
+'went , and was gone almost , and going skating with of','',neutral
+'','',neutral
+'and decided pay for , so got free','',positive
+'tried pay back , but would not let so got free sweet green , too','',positive
+rocks,'',positive
+'was gonna call best and see if wanted go , but was not there','',neutral
+'not skating-type , though','',neutral
+'will just have drag down of , lol','',positive
+'love skating','',positive
+'always fall on , though','',neutral
+'outgrew , and do not like renting','',neutral
+o___,'',neutral
+'what can say','',neutral
+amazing,'',positive
+'like , most definetely on top favorite','',positive
+'in , there\'s only about will buy ,','',neutral
+'and yes , read , of from other','',neutral
+'','',neutral
+'love making up , , and writing down','',positive
+know,'',neutral
+'and after reading about how real are','',neutral
+'pretty much are bland','',negative
+'leads , not who','',neutral
+'what like eat , what like , and don','',positive
+'','',negative
+'well , know that of are , too','',neutral
+hm,'',neutral
+'well , on writing would be appreciated','',positive
+'when ordering , mean','',neutral
+'actually enjoy driving around','',positive
+'know how pronounce of like , , , and','',neutral
+'know that there are , and that re','',negative
+'know what sell at','',neutral
+'can actually find around','',neutral
+'know at least named , , , , or','',neutral
+'have never been','',neutral
+'of is taught in public','',negative
+'own \" suck \" or','',negative
+'think is greatest ever','',neutral
+'pray for win not , but in','',neutral
+'know \" \" is also of can get at','',neutral
+'never go \" \" , go \" down \"','',neutral
+'re aware that there is , somewhere in , named where have biggest outdoor antique in','',neutral
+'know that is of strange dividing','',neutral
+'do not recognize \" \" as of','',neutral
+'ve slammed on deter at least , and sets in if can not see , or within at','',neutral
+'still try order curly from order iced in know what candlepin is drive save in tax ve pulled out of and used block oncoming so can make','',neutral
+'ve bragged about ve saved at know what \" regular \" is actually get and pass on other from','',positive
+'so , ok , like before last , but thought was funny enough mention',ok,positive
+'so and were chilling out at , after being out , and decided step out on for quick','',positive
+'well , new ; , went running out onto and barking up , as stuck out , there sat stupid young trying break into across','',negative
+'asked \" is white or \"','',neutral
+'came , talked for and then drove down second','',neutral
+', unfortunately , broken into already and was out','',negative
+'pick up on and call wihle walking behind','',negative
+'come outta nowhere','',positive
+'so investigate in','',neutral
+'so basically ve met new and have like going on now','',neutral
+'but now feel much happier and safer , and love did mention was after occurred','',positive
+'still love , even though woke up at of','',positive
+beautiful,'',positive
+'😮 although feel like ve been on really bad of & order now',😮,negative
+'there are in when find at','',neutral
+'afraid , confused , without','',negative
+'of , when faced with unknown many of would turn around and run back','',negative
+'but once in , push on','',neutral
+'into better','',positive
+'just beyond of going on alone and just beyond and takes let in , or let fade away','',negative
+'and only when tested that discover who can be','',neutral
+'worst have been personified','',negative
+'','',neutral
+'','',neutral
+'only know that could be anytime within next','',negative
+'there\'s else can say or do change','',neutral
+'woot finally got with','',positive
+'kinda bad because was feeling really sad/unhappy baught','',negative
+'but ve been wanting for like now , just never had , and never wanted charge','',neutral
+'but oh was bad and put on best','',negative
+'got , and oooh so sexy','',positive
+'got for , but need get clear protective for too','',neutral
+'maybe full too , because came with is little too snug , have force into','',negative
+hey,'',neutral
+~,'',neutral
+lost,'',neutral
+eh,'',positive
+'not that much but hey','',positive
+'is changing','',neutral
+'had first just other , have gone sleep and finally have stopped falling on and scaring when take still lame out take before','',negative
+'of have happened in past , since of','',neutral
+'very dear of have lost very important in , and have had be strong can lean on','',negative
+'though do not tiny has been odd for rarely strong','',positive
+'am usually reduced laying on big green in fetal eating leftover and crying about and at once','',negative
+'turns out has just made pretty much that thought knew','',neutral
+'did not see coming','',positive
+'well , maybe do','',neutral
+'but scares even more','',negative
+'talk about','',neutral
+'love dearly and will forever , but definately was not ready for','',positive
+'find again , stuck in where have rediscover over again','',neutral
+'in , lost','',negative
+'feel lost','',negative
+'very disconnected and , not sure where go from here','',negative
+'but do not want admit yet','',neutral
+'so stay tuned','',neutral
+'for :','',neutral
+'gotta milk for re worth','',negative
+'do not get for more','',neutral
+'have great for new','',positive
+'want get done in for next','',neutral
+'well , seem have done','',neutral
+'did not mean hurt at','',negative
+'was just scared','',negative
+'scared of','',negative
+'look ahead and want see being successful , married , with , and great','',positive
+'however , seems have been making are hindering','',neutral
+un-happy,'',negative
+'get , commit and do not want','',neutral
+'do not want get hurt','',negative
+'* sighs * have bad of hurting before can hurt like if think could and might hurt then hurt first','',negative
+'then think if commit only , what if missing out on else','',negative
+'what if is not for and making huge','',negative
+'but then also think what if are','',neutral
+'say , \" , do , \" say , \" , do','',neutral
+'don\'t know','',neutral
+'will wait for show what wants do','',neutral
+'just have when start trying do without and never works','',neutral
+'will post back when get','',neutral
+'welp has been long tiring lol','',positive
+'lay on and zonks out pretty fast and now so used will not sleep in or so have find for sleep in','',neutral
+'says not let on for and only sleeps good','',positive
+lol,'',positive
+'need though will tell that lol','',positive
+lol,'',positive
+'sleeps most of and then never sleeps at','',neutral
+'oh well know that comes along with having lol','',positive
+'will be glad when gets here so can go and then can come back and take little','',positive
+'am not thrilled about going over there','',neutral
+'lol , and so figgured would just go','',positive
+haha,'',positive
+'what get for rubbing in that and not','',neutral
+lol,'',positive
+', had , , other that are , and of other lol','',positive
+'still need do later and need do and then maybe just maybe will get lay down for before wakes prolly not lol oh and for that wants see if there is not nice coming up may have come because for be taking out in , do not need sick along with other lol , or can come when are over at , other than on seeing lil lol','',positive
+'maybe is , dunno','',neutral
+'am once again becoming , which was originally buy new \"','',neutral
+'whoring now is make enough pay on , not buy new and fun','',positive
+'at least of is going down , per across now','',neutral
+'is still just','',neutral
+'have new of and , which will post shortly','',neutral
+'just celebrated great on 8th , and last carved brought , was pretty sweet','',positive
+'bagpiping got moved of \" together \" , so puts small on see other for','',negative
+'oh well , at least can make without of','',neutral
+'kinda far from where am , but is worth','',neutral
+'is unlimited for most between and','',neutral
+'is good for odd like also , there is outdoor , which accepts of , ,','',positive
+'best is , shoot pretty well there , and is really good','',positive
+'if is interested , , and can be found on just','',neutral
+'will write more later','',neutral
+'are starting get interesting','',positive
+'made with various who specifically with and stand down on of military in','',neutral
+'who knows where will be playing in','',neutral
+'in mean have huge private in booked and and for as well','',neutral
+'who wants will send','',neutral
+ha,'',positive
+'would not be','',neutral
+'leaving for on 18th for','',neutral
+'at for','',neutral
+'but love','',positive
+'like of poured into last for','',positive
+'of had','',neutral
+'is vs','',neutral
+'maybe will put on','',neutral
+wow,'',positive
+'last had long at about and','',neutral
+'do not drink anymore','',neutral
+and,'',neutral
+'polite of saying','',neutral
+'looks like','',negative
+'has staying who attend west','',neutral
+'re cute','',positive
+'so toned down and slept until right now','',neutral
+'is gone and just cleaned up , so now going loosen up , take long hot , put on and adorable , and make','',positive
+'','',negative
+'almost died','',negative
+'look at like on straight','',neutral
+'oh and ps','',neutral
+totally,'',neutral
+'other was at with and and came up','',neutral
+'\" how much give for','',neutral
+'nevermind , ve got could be studying for','',neutral
+worth,'',neutral
+'within bid on and won about','',positive
+'are just so cute can not resist although think am under now','',positive
+'still have have not arrived yet','',neutral
+'at is starting laugh at where am going put','',positive
+'have only had bad on so far','',negative
+'was not packed well','',neutral
+'was broken','',neutral
+'emailed and told about and was very arrogant and rude','',negative
+'well , needless say was far below have seen so far','',neutral
+'told was ---- -- and gave negative','',negative
+'in gave negative','',negative
+'man just can not seem keep out of','',neutral
+'and because am such negative had bummed for awhile but now am better','',negative
+'even sold few on','',neutral
+'see at has several electric','',neutral
+'will have work on','',neutral
+'have been staying pretty close but still having good','',positive
+'has finally cooled down which is big','',positive
+'there always seems be much do around here and do not seem get much done','',neutral
+'love \" and with','',positive
+'means recline on with good after and is always stretched out on','',neutral
+'then wants put in before plant in','',neutral
+'just takes and','',neutral
+'well , must go put in','',neutral
+'also made with','',neutral
+'y have good','',neutral
+'oh shit , by',shit,negative
+'so , love of , really do','',positive
+'','',neutral
+'then later hung out with until like','',neutral
+'and cleaned , which was much needed','',neutral
+'came and got together go up','',neutral
+'first off , get up , and can not see worth in dark','',negative
+'were up there for awhile and why or how , but pushed off of and fell flat on back scraping up , which hurts ha','',negative
+'then were cutting damn down , and made go with then by dragging over since did not want go , and when tried sneak away','',negative
+'guess walked behind right when swung huge and swung right into','',negative
+'not only , ended up calling , and ending up balling like , because really do miss and used have','',negative
+'even after getting off with , balled forever','',negative
+'plus , did not eat at , and ended up getting really sick','',neutral
+'was real lame','',negative
+'ehh other than was good','',positive
+', made since loves , and had so feel better','',positive
+'going out for little , and then gonna see if and want stay','',neutral
+'started ago in at least sounds cool','',neutral
+'yeah , know , right up there with laughing off few measly','',positive
+'anyway , get and notice feels kinda tight','',neutral
+'but after , has not really happened','',neutral
+'but , who usually just prescribes for over , starts throwing around like \" , \" \" , \" and \" \" and start thinking , \" oh shit',shit,negative
+'of once says \" degenerative \" and \" not uncommon at \" do total and hear pretty much afterwards','',neutral
+'so what\'s do cheer up','',positive
+'so old , but have really cute show for','',positive
+'used lie before like pretty and rarely gave much thought','',positive
+'well , know what','',neutral
+'in last','',neutral
+', , , ,','',neutral
+'lays down for like','',neutral
+'have felt most free , most alive','',positive
+'have been at best , have shone brightest','',positive
+'skipped or or','',neutral
+'read backwards','',neutral
+'or just set whole and made up as ve gone along','',negative
+'is ,','',neutral
+'happened again','',neutral
+'sucks for but said would not let drive with','',negative
+'plus , means can get in which means will be good for','',positive
+'know can drive not just need study more for written','',neutral
+happy,'',positive
+'but free til 31st','',neutral
+'call just letting know suck at at','',negative
+'first : heh heh heh , so appropriate fer','',positive
+'\" dunno , and find out','',neutral
+'leave for in','',neutral
+'could not fucking decide get caught , know , after landed','',negative
+'had be stupid and think in clouded that change','',negative
+'or convert , or just blow up by in fucking , , or','',negative
+'let calculate how long that will take with current of and current','',neutral
+'so fuck off','',negative
+'so far , ve done is cause international of having over and make sure is not nitroglycerin by drinking','',negative
+'ve killed less in last than did in in','',negative
+'so fuck off','',negative
+'if read instead of fucking damn realize re perfectly capable of raining upon in very effective , thank very much','',negative
+'do much better anyway','',neutral
+'how about ignore , will ignore , can go and can be and suffer through evil','',negative
+of,'',neutral
+'what do care if are bad','',negative
+'might drop or','',neutral
+'being little flippant here , but sure get','',negative
+'oh right , forgot , either','',neutral
+'may think winning , but not','',neutral
+'because are annoying','',negative
+'which is worse than pissing off','',negative
+'because when piss off , have used measured','',negative
+'have be diplomatic','',neutral
+'when annoy long enough no will care about','',negative
+'will just let do want because want brush fucking on after really bad','',negative
+'never underestimate of wide and','',negative
+'am rational , intelligent , rather well informed individual','',neutral
+'and annoyed','',negative
+'in will spend probably in , whereas , ago','',neutral
+'why must show up early for','',neutral
+', really is so when standing in , or waiting around , will be thinking of','',negative
+'trying keep rational and logical from straying bad about how stupid human is and how is but','',negative
+'and try and sympathize with being racially profiled ahead of and making for even longer wait in','',negative
+'fuck off','',negative
+'was frustrating','',negative
+'well , actually , have be , but','',neutral
+'annoying as get out','',negative
+'will be like','',neutral
+'but sent in ago','',neutral
+'look up mumbles and see that has come in for','',neutral
+'then throw little for as repeat over and over','',negative
+'and then hang up','',neutral
+'and then get equally obnoxious','',negative
+'happened unhealthy','',negative
+so,'',neutral
+'but really , only had few','',neutral
+'never happened','',neutral
+'and then was with over was doing wrong','',negative
+saw,'',neutral
+'sat outside on','',neutral
+'talking about running into ongoing and killing , and doing','',negative
+'and told shut up','',negative
+'got up and said does not have take from and was especially angry at was mega','',negative
+'tried control','',neutral
+'was so good-looking','',positive
+'has new','',neutral
+'like made and stop smiling , look straight at , and say \" shut up \" at same','',negative
+'still too soon make','',neutral
+'hell , never make','',negative
+'because knew needed','',neutral
+'of would say and would get angry and tell shut up','',negative
+haha,'',positive
+'let slip','',neutral
+'did not want make with , but made','',neutral
+'was brief , and single , would smile','',positive
+'and did not try touch','',neutral
+'whole there was grabbing onto and screaming like and who came along got swift in from','',negative
+'asked , \" what are doing \" and looked angrily at like did wrong','',negative
+'was wrong be taken aback by','',positive
+no,'',neutral
+'started talking about why was so mad , and said \" called retarded \" , and explained that was being','',negative
+'and said since started ,','',negative
+'and now','',neutral
+'\" whatever \" ugh','',negative
+'told did not lose , and just looked at and did not say','',neutral
+'just do not show anymore','',neutral
+'walked away quickly','',neutral
+'followed , but took look back at was angry','',negative
+'facial was beyond hurt','',negative
+'\" yeah , going go','',neutral
+'\" no , going go','',neutral
+'\" is really hard tell','',neutral
+'know should not have been snotty about but thought was fucking obvious','',negative
+'called as for but said was busy , was near crying and was \" busy \"','',negative
+'like into walking pulled up drive','',neutral
+'hung out in for of talking and laughing','',positive
+'missed so','',negative
+'was fantastic , was old and there were real live everywhere , was cute and adorable but very touristy , was gorgeous and adorable and was there so whole made very happy and clearly was of , was fantastically beautiful but boring once ve seen , was sketchy but had great and now , and think most wonderful ever been and dont ever want leave','',positive
+'well , give and will be out of here but for now , good','',positive
+'was wonderful be away from but is indeed wonderful be back','',positive
+'had of in which used','',neutral
+'felt particularly inspired few after left becos had finally finished and reading always sends into great fits of','',positive
+'maybe will share , and maybe wont','',neutral
+'only sure of at in is is beautiful and am just so satisfied and so content','',positive
+'but for now going go how fabulous smells','',positive
+'good bye :','',neutral
+'is going well suppose , most are nice and ve been warned of are better avoid','',positive
+'re starting put in other of , which is of nifty','',positive
+'ve been having random and lately , but happens','',negative
+'suppose there\'s been of , including with','',negative
+'went ago and of figured easily be back together , but there seem be of in','',neutral
+'will turn out or','',neutral
+'as always','',neutral
+woot,'',positive
+yeah,'',neutral
+later,'',neutral
+'but , with mad , was able convert while faithfully maintaining and of , including','',negative
+'and did in about','',neutral
+'','',positive
+'p.s. if do not understand exactly what did technical , just know that was impressive and rock','',positive
+'so and here am in of','',neutral
+'decided watch as much as possible and also made of would use','',neutral
+'but anyway , so watched during and when came by , decided do and play ; beat','',positive
+lol,'',positive
+'then , came and deicided make','',neutral
+'guess was somewhat fun , considering spent with younger','',positive
+'but other than , feel really alone right now because and','',negative
+'have not really been going out much and just makes mad since told make best of since be going in','',negative
+'gosh , in exactly going start and am nervous','',negative
+'do and do well- and will speak for','',neutral
+'congratulations- and welcome where and and do not hibernate -- walk among','',positive
+love,'',positive
+focused,'',neutral
+'have average in','',positive
+loving,'',positive
+'when comes into after and announces that moved up from and got','',positive
+'think will stay at','',neutral
+'makes sick that is','',negative
+'could be in','',neutral
+'are just awesome','',positive
+': do first','',neutral
+'spend answering calls for and then be free go where-ever desires','',positive
+'just move somewhere else','',neutral
+want,'',neutral
+want,'',neutral
+'ve been staying at and keeps telling be awesome','',positive
+'yeah- really would','',neutral
+'see just how much good does','',positive
+'','',neutral
+'never once had that did not make at least once during','',positive
+'old comes back me- has slipped , but \" are and and of','',neutral
+'corporate at least','',neutral
+'but ve not talked most important in in over','',neutral
+'and killing','',negative
+'starting at next is break- gotta give and pulling with might keep together','',negative
+'do not know what do','',neutral
+'tired of broken and empty','',negative
+'is wearing thin- on last and though may think cool not do what says going not cool','',negative
+'worst love','',negative
+'love with of that am- but try as might- just cant get together','',negative
+'not over','',neutral
+'re still together- and still have make right - - - but very patient and been close now- and is wearing thin','',negative
+'would like be married before','',neutral
+'yes , are having small','',positive
+'am always so happy after talking','',positive
+'anyway , said since and of are having stay , are getting come for whole for after are done with and before go permanent','',neutral
+'of that was sent with thought were only going for','',neutral
+'so thought were going for and thought was going for and then are staying for','',positive
+'and of are furious','',negative
+'says that is unreal','',negative
+'now , do not know yet when will be , but do not care','',neutral
+'was first that thought \" will cut down \" and said','',neutral
+'still has not had','',neutral
+'told that better get on and looked at and yawned so maybe was yes , lol','',positive
+'if not may have get induce','',neutral
+'will see','',neutral
+'was of first that wanted know \" hows , has had \" think loves as much as will never forget first that docked by was tuff\'s','',positive
+'was so proud','',positive
+'had watched but still did great','',positive
+'now , wishes that was here help with','',neutral
+'but am still sooooo excited that will get see for','',positive
+'start very last','',neutral
+'\" love \" is so inspiring','',positive
+'feel very uninspiring','',negative
+'am going give and apologize if boring or ugly','',negative
+'can not decide if want pay make fancy','',neutral
+argh,'',negative
+'am currently angry because want jarred take for','',negative
+'is laying like on watching :','',neutral
+'usually or','',neutral
+'','',neutral
+'if went and got in right now','',neutral
+'oh oh oh is yelling at , \" are ready go , already','',negative
+'like holding up','',neutral
+'have been laid off at in past','',negative
+'when come back from and return , will not have anymore','',neutral
+'now is down','',neutral
+'will miss and can not say goodbye properly now','',negative
+'will have plan at of','',neutral
+'> sigh&lt','',negative
+'now ready get away and','',neutral
+'and barely','',neutral
+wellll,'',neutral
+'excited move in','',positive
+'and basically packed becuase never unpacked except really','',neutral
+'except have of in general','',neutral
+'','',neutral
+and,'',neutral
+'and also because and have formed','',neutral
+'called came up with','',neutral
+pretty,'',positive
+'lol jk','',positive
+'but want go','',neutral
+despite,'',negative
+'and , ciao for now','',neutral
+'was mucho fun','',positive
+'haha he\'s bestest in , had of , & just for','',positive
+'inside inside','',positive
+'ew , had really crappy','',negative
+'for too but love [: walking is always really fun too','',positive
+'well for that rather not name','',neutral
+'was just in & yeeah , sucks be','',negative
+'mmk on next , &','',neutral
+'was like , really fun','',positive
+'was really tired since was like','',neutral
+'never really noticed but , , & are fun be around with','',positive
+hahah,'',positive
+'was even more fun [: ended in & yeah','',positive
+'know talking about but pretty much been happening','',neutral
+ew,'',negative
+hahah,'',positive
+', , & : re seventh ] first at','',neutral
+love,'',positive
+'had cool wanna take , hahah','',positive
+'after , saw , & & guess came with &','',neutral
+'pretty much waisted are buying sparkled that though were naasty','',negative
+'saw then headed after','',neutral
+jk,'',neutral
+'hung down like at & acted like little at once again','',neutral
+'fun fun fun','',positive
+'sucks did not bring but yeeah','',negative
+'& think coming over not sure who , haha kaay bye','',positive
+'posted at -','',neutral
+'must say has gone by in of','',positive
+'not that had off in','',neutral
+'have been quite preoccupied though so can not blame of on','',neutral
+'just once would love not have worry about of','',positive
+'and have more than of','',neutral
+'go for next along with at','',neutral
+'should be interesting','',positive
+'was beginning worry de have put off for yet','',negative
+'have not really given much thought as of recent','',neutral
+'started with , and was working towards , now do not see anymore','',neutral
+'hey will be rich individual','',positive
+whoot,'',positive
+'really in just for 😉',😉,positive
+'actually just want give','',neutral
+'still will have back up and true go into , but for now want do','',neutral
+'maybe have become lazy in thought b/c do not bother with','',neutral
+'worry gains no more','',negative
+and,'',negative
+'have blame but','',neutral
+'has become just big','',negative
+'with , , etc ., seem revolve around how crappy are is , has been , or is going be , and seems like compete with see who has','',negative
+'do not have , do not know what want in long','',neutral
+', at','',neutral
+'love unconditionally , and cherish with , even eldest , who pushes over , but have developed certain deal with','',positive
+'have look at in , and would break','',negative
+'have inside of that cannot , foreign that has stolen away of normal','',negative
+'being alienated , being alone','',negative
+'have where have come know amazing who have such , but possibly will never get put due of in','',positive
+'but make at memorable','',positive
+'am not thinking long','',neutral
+'am happy with casual , not serious ,','',positive
+'frankly would be just as happy alone','',positive
+'maybe more so','',neutral
+'are better off where are now','',neutral
+hopefully,'',neutral
+'have of want do during , and add new','',neutral
+'lol , lets just hope do not run out of complete','',positive
+'says , even if was written by','',neutral
+'guess fit refers , in regards having only or that would fall into \" \" , if only because of circumstantial or geographical being taken into as well','',neutral
+'of will be moving , and have awful going on in , in being less available than first by long anyhow','',negative
+'definitely feel like , moreso than other in , operating almost at in regards have and interact with','',neutral
+'ve burned of and engaged in which have hampered be trusted as much as like be by of , and likewise , there have been which have altered fully engage as well , be circumstacial or environmental or whatever','',negative
+'re getting older , have more work-related matters and personal can get pretty complicated','',neutral
+'on \" big \" , like believe that still hold same that held when was old , now scary half-a-lifetime ago','',negative
+'in , satisfied with bigger and angry as fuck at smaller , but what keeps going , is not','',negative
+'if did not have be better than what currently am , would have keep living at','',neutral
+'as far as \" \" go , ve seen what do people- at best , act as help reach within and outside that may not have been previously able reach','',neutral
+'may be where hang , but is sometimes found far from or in last even expect look for','',positive
+'think sometimes can be easy lose of and are completely separate and having does not guarantee or equal having other of , at least','',positive
+'goes back whole vs , in only by arriving at , while are capable of enjoying required reach as well','',positive
+'now which are most of','',neutral
+'works same only appreciate which are productive and goal-oriented , whereas there are also that along , and can be as interesting and rewarding as before and after','',positive
+'know guilty of','',negative
+'often fail realize what ve lost until becomes too distant and difficult regain','',negative
+'old fester into that can not be healed , becomes which then becomes , and before long wonder if ever happened','',negative
+'sucks , and takes keep from heading down of , but far outweighs of failing do so','',negative
+'so what does then','',neutral
+'can only change own , so expend have be met with of equal or goes nowhere and frustrates entire','',negative
+'is worth , or is better just let play out and look for new','',neutral
+'guess do what can make most of what have , if not enough then likely never was , and in , at least know tried','',neutral
+'as of late , seems do , do just annoy re great','',negative
+love,'',positive
+'are annoying','',negative
+'not going go into here , but almost always ends up in yelling and','',negative
+'was thinking about most recent at and wondering why turns out','',negative
+'only plausible is that want out','',neutral
+'now , know that will reach soon enough , but damn feels like is taking forever','',negative
+'know normal for who\'s in be living with , but does not quell wish be independent and free','',neutral
+off,'',negative
+'of angry with finished , who pays for but has how run','',negative
+'oh yeah , and best','',neutral
+'been and still really pissed off','',negative
+'have been trying post for , but bloody was having on and could not do - was due be posted on','',negative
+'further by , did speak about further when said \" new is making feel really healthy \" - yes considering eated of , and then gone out , and was going out with','',positive
+'paying eat , and then eat again','',neutral
+'but asked about why does not cook for , and said just does not have enough','',positive
+'on think said','',positive
+'is who gets into at , leaves by , takes get , dry cleans , has , does not have or chase after - and does not have explained that travel , go , go more than does , cook , have , and have look after','',positive
+'let see - , sitting on drinking , bitching about , being complete','',negative
+'great right there','',negative
+'does not have if of more important than actually looking after like is not important enough','',neutral
+urgh,'',negative
+'think though , what pisses most off about - is that has chosen easy \" do not have do \"','',negative
+'but since has chosen , just really irritating , because has of - just is lazy','',negative
+'could easily cook own - probably more than half','',neutral
+aarrgghh,'',negative
+'sorry for ranting , but just really annoyed that here am , struggling with internal about , and like , with of , can just pay lose for','',negative
+'slams on , stops , right in of , in of , and gets out','',negative
+'then comes up and starts yelling at','',negative
+'\" like almost hit omg \" said , tossing dyed blonde like enraged , flaring','',negative
+'not very nice , not when facing','',negative
+'\" omfg if there is like','',negative
+'\" threatened','',negative
+'must admit , was of fascinated by , rimmed in black , managed stay so wide like','',positive
+'went on like for good','',neutral
+'finally got fed up','',negative
+'write down','',neutral
+'was when turned into of from','',negative
+'grabbed of , and tried push off','',negative
+'now , are already honking and because is blocking','',negative
+'re struggling with','',neutral
+'got mad','',negative
+'hit so hard','',negative
+'hey , assulted in of','',negative
+'and was on fucking','',negative
+fucking,'',negative
+'must have been gone hella bad','',negative
+'and found out in most annoying','',negative
+'woke up on , bright and early as do go into','',neutral
+'walked over as first of and was very surprised when oh would not turn on','',positive
+'but then of , who was already up , informed that , was that was not working anywhere in','',neutral
+'grrrr - then spent next or so turning off in , switching back on , and then sequentially turning back on until was tripped','',negative
+'tried make sure was not','',neutral
+'thought for about what do , not really being able afford new or fix','',neutral
+'at first of thought about possibly buying new for , but was sadly left behind due monetary','',negative
+'in then end other lovely love','',positive
+'offered give woooo','',positive
+'so , ve now gone over without hate think what half is like in there','',negative
+'but will joyfully be picking other up','',positive
+wooo,'',positive
+yay,'',positive
+'as wrote in recent posting , even in favorable political democratic face significant in turning out','',neutral
+'despite widespread among with and , detect real so far at least in of actually vote in','',negative
+'goes nationally over rising and , protracted , expensive with in , and among religious that has failed deliver on that motivate has taken with','',negative
+'well , maybe','',neutral
+'as noted in latest of & , new has feeling pretty darn good about turning out , with that will vote return elected power','',positive
+'is or is true','',neutral
+'in other , for political : persuade can , turn out , and assume other usual will vote','',neutral
+'feel like could fly','',neutral
+'with ofcourse','',positive
+'not different or , different in how am in , compared','',neutral
+'and re being best can for other , and shows , and pays off','',neutral
+'re and and inbetween','',positive
+'am already , know and hope does too','',neutral
+'and learned from past what do and what not do and watching what say and how say and','',neutral
+'duno , kinda losing of wht want say here','',neutral
+'so wont have too high up about , but noot going sit here and think/dread either','',negative
+'will cherish love and let know there and care for that have together','',positive
+somehow,'',neutral
+'was little abusive , mainly with and directed at / make feel bad','',negative
+'had with too , and','',negative
+'could car eless about and as long as got was alright','',neutral
+'other than hed get offended or pissed off or ignorant about','',negative
+stupid,'',negative
+', why did waste so much on sorry','',negative
+'oh yeh , was sub-conciously restraining and waiting for > 😃',😃,neutral
+'after went of best for','',neutral
+'saw went with once back at there at','',neutral
+'have not seen in','',positive
+'goes he\'d be there','',neutral
+'hm , was weird','',positive
+'had good with','',positive
+'however spell ah , talked about anri\'s and mentioned how was angry with visited , cos kept busy most of','',negative
+'oh ya were talking about','',neutral
+'anyhow asked then at but why would be angry with','',negative
+'\" whahahaha \" nearly cracked and do not think did not blush','',positive
+'was funny','',positive
+'at was giggeling','',positive
+'w0rd am dead tired','',neutral
+'then wanted go , cos just visited for and has go back where in like of away from','',neutral
+'went in , cos apparently have','',neutral
+'be only , cos is scared of driving with >.> do not ask','',negative
+'sat on and mostly felt like sleeping','',neutral
+noooooooo,'',neutral
+'now was fun','',positive
+'will try and upload somewhere or do or will see','',neutral
+'took of little in','',neutral
+'somehow got in that had go test so that can take and like was not enough had throw moves','',neutral
+'funny came out there','',positive
+'wanted take of , but there were','',neutral
+'and on driven that was in','',neutral
+'would like just walk around or sit somewhere where are and take of , especially like','',neutral
+love,'',positive
+'get lost in','',neutral
+'went for and','',neutral
+^.^,'',positive
+'and dark','',positive
+'wanted go and wanted go and do not know what','',neutral
+'almost sat there for','',neutral
+'was as clear as','',neutral
+hm,'',neutral
+'really sad how can actually sit and wonder in is and other is','',negative
+', do not worry about am just expressing , does not mean do not accept still as , just kinda thinking out loud that believe same as hmmm','',neutral
+'so went and was nice be there','',positive
+'went afterwards','',neutral
+'did not think would do , but hey','',positive
+'sat there drawing and uhm rang and was','',neutral
+'am too tired now','',neutral
+'want pose serious out there chooses read','',neutral
+'no , not stupid for of that may be wondering','',negative
+'does seem quite obvious but what if knew were gonna die , like possibly sooner than later , for','',neutral
+'have that is gonna die , probably sooner than later , and was angry because of has made in last few have cut down virtually','',negative
+'so tried step out of for and look at may have been viewing','',neutral
+'','',neutral
+'have wonderful that love and cherish','',positive
+'are virtually unstoppable','',neutral
+'then start take in unexpected','',positive
+'think constant , and , , and','',negative
+'so decide join','',neutral
+'is still for taking','',neutral
+'goes well with','',neutral
+'leave there with renewed of and take full of','',neutral
+'comes in with of and','',negative
+'think that maybe had too many , or maybe there was small in past that has presented from being selected join','',neutral
+'begin prepare hear bad and immediately go into plan out next','',negative
+'begins speak while re planning , \" sorry have tell , can move back for and go back and on','',negative
+', but will not be able welcome into could do and explore','',neutral
+'so what do do','',neutral
+'is as was given , and when heard was pissed','',negative
+'see , knew had cheated','',neutral
+lol,'',positive
+'so imagine when was about engage in with and saw of coming from know where','',positive
+'then tells that gonna test for , but also that gonna have test for','',neutral
+'like , \" for what','',positive
+'could not answer','',neutral
+'really , what did make think','',positive
+'would have given , who obviously had little for , in for and','',negative
+'fortunately , came back negative for and','',positive
+'was of thankful , but realized very important during','',positive
+'realized that belongs fuck','',negative
+'second was pissed was because not only was is dying from and has had entire that have been , but has not taken appropriate of that with should be taking','',negative
+'never took other than','',neutral
+'when first became was , so was pretty fit for most','',neutral
+'maybe maintained in because thought that could somehow','',neutral
+'wonder what changed about','',positive
+'ve asked about , and has never really given','',neutral
+'but think about alot , and wonder exactly when did decide die','',positive
+'wonder what would have made differently had from given different','',neutral
+'would choose live , or would choose die','',neutral
+'however , if are so compelled do so , please leave and','',neutral
+'is on','',neutral
+'going be trashed','',negative
+'even tho have on which is cause sucks','',negative
+'usually always so pumped for','',positive
+'seriously dont know what am going do at','',neutral
+'just sucks when known for just disappears','',negative
+'; sjdf ; ; fjlakjsf','',neutral
+'miss myrtle','',negative
+'cried on from','',negative
+for,'',neutral
+'hearbroken </3',</3,negative
+/,'',neutral
+'not bad here at','',neutral
+'just annoyed','',negative
+'good b/c def dont have move out right now','',neutral
+'is in','',neutral
+'maybe wont be so bad','',neutral
+'then convince move out with','',neutral
+'since wanted get with is now moving away b/c of freaking','',negative
+'look at','',neutral
+'gnite darlin','',neutral
+'well , well , well','',neutral
+hahaha,'',positive
+'well , surprised that actually found','',positive
+'so searched for and finally found','',neutral
+hahaha,'',positive
+'so , drop by and tell what of are up','',neutral
+'so missed cool met at','',negative
+'not religious like or societal like shaking , but personal','',neutral
+'and how can possibly develop more and fewer in','',neutral
+'granted , not global , , just big','',neutral
+'like in','',neutral
+'want next be lived on','',neutral
+'and how can start now','',neutral
+'of most surprising about whole is how much easier was establish new when was on , as opposed being at','',positive
+'makes that there is for or who successfully gets straight or sober other than where live','',neutral
+'so anyway','',neutral
+'','',neutral
+'not advocating , or','',neutral
+'but do know of of','',negative
+'like say that are more active and crunchy','',neutral
+'but alas , are not yet','',negative
+'* when come from , first do is put on','',neutral
+'but when started thinking about do regularly that enjoy , definitely of','',positive
+'* other , and get and','',neutral
+'and come away with cutest ever','',neutral
+'* absolutely adore is going outdoor at during','',positive
+'* when not working , have been known take on : just and currently enjoying','',positive
+'maybe after ends , will be able start new','',neutral
+'how very telling','',neutral
+'is not good','',negative
+'and like are what come','',neutral
+'* happy taste new of love try new , but when comes ordering , always','',positive
+and,'',neutral
+'* of keeps from going when really tired','',negative
+'or just totally mental that do','',neutral
+'how do think can instill more meaningful into','',neutral
+'\" of after sitting at folding selling comic is truly pathetic','',negative
+'can be when comes buy','',negative
+'- , whom had of at , from conversational on what could learn from european','',positive
+'really enjoyed at , of rare and exclusive and and who brought about','',positive
+'do not sweat , just : traveled and half down on with attained storied by agreeing drive , arrived after opened , stayed until , then went right back','',neutral
+', in other , was full of and stalking','',neutral
+debuts,'',neutral
+'met awful of fine , but hated taking up much of ; knows by there\'s of waiting trudge through between , and thousand attend','',negative
+'there were direct or , though was not hard find ask of','',neutral
+'there were of with and and totes , and and on certain attract , and even of entice stray','',neutral
+'of in off , and and whipping of around','',neutral
+'was , on','',neutral
+'after passed by large promising , as well as haunted and possibly or in , decided turn around and stop at little passed on','',neutral
+'hurried back from gray of and , followed close behind by haunted who\'d just bought cheap for stable and were now jonesing for independent','',neutral
+'love walking around for buy , and traveling less than arrive at of will not raise too many personal , let tell','',positive
+'also really glad had with , since knew of faces that didn ; made fine , though of would occasionally wander away from other in of old of who framed though unsure as of was','',positive
+'actually , think maybe best about is how is of pressed together , placed near seemingly without much for heard was different in prior , with multiple selling and ); if in and on were not comprehensive of english-language non-superhero , there was at least enough manage of','',neutral
+'look only at , imagine that there was as of','',neutral
+'there was nowhere sit in , since got there late , so sort of drifted in and out of hearing','',neutral
+'behind turned else and whispered \" just like','',neutral
+'talk was different , highly entertaining , digression-prone by through and , moderated by and with extra from , who was seated in of','',positive
+'was particularly brusque at , at least from among , but found be consistently most emphatic and friendly around','',neutral
+'tried follow of not buying on first around , but did not quite hold','',neutral
+got,'',neutral
+'by & reviewed of few ago ; having walked away from , and indeed entire , suddenly realized forgotten actually tell who was - of','',positive
+'edited by new of funny , comics-heavy devoted entirely finest in and pornographic - creator\'s , and assure that is in real exactly portrays in','',neutral
+'edited by & mentioned , but did not note that also got hard of','',neutral
+'& pluck in of by surely can not be only of mighty & pluck ; still , ve never seen in , though had at','',neutral
+': by various from of , free , parodying original of','',neutral
+'by debuted at , probably of , and ve gushed enough already ; when went , became momentarily transfixed with and murmured \" want make like \"','',neutral
+': romantic by various debuted at , newest in adhouse\'s of , strictly devoted romance','',neutral
+r,'',neutral
+'so was nice','',positive
+'of good have , and good shake','',positive
+'hope do again , and add on few more','',neutral
+is,'',neutral
+'think in of or of , can not remember which , but there\'s so much in actually sleep','',neutral
+'no , alright , ve had of come with','',neutral
+'of have found little strange ; think of break up with in , as if need anymore','',positive
+'most of , sit in','',neutral
+'try and remedy , spend reading','',neutral
+'how important can be','',neutral
+'but was good , and if did have where had with , well , now know what means','',positive
+'sometimes , can not reading about , though','',neutral
+'did not always have','',neutral
+think,'',neutral
+'not sleeping has terrible of playing with','',neutral
+'really do when there\'s','',neutral
+'do go again','',neutral
+', but might be','',neutral
+'but think work on','',neutral
+'how else would keep straight','',neutral
+'can not always read about , or whatever may be','',neutral
+'tell , but do not go','',neutral
+'weigh about , about , \" , do not have that seems be wrong with have weird on','',positive
+'from when was','',neutral
+'and there\'s on','',neutral
+'would say was from drunken of , but ve never blacked out','',neutral
+'oh , get drunk , but seems happen where forget','',neutral
+'remember second , horrific leaning over and puking','',negative
+'selective , say','',neutral
+'think be at , but menial','',neutral
+'spend most of in typing and filing , thinking about what read before , trying process , trying figure out what is/has been happening last , read as lay dying by','',neutral
+'of confusing','',neutral
+'think had','',neutral
+'at , and left at','',neutral
+'unless returned','',neutral
+'when nice','',neutral
+just,'',neutral
+'takes by','',neutral
+'so often , walk around','',neutral
+'of , and , choppy from , only slightly','',neutral
+'soon will be frozen , walking on top of','',neutral
+'just like','',neutral
+'amble around , and are slowly thinning out','',neutral
+', on other , have go','',negative
+'should have brought with then could read at','',neutral
+'suppose should annoy but doesn begin take off','',negative
+'but swim in , right','',neutral
+'can not be bad','',neutral
+'stare as dangle into in','',positive
+'is in , and think thinks is wrong with is wrong , but still do not know what','',neutral
+'walks by and says , but do not know what , and singing , but can not tune','',neutral
+think,'',neutral
+'but where else would know from','',neutral
+'is right','',neutral
+'just throw in','',neutral
+'tingles as hit and sink , blowing','',neutral
+'for first in feel completely normal','',neutral
+'except for','',neutral
+'what suck-ass turned out be','',negative
+'was fucked up','',negative
+'like in on bad up','',negative
+'can borrow','',neutral
+', ve been treated like of for past of , and did not even do at deserve','',negative
+'and then of played that made think of , and suddenly , so depressed that want do is go curl up in and die','',negative
+'and now main in has come','',negative
+'','',neutral
+'but for now , go hide','',neutral
+'last at was nuts- was first that can remember where was putting in in , really busting are going well and feel like ties in- which really like','',negative
+'nice of being able put together in','',neutral
+'sure by now most heard about really sad and of ,','',negative
+'pretty awful- there\'s not much else say about','',negative
+'found out about on and was just shocked','',positive
+'even just last there is definite in around that is pretty sad','',negative
+'really can not imagine what and are going through right now because really unnecessary did not have die and probably saddest','',negative
+'anyways , not sure there\'s else can add has not been said over and over','',neutral
+'was so fun seeing from back- ran into and went out see so was just so fun','',positive
+'and are getting little intense but ve found that can do just need stay focused','',neutral
+'turns on how weird','',positive
+'and am excited about little haha','',positive
+'last was so busy that just trashed','',neutral
+'would be so proud of','',positive
+', rainy','',neutral
+'took again','',neutral
+'did not see on so was surprised find at','',positive
+'once got of and started down got turned on because started acting jumpy , darting over , picking up , randomly chewing on , probably wanted play but there\'s not much for on especially on down steep','',neutral
+'was surprised see sitting so still ; spastic must have been turned off','',positive
+'\' started off with ; year-old shepard-pitbull','',neutral
+'has bad left which do not think has','',neutral
+'during were calling since was nameless because when was laying on back in would kick like was riding ; wrote down on but guess did not like','',neutral
+x,'',neutral
+was,'',neutral
+'was fun-filled','',positive
+turned,'',neutral
+'jumped in and blew','',neutral
+cried,'',negative
+'lol [ are cute , no','',positive
+'was scared see with','',negative
+'made more scared','',negative
+'first tore up','',negative
+'and tore up','',neutral
+'😄 was really yummy',😄,positive
+'is of','',neutral
+'think has on x','',positive
+'adore with','',positive
+<,'',neutral
+'did not even think about what was wearing or and just left','',neutral
+'','',neutral
+'looked tired','',neutral
+'har har','',neutral
+'goes show have bigger than , dearest','',positive
+xddd,'',neutral
+'xd oh well ~ was coolio','',neutral
+'need new','',neutral
+'was sooo fun','',positive
+'was like exciting where walked in','',positive
+'was like in and so','',neutral
+'and so try warm up','',neutral
+', suck','',negative
+'do not know','',neutral
+'anywho , was awesome','',positive
+'so , is where begin','',neutral
+'and of attended','',neutral
+'as walked','',neutral
+'and even more','',neutral
+'with , should get for surviving long with','',neutral
+'then met','',neutral
+'that too','',neutral
+'because have snazzy','',neutral
+'check out on','',neutral
+'anywho , got really interesting','',positive
+'\" unexpected from past with resurface','',positive
+'and guess what','',positive
+'saw during','',neutral
+'have not seen in like','',positive
+'then , unexpected too','',positive
+'as for , got \" will find by helping','',positive
+'eff likes','',neutral
+'was pretty good','',positive
+'check out \" little \"','',neutral
+'and then meet \" \"','',neutral
+x,'',neutral
+'first was in','',negative
+'xd yes , was baring , and then popped','',neutral
+'anywho ~ was fun','',positive
+'am going do again next for fun','',positive
+'interact ended up being whole better than had expected','',neutral
+'stand by , sinking slowly , being sucked beneath of cool , wet','',neutral
+back,'',neutral
+'enormous of gray , only momentarily visible as are back-lit by silent , random','',neutral
+'stretch out as far as will reach just as first of','',neutral
+'being tallest on in and living write about','',neutral
+'although likes point out that for is','',neutral
+'regardless of temporal as far as is concerned , still moves ahead at frighteningly rapid','',negative
+'ordered first of who on','',neutral
+'no , not new first , black and white ago suck first first','',negative
+'sorry but british','',neutral
+'historical was having as and wanted go','',neutral
+'assumed with in and working keep there that would just be and ; little did know that invited accompany','',positive
+'on , put in','',positive
+'am totally going start','',positive
+'used have done by so maybe will return','',neutral
+'am actively seeking and other , however , if find want get out of allow move quickly','',neutral
+'and on , enjoy of','',positive
+'well , re half-way through','',neutral
+'can not believe','',positive
+amazing,'',positive
+'will sightsee there and then take in','',neutral
+'from there on and then','',neutral
+wow,'',positive
+'there is or everywhere look','',neutral
+'or was awesome','',positive
+'is still standing for see is well , feel very lucky','',positive
+amazing,'',positive
+'enter was about','',neutral
+'in close quite early , so by got in did not have whole of see','',neutral
+'ah well','',neutral
+at,'',neutral
+'walked around pretty much entire until found','',neutral
+'was beautiful , and full of and','',positive
+'did not have wait too long , though','',neutral
+'inside was stunning- and full of','',positive
+'and then realized- there was going on','',positive
+'can not believe do','',positive
+'so rude','',negative
+'last met at and had nice','',positive
+'meet of neat at','',neutral
+'pretty cool','',positive
+'so anyway , in was loud , dirty and absolutely chock-full of and and','',negative
+'really is like human , especially in as watch and hear begin awaken','',neutral
+'what am going do when get back','',negative
+'should take offered should stay in','',neutral
+'completely depress','',negative
+'so ve discovered new and yes do have','',positive
+'can and and will actually happen','',positive
+'not entirely true','',neutral
+'keep in is lofted about high and was after having slept','',neutral
+'then calls','',neutral
+'then calls again and , knowing that\'s for \" pick up frickin , \" picked up thinkin there was wrong with','',negative
+'and like','',neutral
+like,'',neutral
+'huh , fast','',positive
+called,'',neutral
+'called just wanted frickin','',negative
+'so went back sleep till , took for , surfed for , cooked in , read by for little , adn then came back on so could watch','',neutral
+'in , interesting','',positive
+'were cause were packed and could not get in with very well','',negative
+yeah,'',neutral
+useless,'',negative
+'so made','',neutral
+'do not go down too easy','',negative
+'oh , was rated highest at','',neutral
+'what surprised most geekin up was of','',positive
+'definitely in audible and very regular','',neutral
+'but yeah','',neutral
+say,'',neutral
+'or how make in','',neutral
+'of required move much sustained at such high is ridiculous','',positive
+'earlier , had invited over','',neutral
+'got there little after , playing on , and asked , \" where\'s \" because usually very punctual','',neutral
+'take in across from , and while talking , appears in behind , grinning and waving enthusiastically','',positive
+'jump , shrieking little before realize only','',positive
+'prepared of , red , , and settle in of for','',neutral
+'of watch , half watch while reading , sometimes out loud , but complains , \" is talking while trying watch \" but defends , \" talk','',neutral
+'watch , but of same becomes old fast','',neutral
+'haha , except nicer','',positive
+', , , and are going','',neutral
+'from trendy can brighten up','',positive
+'of find and surprised by of young who are there , in usual elderly and young','',positive
+'slowest go through , and soon lose and , occasionally catching up with when slow down','',neutral
+'carpeted , so not too hard on , and see left behind','',neutral
+'while looking at on bugging , comes up behind and , \" dropped','',neutral
+'stop in before heading','',neutral
+'blows strongly outside , and has hard pushing open , but or old who\'s already exited with helps out by pulling while pushes','',neutral
+'was cute','',positive
+'dipped into and drank that collected on when put close','',neutral
+'had fly out and ended up being late for , but were doing , so dived in and did','',neutral
+'think knows not cross crossed once before','',neutral
+'there was not really on could do that felt like doing','',neutral
+'do love found','',positive
+'always been of favorite','',positive
+'maybe because can beat out of heh','',positive
+plus,'',neutral
+'love as well , except think after wins in is of silly , but just , from , has been favorite of','',positive
+'have true normal','',neutral
+lol,'',positive
+'* whispers * especially if into','',neutral
+'😉 love',😉,positive
+'is also very strong and keen , but carries of past','',negative
+'is loved','',positive
+'wish could get that w wears','',neutral
+'so , what did for like','',neutral
+'decided get annual of with if did could get free and','',neutral
+'still have few other','',neutral
+'than went and got drives','',neutral
+'were on special and heh','',positive
+'believe entered in , instead of , so got unexpected','',positive
+', so not bad','',neutral
+'feels so nice after long','',positive
+'so , stayed at for about and went little','',neutral
+'works great and really like','',positive
+'actually thought about alot and did stay dressed up for','',neutral
+'has not seen for about , so wanted look nice','',neutral
+'* smiles * said looked cute as always','',positive
+'thanks hun','',neutral
+'sorry and will get more focused','',negative
+'so , dedicate','',neutral
+:,'',neutral
+'always wrapped up','',neutral
+cannnot,'',negative
+'','',neutral
+'is sorry for','',negative
+'and sorry about','',negative
+'maybe in different','',neutral
+'cause now can se','',neutral
+'never really wanted se','',neutral
+'always seems get m','',neutral
+'so many should have know','',neutral
+'guess for just','',negative
+'* smiles * will beat','',positive
+'* huggles','',positive
+'as have said before am happily not taking , but particular were that were not be missed','',positive
+'first was of that was donated by of , there','',neutral
+'entire was done as for and was genuinely touched and surprised by','',positive
+'other was of in , intended bring , and together for of surrounding chosen by','',neutral
+'whom had for and had been telling about for','',neutral
+'really wanted mrangelmeg have experience','',neutral
+'after spent in little on which is called unstable take of , so call , unstable , get','',neutral
+'do miss so very much , though do not miss at','',negative
+'had wonderful','',positive
+'and got see extreme in as drove','',neutral
+'how cool was','',positive
+'on were having on in early on was more than happy be returning','',positive
+'and forget , where as much as of is general','',neutral
+'has been missing since was born','',neutral
+'is need , so grab of favorite , and enjoy newfound','',positive
+'if little are truly helpful , may just have take more','',neutral
+'welcome of classical','',neutral
+', where in endless and give entire of listening','',positive
+'since classical is oldest and largest of in , let\'s study from next','',neutral
+'','',neutral
+'first were mostly supported by , and influenced early classical more than other','',positive
+'there was formal of , making composing very difficult and time-consuming','',neutral
+'','',neutral
+'became more of expressive than , and was now being printed , allowing sacred , secular , and instrumental spread everywhere','',neutral
+'was of most prominent of','',neutral
+'baroque ): of , , and saw of almost modern in , particularly , , and','',neutral
+'used , dance and in','',neutral
+'think of brief as of modern follow','',neutral
+'just kidding','',positive
+'can find nearly of most popular in , namely and of whom did not know were writing \" classical \"','',neutral
+'','',neutral
+'of such as , , and wrote with wider dynamic , using larger of','',neutral
+'','',neutral
+'new of classical were born , and more were writing than previous','',neutral
+'and and was possible , from atonal experimental electronic','',neutral
+'over thousand into , including , , and','',neutral
+'','',neutral
+'welcome contemporary classical , where see even more such as of , by , and works of ,','',neutral
+'was painless , was not','',neutral
+'next few into classical should now be little easier','',neutral
+'add little , and share with','',neutral
+'in :','',neutral
+'of \" \" of what take be single in from which there are appellate','',neutral
+'there\'s of thought about how will make judicial more or less political , whether already are political , whether matters that originally had and switched statewide ago , whether by mean that of will be less qualified than could have been or whether means currently underrepresented think rural will have better have who understands in appellate ,','',neutral
+'of few that seemed say worth saying was in that was written by','',neutral
+'surprised , because know from that is running for or other','',positive
+'other somewhat-convincing was immediately after , also in , by of','',neutral
+'there seemed be at least of personal reflected in , not really present anywhere else','',neutral
+ugh,'',negative
+'again , has proven how is not who wants be yet','',neutral
+'finding out is almost as fun as finding out of placing one\'s down','',positive
+😄,😄,positive
+'lately capable is questioning and deal','',neutral
+'there are wrong , only different \" but can not','',neutral
+'do not want make that can not undo','',negative
+'do not want burn , ve crossed wrong','',negative
+'really knows','',negative
+'found out of left and got , good 😄',😄,neutral
+'talked , ok still since left from what told but new there',ok,neutral
+'amuses so very much','',positive
+'if know and approach , understand better','',neutral
+'is is dealing w/ senile still','',neutral
+'makes sad , tough old but just not anymore','',negative
+'like/can w/ most of','',neutral
+'','',neutral
+'lost for but is so cut n dry that','',neutral
+'just of proofreading w/','',neutral
+'well , mostly and know','',neutral
+'','',neutral
+'know , where has shocked w/ coming out of','',positive
+'so easy and cool ~ looking','',neutral
+'and handling of which is double esp when have squimish working w/ x','',positive
+miss,'',negative
+'but still laughing','',positive
+'make laugh here , esp','',positive
+'have not had major w/ , not even small','',neutral
+last,'',neutral
+'speaking in thrid amuses','',positive
+take,'',neutral
+'so had','',neutral
+really,'',neutral
+'but will give','',neutral
+'but not','',neutral
+'surprising know','',positive
+'so about','',neutral
+'and held there for','',neutral
+'dont worry not','',neutral
+done,'',neutral
+'else happened in just cuddled and was real sweet','',positive
+'like wanting dooo be with','',neutral
+'ok peace',ok,neutral
+'seeing scarred , bearded in rippling black warmed , because were painting trembling solo on acoustic','',negative
+'eventually , faded away , and slipped back into','',neutral
+'\" oh , \" said , and smiled','',positive
+'few later turned and asked , \" are going be here','',neutral
+'\" ah , thanks','',neutral
+'was very disappointed','',negative
+'but insisted on getting so took spirited and rented from there','',neutral
+'think quite good for of ve been playing','',neutral
+'actually pretty easy , suggest for who are really quite sick of playing','',neutral
+'is usually played on , so just bring up','',neutral
+'are hard push back in , especially , was real','',negative
+'would be pretty sweet','',positive
+'last and and and of went and got raving drunk on just','',neutral
+'suck when drunk , just get dizzy and fall asleep , so once was finished making of at dozed for on','',negative
+'wrote little of , but not much','',neutral
+'going mention right now','',neutral
+'and disgusting','',negative
+'avid of','',neutral
+'love because learn so much','',positive
+', though , heard of','',neutral
+'depends on what measuring','',neutral
+'do not measure accurately , and find be disgusting','',negative
+'and of changes for worse for , making mere in computerised , with for free','',negative
+'forcing into is exactly what creates so many in (* ahem * are at with over , know','',negative
+'is dangerous force into','',negative
+'is like throwing eat into','',neutral
+'who is going buy of and','',negative
+'* in of *','',neutral
+'how disgusting would be see turn into','',negative
+'and who would be who off of of and','',negative
+'and , do ask , who profited from in first','',negative
+'yes , mentions','',neutral
+'are dispicable','',negative
+': \" , who buy and sell , bring disparate on political in into central','',neutral
+'would be throwing out for','',neutral
+'plus , in such secretive , would not promote','',negative
+'selling of top profit off of killing of in','',negative
+'and there\'s really encourage who can afford gamble on of do so dispicable and amoral','',negative
+'is sickening','',negative
+'there is so much for worst of in doing like , let\'s not encourage , please','',negative
+'\" in last , has flourished','',neutral
+'maybe is not','',neutral
+'shudder think','',negative
+'manages dive on recent that emerged from and turn around make on and','',negative
+'apparently in are connected in despite that were pure and are involved in civil , and slow from was','',neutral
+'does see with','',neutral
+'in is fighting','',neutral
+'want out of','',neutral
+'as long as there are anywhere doing , can not pull out','',neutral
+'matters is want out of , so means have stay','',neutral
+'is that abandoned for in and went into under incredibly false','',neutral
+'\" worried that too many , in and out , do not appreciate of and of that faces , \" said at','',negative
+'called \" more evil , or as evil , as and probably more dangerous than fought during long cold','',negative
+'suggest that of disorganized trying replicate is more evil and more dangerous than what did is beyond off-base , beyond stupid','',negative
+'flat-out disgusting','',negative
+', re scraping','',neutral
+'apocalyptic last : wandering through large that are stuffy and crowded with lying on covered with , most of separate from other','',negative
+'aggressive with mean faces and nasty staking out , telling move along','',negative
+'try find comfortable and down that seems get smaller as gets','',neutral
+'and somehow melt away as begin depart - leaving behind','',neutral
+'am , by means ,','',neutral
+'for , took in','',neutral
+'have several','',neutral
+and,'',neutral
+and,'',neutral
+'now , understand , when comes right down , am from','',neutral
+'had never before seen by of - closest have ever gotten is watching \" \"','',neutral
+real,'',neutral
+'oh , and think made really nervous - like was going blow runny on and forever ruin with bodily','',negative
+'did not like very much','',negative
+', no should see in','',neutral
+'like said , of','',neutral
+'was excited see as have of blame gross and really wanted get at up close viewing','',positive
+'- and hostin','',neutral
+'','',neutral
+'glenoid-humoral \" of were very interesting , such as and','',positive
+'in , were solemn - laying on as if in deep','',negative
+'seeing in was very interesting','',positive
+'also interesting were of - healthy and diseased','',positive
+'odd about is that goes from being being of of bizarre','',positive
+'again , am of , and that has drawn of at that am off-base','',neutral
+'now , can see are not sees in','',neutral
+'also has look at diseased usually reserved for , who , ve noticed , seem get * very * excited over like and','',positive
+'basic and in are must see','',neutral
+'however , for , more \" artistic \" were more of off - willingly admit that was very attached in , and of being displayed like makes sick','',negative
+'as , there have been interesting regarding of for such as guess entire has sparked various \" \"','',neutral
+'while has huge of and medical has do dirty there have been , and as where come from','',neutral
+'however , of might not be as professional personally , avoid if were','',neutral
+'dislike feeling especially when had for','',negative
+'just thought let know','',neutral
+'still being bothered by craziest smells','',negative
+'also constantly congested , and ve been having in','',neutral
+'which of , makes feel nauseous','',negative
+'besides of , ve been feeling great','',positive
+'was able tell of at that am pregnant , so been fun hear of','',positive
+'since is just starting , ve been eating , and funny because are letting get away with going first saying am eating for','',positive
+'keeps asking if re going find out if re having or','',neutral
+'alright , re about eat , so until next','',neutral
+', went for','',neutral
+'has not been very eventful in','',neutral
+'most exciting of whole was going with , and , and lasted less than','',positive
+'do not except , because is taking as previously stated , and hates more than hates else','',negative
+besides,'',neutral
+'or like','',neutral
+'keeps yelling and pounding on','',negative
+'just asked , \" how would prefer','',neutral
+'or hot with and','',neutral
+'\" what think','',neutral
+'as can tell , has been short of tremendous','',positive
+'looks like puked up several and , and then pasted on','',negative
+', , is very nervous','',negative
+'was just eating few away from saw at , and ran away','',neutral
+'pretty disgusting','',negative
+'freakin hate when get in bad and not just','',negative
+'just kinda just of little and then get sad and just want go cry and just be away from','',negative
+'just want','',neutral
+'mean know but cant put into and just dont want say guess','',neutral
+'and not trying be mean but if say dislike and are like \" why why why \" and try explain but re just like \" stupid shouldnt dislike \" pisses off if have defend for disliking','',negative
+'and of only highly dislike','',negative
+'actually only highly dislike','',negative
+'mean have dislike and shouldnt question cuz arent and dont know and just stop','',negative
+'cuz hate tryin prove','',negative
+'consider nice and should have dislike','',negative
+anyways,'',neutral
+late,'',neutral
+'looked over at and said \" hey , feel like going pass out','',neutral
+'woke up picking up and saying , but could not hear','',neutral
+'hope can at least pass out sometime when sweet , like when driving or heavy','',neutral
+'know have not been writing 4 long','',neutral
+'anyway , few ago , visited and ate and proper and','',neutral
+had,'',neutral
+'luckily , stopped in for','',positive
+'did not climb very high up but was not bad either','',neutral
+'was taking and saw too','',neutral
+'love \" absolutely \" ever since','',positive
+by,'',neutral
+'was uhm harsh','',neutral
+'being trained by , is','',neutral
+'not mention find be incredibly intimidating(sp','',negative
+'felt up until was count','',neutral
+'guess made feel little more at','',neutral
+'second went in and was so paranoid','',negative
+'of was stressing too much because as proceeded , began feel becoming more and more comfortable with','',negative
+'was exact down last , what that was for lol','',positive
+'went relatively smoothe','',neutral
+'at of was exact again','',neutral
+'have go in at and stay till','',neutral
+'is going suck so much','',negative
+horrible,'',negative
+'hopefully will go smoothe','',neutral
+'definately done bitching for now','',negative
+'little on , as of are now done and graded , and still retain','',neutral
+'assume until proven otherwise that ought be able excel at highest at most , so top in of was always from','',neutral
+'thus , , mandatory , and ve been in were ve assumed were most likely potentially drop','',negative
+'so far turned out be little believe got perhaps wrong over or in of and secured easily in','',neutral
+'of is really of , but is nice know that seem be improving in which were previously more difficult','',positive
+'dislike of having in ; same need for that leads trying further develop natural into','',negative
+'why try hone as do','',neutral
+'have off of now , do and move and probably take up','',neutral
+'going have go out sometime','',neutral
+'little unfortunate , but at least saves from actually walking there','',negative
+'if had not been so important have refused anyway- who\'s going watch while gone','',neutral
+'while ve got in , would not like think about what could happen if','',negative
+'sent last that came around off with such red , was did not pass out','',positive
+called,'',neutral
+'good that old enough learn on own and not from , by teaching or , because are stupid','',positive
+'on in , and ve come most have of what turn , , and sinks are for','',neutral
+'saw after take then leave without washing','',neutral
+'told about , and was only who actually washed','',neutral
+'finally snapped and yelled out at last \" does wash frigging after using anymore','',negative
+'disgusted , dried , walked out , and yelled \" \" toward where of had congregated for late','',negative
+'were in of eating , were holding girl\'s or','',neutral
+'','',positive
+'while have whatsoever that is clean and free devote at least as much cleaning that as do ; dating should be weary of possible probably accompanies sexual with if can not even take of , cannot say same for , and cannot vouch for where have been prior touching same that have , such as , flush , and handles','',negative
+'hey , explain where came from : \" did not wash in , then cleaned off , and now have','',negative
+'wash damned','',negative
+'unclean \" should at very least be on interstate','',neutral
+'simply entering should make feel dirty and in want of','',negative
+'saw \" \" at local , in local','',neutral
+'has not been updated since approximately was first released','',neutral
+'but was nice get out with , do not get see very much at in other than as \" \" , and as single male with , hard associate with \"','',positive
+'ask , usually have about of childless relate and','',neutral
+'not has , loves and works with , but ve never honestly been much of','',positive
+have,'',neutral
+'can not beat , can not yell and at , but can not ignore either','',negative
+'but unlike said , grow-up at , and most at least realize that can not just go around pissing off','',negative
+'though undoubtedly do','',neutral
+sucked,'',negative
+tricky,'',negative
+'was just full of , there was not even gratuitous that might otherwise associate with stars entire of but athletic','',negative
+'but was just full of that could drive through','',negative
+'','',neutral
+'ok , so at find dead in of','',neutral
+'\" oh kill outside and bring inside eat','',neutral
+'but on of , there are drop-offs of of that had be traversed by clinging','',neutral
+'so how holy did get through','',negative
+'how did traverse','',neutral
+'\" hey \" think , good','',neutral
+'explore for little , then','',positive
+'is first thought \" well , must find across','',neutral
+'what\'s','',neutral
+'is there deep in','',neutral
+'','',neutral
+'hell no','',negative
+'if took in of , perhaps might be worth venturing into escape large that prayed upon human so very long ago , but even was well before took drawing','',neutral
+'after and subsequent as different was just simply retarded , came back and watched','',negative
+'alright , like in enjoy if really else watch','',positive
+'also caught of new about wanna-be super on','',neutral
+'is entertaining , but got old-school , like original or','',positive
+'and subsequent such as reflect making : whole has gotten darker , literally and figuratively','',neutral
+'look at : original was in with , had human and','',neutral
+'\" - \" , good','',positive
+'\" do worry that re not liked','',negative
+'how long til break','',neutral
+'re happy cause , but how much can fake','',positive
+'yea ok , so do not know what has do with , but catchy',ok,neutral
+'then head around','',neutral
+'was , from and was apparently heading','',negative
+'at about , jumped-ship and headed up , expecting \" \" likes of which experienced last headed from by','',neutral
+'come , jumped back on , since was pretty packed , and did not want go through','',neutral
+'of sucked','',negative
+'so back on , putting up with , picked up well above where should have been , cleared little of , little more above , but was still pretty frigging busy up','',negative
+'got into , picked up , went and waited for','',neutral
+'how can so extensively at','',neutral
+'so not doing unless absolutely necessary','',negative
+'yes , in , ve become','',neutral
+'so proud of','',positive
+'runs over , score of','',neutral
+'--- --- --- --- --- --- ----','',neutral
+'---- --- --- --- --- --- ----','',neutral
+'yeah , cocky , supercilious who eats as if had been walking in feasting on but for','',negative
+'scored runs in 4th because of shoddy by','',neutral
+'would just never','',neutral
+'in , tried score when third got away','',neutral
+', who was blocking , reached up and snared as arrived at','',neutral
+'went flying backwards and landed with huge in left-handed','',neutral
+'when asked whether was right , said was and proceeded tell that knew was coming','',neutral
+'oh well , how often does see at anyway','',neutral
+'who can forget and at in 12th of','',neutral
+'hit , comes up firing , third , , brings then , few up , and then happens','',neutral
+'knocks into and permanantly knocks into somewhat more precarious','',negative
+'so , in , held on win by of','',neutral
+'is probably most have banned from destroying like','',neutral
+'yes , can happen but , as , most exhilarating play in','',positive
+'said does not happen often so does not bother','',neutral
+'there is usually good and is','',neutral
+'was of funny','',positive
+'not as if has never gotten before','',neutral
+',','',neutral
+'were intentionally walking load up','',neutral
+'screamed for throw and did','',neutral
+'landed by and picked up with bare','',neutral
+'says still remembers play','',neutral
+'told that remembers mostly because was being played in and very rarely play when raining','',neutral
+'then saw lying on and screamed for touch','',neutral
+'remember walking off disgusted with','',negative
+'completely mobbed and were bounding around as if were of','',neutral
+'good faithful','',neutral
+'and just went out go for','',neutral
+'liked , am really happy be able ride again','',positive
+'was at was check see if had deposited into yet','',neutral
+'was , precisely more than had','',neutral
+'','',positive
+'was pretty bummed out , because meant put on , hate when do , what\'s bloody','',negative
+'especially when bloody','',negative
+'would not bother much , except last deposited had on','',neutral
+'so , here am with right there that can not get of , and really want spend at on','',neutral
+'get does not want go weird on','',neutral
+'pretty old , but not rude about','',neutral
+'not ignorant , just old which is pretty damn rare','',negative
+'earlier , put on - , and asked if ever listened radio anymore','',neutral
+'pride on listening wide of','',positive
+'swelled with','',positive
+'was sad , but helped move','',negative
+'despite large of took , barely notice in','',neutral
+'ve already told moving on of 26th , and just need get of so can make formal','',neutral
+'could probably find swing , but would be little cramped','',neutral
+'love * sniffs','',positive
+'also tried do , was first can set','',neutral
+'can go , also did same , has off so can go','',neutral
+'funny , think , that love so much that re willing schedule schooling around','',positive
+woohoo,'',positive
+'was of confused','',neutral
+'need make few calls , but in and has only that works right now','',neutral
+'same , have written down on of so do not forget when comes','',neutral
+'and since put that was living with , and only makes , can almost guarantee that will get accepted for , and said will pay for','',neutral
+'which is crazy good , especially if living with , who only asks for , , and','',positive
+'well , could splurge','',positive
+'do have pay like for','',neutral
+'and say for , only owe','',neutral
+', thinking looking pretty good','',positive
+'so , am busy','',neutral
+'get be , and get more and','',neutral
+'try tell that not impressive see on','',neutral
+'need have ready so can be looking for in after','',neutral
+'finally feel little more independent','',neutral
+'here\'s of need do','',neutral
+'just need get , then think mail when decide or','',neutral
+'after , then make calls mohawk ask about , and','',neutral
+'talk concerning from','',neutral
+'just opened up , so not like late , ve been open for whole , and can register until mid , so ve got , however , do not want wait , why went on do asap','',neutral
+'so , gonna make little sad','',negative
+'not mention','',neutral
+'know , do , be independent','',neutral
+'anyway , smart of says go , make , get stronger , get ready and train be stronger like did on','',neutral
+'mean , told on , or somewhere around there , come help out , and was not backing out','',neutral
+'miss and re smartest , most responsible ve ever been of','',negative
+'however , playful , of tells fuck and go watch with','',negative
+'in , sent , and still has not responded , so do not know when will be here','',neutral
+'','',neutral
+'like know named , and','',neutral
+'just as , here\'s wrote','',neutral
+'defensible , however unproven','',neutral
+'like , not because disagree with , but because when disagree with , , and know how need have big and can not lose , always fall into , or as known ,','',negative
+'try stay out of , as can not stand being lowered , but sometimes just want do what and did','',neutral
+'go and smash in because like aggravate','',negative
+'when go on about , like discussing like was better , or','',neutral
+'personally enjoyed more , but thought was far more artistically done with fantastic','',positive
+'whereas go on there , on there are constantly saying sucked , and is allowed like because sucked and was horrible','',negative
+'or have trying tell that was horrible','',negative
+'disgusting that have feel relieved when find that has calmly discussing of','',negative
+'well , gonna go on and try ignore','',neutral
+'so confuzed','',neutral
+'dont like quite frankly dislike very much , dont ask why cause couldnt tell','',negative
+'know is suck and not looking for here','',negative
+'only writing down because when see in writing sometime understand bette','',neutral
+'hate bette','',negative
+'why cant just be happy with good enough','',positive
+'could always be better so never be happy','',negative
+'','',negative
+'but wat does \" in and will give of \" , mean','',negative
+'suck , completely and thouroughly','',negative
+'feel like constantly need','',neutral
+'ahhhhhhhhhhhhhhhhhhh why do hate','',negative
+'just wanna have fun and be happy and simple like','',positive
+'just giggle giggle thats do and need is and laugh with','',positive
+'want be','',neutral
+'make sick , ought be horrifically detained , believe was first in have had resort extreme','',negative
+'do not listen or what','',negative
+'perhaps am just being petty , but did really annoy absolutely outrages as how evil , and canniving are','',negative
+'imagine , transporting , out of , and triggering with simplistic of disposable','',negative
+'just can not believe','',positive
+', has , evidently officially gone if so-called \" \" is in , whilst could have been dealing with innocent lost , on different','',negative
+'so , am thankful still be alive','',positive
+'for now ve been doing and at of get talking too about not doing of at , and ve just discovered why','',neutral
+', while trying demonstrate how effectlivley could beat up if ever had complete of and decided attack slipped on trying demonstrate backwards and hit with what assured was sickening','',negative
+'so now have in of','',neutral
+'which , just so know , really fucking hurts','',negative
+'in , bought of stupid','',negative
+'now on political , so if find distasteful , feel free exit now','',negative
+'on more serious , just open up or and will find that * should * , and which definitely are bothering here is just from','',negative
+'\" - while suspects were hatching , was quietly seeking divert that was supposed be spent developing new','',negative
+'have spent of and countless human on whole','',neutral
+'does not even begin address of civil and of or most of just seems be blissfully unaware of','',negative
+'can and will find what take try and get','',neutral
+'perhaps being alarmist , but of and personal in of \" \" scares am fine with heightened at','',negative
+'in , last asked if am \" scared \" of flying and going on','',negative
+'pervasive of \" is watching \" say \" only have put up with for more \" while say , \" get in','',neutral
+'such being slight civil of riding on','',negative
+'often only concerned in in busy or','',neutral
+'sadly , due current legal , forcefully conveying and concerned with sitting in such are verboten','',negative
+'knowing and speaking out , with up on can usually last of','',negative
+'works in','',neutral
+'for who feel powerless and fearful of , yet want take , there is always more grating than knowing either cannot read or for','',negative
+'away from and made be of of','',neutral
+'as , after , has been developed shift blame and','',negative
+'thank over','',positive
+'really hate am','',negative
+'was not even discussed','',neutral
+'fuck can not wait live alone','',negative
+'if ever live with , better be clean','',negative
+'come after and is fucking disgusting','',negative
+what,'',negative
+'cleaning out and saved and too','',neutral
+hahah,'',positive
+'and random and','',neutral
+'gotta love','',positive
+'did not even get when saw on','',neutral
+'used be so sad about','',negative
+'still have and ,','',neutral
+'of last','',neutral
+'most say first , but totally is not','',neutral
+'euphoric almost','',positive
+wowo,'',positive
+'deep like kiddy','',neutral
+good,'',positive
+'re down final of','',neutral
+'hate when certain always seem be better at in do','',negative
+'maybe if just tried hard enough , without putting down','',neutral
+'guess not going continue with more','',neutral
+'still pretty freaked out by next','',negative
+'seems dead and most probably will not be able keep up with else sure is going be thrown at if could be weirded out','',neutral
+'wish would end','',neutral
+'dislike negative , non-beneficial change in and','',negative
+'do not like','',negative
+'where has in gone','',neutral
+'were beautiful','',positive
+'only enjoy , is live','',positive
+'then , are gone','',neutral
+'miss and is','',negative
+'last watched so close up was back when was still young','',neutral
+'why is so much more complex now','',neutral
+'where should go on from here','',neutral
+'sms-ed , in','',neutral
+'gave in','',negative
+'replied , asking give , which did','',neutral
+'told about and for upcoming','',neutral
+'just wanted can confide about faced at and in','',negative
+'about basic needs being met and wanting find other in','',neutral
+'have yet establish for','',neutral
+'yet , do not know means achieve','',neutral
+'feel so lost','',negative
+',','',neutral
+'hurts soooooo much','',negative
+'hate going , well hate is strong','',negative
+'dislike going','',negative
+'bad new','',negative
+got,'',neutral
+'have go back shrug at','',neutral
+'have have healthy','',neutral
+'\" playing and are alike , have say without really say and make sure get want see','',neutral
+'and for dislike doing politic cause manipulating , , are what does','',negative
+'are moving , , on','',neutral
+'is from , where works , but still from , where go','',neutral
+'win win','',positive
+'will remain in , so thought be coming back here occasionally , but and have had several vicious , scarring','',negative
+'spend joyfully packing','',positive
+'like presents in','',positive
+'probably do','',neutral
+'ve considered not coming for see because dislike so much','',negative
+'no , last is not true','',neutral
+'next and bumped with','',neutral
+'\" are not of \" am','',neutral
+'\" really','',positive
+'\" look like , guess','',neutral
+hahaha,'',positive
+'sitting next started small-talk','',neutral
+'attractive and high','',neutral
+'totally dangerous','',negative
+'disengaged after second','',neutral
+'just because , know , too cheesy live','',negative
+'also , came last','',neutral
+'not sure why did , or why allowed happen , or whatever','',neutral
+'maybe wanted fuck with , which usually happens anytime feel relatively okay','',negative
+'maybe was nostalgic','',negative
+'need go like whoa','',neutral
+'tell here so will just give general of','',neutral
+', , amazing irish named , and in and can only lead once in','',positive
+', , , , , , , , will , , , , , , , , , of haha , , love','',positive
+'made amazing and do not know what gonna do without','',positive
+'so came back right in , right before was put on severe high','',neutral
+'really lucky about','',positive
+'actually pretty good at driving normal , so excited','',positive
+'got great presents and had awesome 16th','',positive
+'not like much has happened since last','',neutral
+'there is always so much have do that before know is gone','',neutral
+'here even at are so different than expected','',positive
+'loving at','',positive
+'feel more at now that kind of know what want do with , but more scared because feel like is ahead of have admit though has freaked out about','',negative
+'always keeps thinking about','',neutral
+'scared death about getting after','',negative
+'can not wait , but nervous as now','',negative
+'what if goes as planned and can not get and stuck doing that hate','',negative
+'of who is also in was in','',neutral
+'was saying how had same and that from huh','',positive
+'weirdest is is who went with since high','',positive
+'is if ever comes','',neutral
+'excited go always like go different and plus will be nice go out and do fun','',positive
+'was definitely shocking , but atleast can say have ridden in before','',positive
+'am still having walking straight and am slurring so excuse , but are getting better','',neutral
+'was there for whole while was scared , losing , and fearing for , and will always remember','',negative
+'was go sleep and never wake up , but after taking of dreadful cold that put on in first , was becomming too real too fast','',negative
+'have ever wanted be with that is of other but are afraid ask','',negative
+'afraid that would ruin with as well as with','',negative
+'afraid that will be hurt yet again','',negative
+'hurt if say\'s','',negative
+'hurt if say\'s yes and down up','',negative
+'hurt by of yet again','',negative
+'hurt by of dating','',negative
+'hurt so bad stay in that is only in','',negative
+'hurt so bad stay in','',negative
+'never wanting go out with again','',neutral
+'last turned out amazing towards','',positive
+'had really nice with , amazing with , and then with','',positive
+'was definitely good of , although did stay up until , and payed for in','',positive
+'but of hit that have due','',positive
+'have so much long-term that not sure if will get finished with , , and','',neutral
+'starting on illegal which may say is turning out fantastic with first have , and finished of , and plan on outlining once start watching','',positive
+'plus , is being forced on with','',neutral
+'and and and are getting mad because do not have in hang out with for few','',negative
+'love , love live , only makes','',positive
+'instead of , get of rambling on about who just died','',neutral
+'sorry died , but mislead like is inexcusable','',negative
+definitely,'',neutral
+'turned because said was on','',neutral
+'love , love live , only makes','',positive
+'sorry died , but mislead like is inexcusable','',negative
+'jacked up','',neutral
+'do not be afraid weigh in on','',neutral
+'even though wasnt in , a.k.a : was in , was really good','',positive
+'was of was told watch','',neutral
+'just plainly said','',neutral
+'stopped talking about , started mumbling about and what has start','',neutral
+'not on however','',neutral
+'never took out','',neutral
+'what was worried about , trying steal off , isnt going happen','',negative
+'\" eat \"','',neutral
+and,'',neutral
+'makes nervous and tense','',negative
+'and says , how sweet is is nasty and mean spirited','',negative
+'and with explaining wont show how what just said stung','',negative
+'get stuck , cant think of and lose of thought','',neutral
+'thus getting more pissed and less willing finish what was just trying say','',negative
+'and end up doing what says because cant get over stumbled in prior','',neutral
+'cant wait visit again , though right now dont think be able go back until have payed','',neutral
+'which sucks , but might mean','',negative
+'but if takes for get and first of is counted into next','',neutral
+'might have borrow from , since payed off , but then know dont have of left and','',neutral
+'afraid of what will happen if gets out','',negative
+'worried about','',negative
+'but more worried about losing love , even though cant have right now','',negative
+'know is cheesy and maybe pointless but am going say anyway','',neutral
+'okay shut up','',negative
+'okay y alls','',neutral
+'went was and instead got','',neutral
+'was not too bad','',neutral
+'can handle dull aches , sharp freak out','',negative
+'then fucked around with , which never hurt except for , but was on , because felt like was about hurt , like might hit','',negative
+annnndddd,'',neutral
+'so was doing , and accidently hit across isolating which made very loud in , so flinched , and was like \" not big , show be afraid of \" so did again and really freaked out , really flinched and even cried out and then starting crying','',negative
+and,'',neutral
+'filling , which sucks','',negative
+'as unexpectedly and elusively as appear , so do stop disapear','',positive
+'enjoying while lasts','',positive
+'so hi , , is , and in and','',neutral
+pshaw,'',positive
+'totally true says so','',neutral
+'go and tell if think should get from','',neutral
+'spendy are , like , twitching in but do not know','',neutral
+'at popped and helped and out for','',neutral
+'and turns out that and graduated from','',positive
+'living at with now and not feeling very good about','',negative
+'except , cos thinking about going for , and ve been knitting like','',neutral
+'good is going happen if kills think threw out back hunching over hence , but','',neutral
+'','',neutral
+'which , be honest , was making slightly nervous','',negative
+'perhaps had just been','',positive
+'had wanted call or last , but had kept busy attending , not returning until in','',neutral
+'almost was not of good','',neutral
+'and did not have planned until','',neutral
+'and then','',neutral
+'but in , had free , as was passed out in from too much and too little and be as perky as possible for','',neutral
+'was pleasant in , at , reminded automatically , and had and was sitting on looking out over','',positive
+'called , missing , wanting talk','',negative
+dear,'',neutral
+'is last','',neutral
+'instead , went for wear','',neutral
+'two-piece , green','',neutral
+'in drawing , played','',neutral
+'actually was quite of fun','',positive
+'involved with in and was decorate wanted','',neutral
+got,'',neutral
+'was very bright','',neutral
+'asked if could help make up like , and then of painted like','',neutral
+'offered do too , but just laughed and shook','',positive
+'really laughed','',positive
+'made sorry that do not actually know','',negative
+'after drawing , was standing at , leaning back , laughing','',positive
+'for last had already rung and were talking of popular','',neutral
+'was laughing up at and , when spoke softly behind , very fast','',positive
+'wanted wipe green-and-purple off with , but was afraid of making worse , so did not do','',negative
+'was of standing on outside of , which makes , guess','',neutral
+'as turned from and slid through , watched go','',neutral
+'said , \" always seems so nervous','',negative
+'\" yeah','',neutral
+'feel of bad','',negative
+'\" what for','',neutral
+'and - know - and together and shows up late on first of and was at same','',neutral
+'\" so , just did','',neutral
+'for like','',neutral
+'hurting , \" finished flatly','',negative
+'nodded , felt guilty','',negative
+'because about are exactly why can , well , can not , really','',neutral
+'and total , because should not even','',negative
+'about fucking','',negative
+'only , maybe just in different','',neutral
+'and also , look like','',neutral
+'break and make choke on last','',negative
+'cause run down and make want fall','',negative
+'backing out of getting further and further away from was of hardest ve ever had do','',negative
+'so scared that everytime that see going be last and never want leave','',negative
+'getting back reality','',neutral
+'is finally coming along though am of excited','',positive
+'anyways wont b here will b in with of male and lol so there ttyl bye','',positive
+'say want','',neutral
+'want change','',neutral
+'well kno','',neutral
+'but when talk about destructio','',neutral
+'do not know gonna be','',neutral
+'say got real','',neutral
+'ask for','',neutral
+'re doing what ca','',neutral
+'but when want for with','',negative
+'do not know gonna be','',neutral
+'say will change','',neutral
+'want change','',neutral
+'well kno','',neutral
+'but if go carrying of','',neutral
+'do not know know gonna be','',neutral
+--,'',neutral
+'as long as reigns in , between and will widen until is insurmountable filled with of whipped','',neutral
+'stiffer than starched','',neutral
+'pretty damn sad , is not','',negative
+'what will take rise above and leave human that ve been snubbed into','',negative
+'will take total deprogramming','',neutral
+'will take radical thought','',neutral
+'and like \" terrorist , \" anti-semitic \" , \" anti-war \" , \" islamo-fascist \" , \" \" and \" \"','',neutral
+'last alone has been responsible for more than presently seated has been able muster in past , and pretty tall','',negative
+'what\'s interesting about is most of what re supposed be afraid of is actually simply informative : of','',negative
+'wants be afraid of so that can pass more questionable that makes easier control','',negative
+'want not criticize who give bad , because of how much in of','',neutral
+'want be scared of protesting and dissenting in of , because there are more of than there are of','',negative
+'even suggest that has always wished be afraid of , because goes against very that relies upon keep rolling :','',negative
+'from \" red \" and of with aggressively pursuing perceived and of , current and of so-called such as , and , actual has never , ever existed','',negative
+'like and oversee , but are not of actual as espoused by','',neutral
+'but whereas earlier often favored longer-term , and believed popular was but inevitable , and only','',neutral
+'even within so-called modern , there are many and , notably between marxist/leninist and','',neutral
+'while perusing detailing of , ran across detailed at just what might look like , if truly indeed ever happened','',neutral
+for,'',neutral
+'and makes pretty clear that of of voting and elected is never going turn around and make many hope will become ; unless get serious about organizing and ceasing selfish , alienating of that cling','',neutral
+'are of air-conditioned , frequenting , automatic can-opener using , processed , hands-free','',neutral
+'most of do not choose work','',neutral
+'only after have been put through , which teach not think for or what re taught , only after re encouraged seek higher learning in make highest , do then enter life-long in that keeps away from actually wish do','',neutral
+'that can fight hard and get ahead , put away and eventually leave of human , at , finally live left of shriveled , aided by of that dear , \" \" is actually trying privatize , just like national','',neutral
+'','',negative
+'out of or scared of losing','',negative
+'know is unfit breathe and is unfit eat','',neutral
+'sit in , and slowly re living in is getting smaller , and say is , \" please , at least leave alone in living','',neutral
+'just leave alone','',neutral
+'want get mad','',negative
+'do not want write , because would not know what tell write','',neutral
+'do not know what do about and and and in','',negative
+'know is first , ve got get mad','',negative
+'ve gotta say , \" human , goddammit','',negative
+'want of get up out of','',neutral
+'\" as mad as','',negative
+'and not going take anymore','',negative
+'have ever felt longing','',negative
+'just at mere thought of of makes want cry , sob out of','',negative
+'longing is not for of , but longing will make weak in','',negative
+'will alter , longing will destroy','',negative
+'so started first','',neutral
+'volunteered at once but was about','',neutral
+'is really nice','',positive
+'actually knows of that know','',neutral
+'luckily do not have do much with cause deal mostly with , oh and did mention do not if re on , check , or look up random as long as get done','',neutral
+'pretty sweet and feel very blessed that have','',positive
+'oh and , and teaches so and get along pretty good','',positive
+sucked,'',negative
+again,'',neutral
+ugh,'',negative
+'suppose mostly','',neutral
+'will not pay in and miss , always afraid going forget do or gonna spring up on and aaaaaah','',negative
+'just feels like has ceased','',neutral
+'can not pay , can not think straight , can not even talk','',neutral
+eeh,'',neutral
+'and continues talking else','',neutral
+', was pulled out of by , who was in blind','',negative
+'turned out be that needed choose for of new','',neutral
+'why yes , have in spent of imagining','',neutral
+'at once \"','',neutral
+'anyway , tracked down buried on , and pulled out , preparing face daunting -- which turned out be between nearly identical of off-white','',neutral
+'checked out of','',neutral
+'is appalling : disorganized , blatantly pseudoscientific , and misogynistic','',negative
+'suppose towards have changed too , but was so awful threw up and returned before leaving','',negative
+'goes on describe in later as unhappily married , fat , and sullen','',negative
+'hello , hostile much','',neutral
+yeah,'',neutral
+'well if do , remember catchy','',neutral
+'was not performed by , but by','',neutral
+'there\'s currently on , advertising what capitalistic of is , but is terrible , terrible , of \" in big','',negative
+'also heard somewhere that was covered by','',neutral
+'have had or are still having , perhaps for of with stupid , but who just will not stop bothering that are among of worst','',negative
+'fucking invited called \" is cooler than','',negative
+'okay , if re going be cooler than , saying that re cooler than is fucking given','',negative
+'but then again , even is greater than','',neutral
+'like tell go eat','',negative
+self-explanatory,'',neutral
+'angry ; as of , last alone at was only where met troublesome','',negative
+'very odd and peculiar','',positive
+choose,'',neutral
+good,'',positive
+'named called and asked if could work','',neutral
+'oh know , who are voted \" best dressed \" in','',neutral
+'is not aggravating when is practically demanding hang out with','',negative
+'get fucking','',negative
+'go find else be','',negative
+'sure , nice see wanting be within , but when step over and enter of , and of , well then want do but kick in fucking','',negative
+'get such out of','',positive
+'lame lame lame , know','',neutral
+well,'',neutral
+'closest is s on is','',neutral
+'is probably good','',neutral
+'or maybe there is worth upon )and influences what share , too','',neutral
+'tend have great about about , and do not get around blogging until later and has passed','',neutral
+'and can bet gave of thought','',neutral
+'can always choose not go','',neutral
+'not afraid of having of','',neutral
+'just know having right now would cause great in tender new that and have with now','',neutral
+'and provided of for use in','',neutral
+'','',neutral
+'next actually get on when re not in or plain not wanting talk please do not elect watch instead of having with of that make hard for justify trying be','',negative
+': yah uh , was with about other ready watch were supposed start before for , already planned','',neutral
+'first let say , is of stupidest fucking be once again pissy with','',negative
+'fucking seriously','',negative
+'was on','',neutral
+'rather sick of','',negative
+'noticed are usually about , and rather stupid','',negative
+'so ve stopped listening','',neutral
+'once in awhile or will catch and will read , but for most really am sick and tired stupid repetitive','',negative
+'attempted have normal with , and apparently basic human right hang up whenever choose do so , is not allowed','',neutral
+', enough on','',negative
+'anyways , went','',neutral
+'was intimidating but did good','',negative
+'long short , learned','',neutral
+'and got ruled that was not , and got minimum possible for','',neutral
+'actually got pretty good','',positive
+'was really nice , even','',positive
+'get in and never had before , so will be fine','',neutral
+'exciting of , as as sounds was','',positive
+'so pulled over and ran up','',neutral
+'walked up \" going on , need','',neutral
+'backed up during and looked under only see roaring towards','',neutral
+'so told was on dont think heard , so grabbed and yanked out of , stumbled back , dropped and looked at pissed \" what \" got about or from when tanked popped not here and burning flew out everywhere , catching on , blowing out and because was , of started going up in','',negative
+'after from changed and like \" thanks could have been \" and repeated \" oh \" while got on and from and gave','',negative
+'showed up , talked and pointed at while was telling had go , because really did not want be late , and left','',neutral
+'dont think saved , but may have saved and of','',neutral
+'is was exciting','',positive
+'remain \" anonymous \" in and goes on','',neutral
+'gave , was good','',positive
+'','',neutral
+'and ve been thinking , earlier about how finds many drove past , and many were of in , maybe is just as equally around , only choose stop','',neutral
+'how many by with on , or sitting n of','',neutral
+'how do know is not from , and could be on','',negative
+'didnt even get , but sure will not forget','',neutral
+'ve do','',neutral
+'broke on down , but decided fix','',neutral
+'but saved and fixed of for called early , is so amazing','',positive
+'while was in surprised and met for , suprised too','',positive
+'was soooo nice see','',positive
+'just what needed collect and continue','',neutral
+'does not know yet , need call','',neutral
+'can not wait go on with and just chill out there for awhile','',positive
+'feels pretty good','',positive
+'so , going out with later , do , are dirty of so think might do , and make','',neutral
+'was eventful , is relaxing','',neutral
+'good love','',positive
+'just lost and has had more , were hoping will help feel better','',positive
+'which am so happy for','',positive
+'am so proud of','',positive
+'will be just fine','',neutral
+'sick of looking at','',negative
+'','',neutral
+'\" can not relate of','',negative
+'after watching middle-aged geeky , in \" , \" can not but help agreeing with','',neutral
+'and not even that can not relate , or try','',neutral
+'just do not','',neutral
+'there are not of that will go for','',neutral
+'but , back that do not relate * of','',neutral
+and,'',neutral
+'and know what mean , because in are okay , but mean drunken and like','',neutral
+'has seen','',neutral
+'am , quite honestly , furious and will be getting angry from , even though will not care , sure because as much as would like think that are not of \" \" are','',negative
+'go ahead , care about , but do not care about demeaning','',negative
+'do not drink excessive because am bored','',neutral
+'- do not like \"','',neutral
+'- enjoy reading','',positive
+'- do not think buys','',positive
+'do not think begets','',positive
+'- actually take of nice , smells , and appreciate , appreciate of like and let effect do not just trample in','',positive
+'- do not say \" like \" other','',neutral
+'could go on','',neutral
+'are just rude and selfish , and know too , but do not want be like','',negative
+meh,'',neutral
+'not and do not really even want be around','',neutral
+'when are going step up and join','',neutral
+'and where are intelligent , attractive , respectful who are not frat , who just wear and and , who like read and watch','',neutral
+'please , if exist anywhere , let know','',neutral
+'so kept walking straight , and that crossed turned around and saw and growled , was like \" oh shit , just keep walking',shit,negative
+'so did , and then second growls at too , and like \" should run or keep walking','',negative
+'so kept walking and then other that crossed comes back running at and said \" ohh sshhiittt','',negative
+'and saw with opened slightly , and squeezed in there sumhow sumway','',positive
+'with on','',neutral
+'knoe skinny but damn','',negative
+'wuz scared','',negative
+'\" afraid of never learns dance','',negative
+'afraid of waking never takes','',negative
+'and afraid of dying never learns live','',negative
+'\" when has been too lonely , and has been too long','',negative
+'just remember , in , far beneath bitter','',neutral
+'','',neutral
+'second caught ; more specifically , first : \" afraid of never learns dance /it\'s afraid of waking never takes','',negative
+'grand , ; is that must be handled with delicate : , rushed let','',neutral
+'have considered for now , but have been apprehensive , and did not act on what felt','',negative
+'and then , just other , was driving down on , listening , and beautiful came on had not heard before','',positive
+'made think now have thought , and thought , and who know best will not be surprised that thought more','',positive
+'think will wake from , and will see if cannot turn into','',neutral
+'was pretty awesome','',positive
+'did on , because am cool , and did better than expected','',positive
+'is currently in of archiving of second ever made , so spent almost going through','',neutral
+'totally loved , because am','',positive
+'at first thought had inexplicably decided in of , but with french told was for will','',neutral
+'love who at - awesomely flamboyant and told about how came in for latte during last but without','',positive
+'did not see will although is usually , think would have had punch on of who\'s heard \" \" , but on with said had just randomly seen','',negative
+'- * gulp * - came observe when heard was coming , spazzed , afraid that might have with that never , know , handed in of','',negative
+'of , as soon as came in , came over and said , \" realize , , that re not allowed , and will have give thirty more','',neutral
+'just kept smiling awkwardly','',positive
+'then proceeded call and went through required but hilariously inapplicable hazardous of while around tried stifle','',positive
+'of freaking out about but of okay','',negative
+'** as in , assume','',neutral
+hey,'',neutral
+good,'',positive
+'was psyched','',positive
+ugh,'',negative
+'went back , had go get and get back','',neutral
+'got on , dropped on wet and almost dropped','',neutral
+'when got there , went in and told was there and waited','',neutral
+'at apologized for being so nervous and told that there were worse and that was not using \" uh \" and \" um \" as often as had been','',negative
+'told that would set up for next by calling in next or','',neutral
+'looks good','',positive
+'interviewing were thinking of placing in digital due with and editing , told that would likely turn out be too easy for in long and that was hoping for more challenging so that could learn more overall','',neutral
+'where will decide place is up , as long as get , will be really happy','',positive
+'oh , if get at , looks like would be starting there around','',neutral
+'coming up','',neutral
+': going or with at','',neutral
+': if free , want check out sucks live in','',neutral
+'is for now','',neutral
+'felt really awful through out whole too','',negative
+'before , was really','',neutral
+'dislike with because think is obsessed with and really likes','',negative
+'really do hate','',negative
+okay,'',neutral
+'hmm remember gareth\'s why do not spy see going on','',neutral
+'so did and got so panicy that only got 6th','',negative
+'and was freak','',negative
+'left , but through out whole was really awful','',negative
+so,'',neutral
+'when got was really nervous had not talk for because of','',negative
+'really scared','',negative
+'so tell took forever tell but was shakey and nervous','',negative
+'so did anyway','',neutral
+'and said that was understandable','',neutral
+'and said gave for , so would not have keep from other','',neutral
+then,'',neutral
+'like , would make happy that delete off and','',positive
+'well if want','',neutral
+'because dislike very much','',negative
+'like yeah would wait of and delete','',neutral
+'and hate do','',negative
+'because then afterwards had big','',neutral
+'man hate','',negative
+ehh,'',neutral
+'miss always forever and ever','',negative
+'little more complicated','',neutral
+'so down right now can not be anymore upset','',negative
+by,'',neutral
+'and know true','',neutral
+good,'',neutral
