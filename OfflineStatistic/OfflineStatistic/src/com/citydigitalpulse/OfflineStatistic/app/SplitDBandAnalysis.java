@@ -88,7 +88,11 @@ public class SplitDBandAnalysis {
 					temp.setTime_zone(tempReg.getTime_zone());
 					isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"
 							+ tempReg.getTime_zone()));
-					Date time = new Date(temp.getCreat_at());
+					long timestamp=temp.getCreat_at();
+					if(timestamp<Long.parseLong("10000000000")){
+						timestamp=timestamp*1000;
+					}
+					Date time = new Date(timestamp);
 					date_string = isoFormat.format(time);
 					String table_name = "part_message_" + date_string;
 					// System.out.println(table_name);
