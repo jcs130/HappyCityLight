@@ -1,7 +1,9 @@
 package com.zhongli.NLPProgram.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.Tokenizer;
@@ -34,6 +36,7 @@ public class TaggedMessage {
 	private List<Double> emotion_value;
 	private List<String> tokens;
 	private List<String> tags;
+	private Set<String> remove_POS_set;
 	private boolean hasPositive = false;
 	private boolean hasNegative = false;
 	private boolean hasNeutral = false;
@@ -53,7 +56,59 @@ public class TaggedMessage {
 		this.tokenizer = tokenizer;
 		this.msg_id = msg_id;
 		this.raw_message = raw_message;
+		init();
 		splitRawMessage();
+
+	}
+
+	/**
+	 * Alphabetical list of part-of-speech tags used in the Penn Treebank
+	 * Project: https://www.ling.upenn.edu/courses/Fall_2003/ling001/
+	 * penn_treebank_pos.html
+	 */
+	private void init() {
+
+		// 需要去掉的词性列表
+		remove_POS_set = new HashSet<String>();
+		// @username
+		remove_POS_set.add("USR");
+		// hashtag
+		remove_POS_set.add("HT");
+		remove_POS_set.add("-LRB-");
+		remove_POS_set.add("-RRB-");
+		// URL
+		remove_POS_set.add("URL");
+		// 符号
+		remove_POS_set.add(".");
+		// 名词
+		// Noun, singular or mass
+		remove_POS_set.add("NN");
+		// 专有名词，单数
+		// Proper noun, singular
+		remove_POS_set.add("NNP");
+		// 专有名词，复数
+		// Proper noun, plural
+		remove_POS_set.add("NNPS");
+		// 名词，复数
+		// Noun, plural
+		remove_POS_set.add("NNS");
+		// 数字
+		// Cardinal number
+		remove_POS_set.add("CD");
+		// to
+		remove_POS_set.add("TO");
+		// 人称代词
+		// Personal pronoun
+		remove_POS_set.add("PRP");
+		// 物主代词
+		// Possessive pronoun
+		remove_POS_set.add("PRP$");
+		// 限定词
+		// Determiner
+		remove_POS_set.add("DT");
+		// 介词或从属连词
+		// Preposition or subordinating conjunction
+		// remove_POS_set.add("IN");
 	}
 
 	public void addEmotion(String emotion) {
@@ -83,6 +138,13 @@ public class TaggedMessage {
 				temp_text = temp_text.replace(tt.token, " ");
 				// System.out.println(temp_text);
 			}
+			// 将所有的'll 展开为 will
+			temp_text = temp_text.replaceAll("'ll ", " will ");
+			// 将所有的否定词展开
+			// 将所有的否定缩写提取
+			temp_text = temp_text.replaceAll(" can't ", " can not ");
+			temp_text = temp_text.replaceAll(" won't ", " will not ");
+			temp_text = temp_text.replaceAll("n't ", " not ");
 		}
 		// 将字符表情转化为Emoji並且加上空格
 		String full_tweet = addSpace(EmojiUtils.emojify(temp_text));
@@ -120,33 +182,17 @@ public class TaggedMessage {
 					}
 				} else {
 					String token = tt.token.toLowerCase();
-					String tag = tt.tag.toLowerCase();
+					String tag = tt.tag.toUpperCase();
 					// 如果以#开头，则去掉
 					if (tt.token.indexOf("#") == 0) {
 						hashtags.add(tt.token);
 						token = tt.token.toLowerCase().substring(0);
 					}
 
-					// 将所有的否定缩写提取
-					if (token.indexOf("n't") != -1) {
-						if (token.equals("can't")) {
-							tokens.add("can");
-							tags.add(tag);
-							tokens.add("not");
-							tags.add("NOT");
-						} else {
-							tokens.add(token.substring(0, token.indexOf("n't")));
-							tags.add(tag);
-							tokens.add("not");
-							tags.add("NOT");
-						}
-					} else if (token.equals("not")) {
-						tokens.add(token);
-						tags.add("NOT");
-					} else {
-						tokens.add(token);
-						tags.add(tag);
-					}
+					// } else {
+					tokens.add(token);
+					tags.add(tag);
+					// }
 				}
 			}
 		}
@@ -253,7 +299,7 @@ public class TaggedMessage {
 	public boolean isUseful() {
 		// 如果同时存在正反中标记则本记录无效
 		if (hasPositive == true && hasNegative == true && hasNeutral == true) {
-			System.out.println("skip:" + this.emotion);
+			// System.out.println("skip:" + this.emotion);
 			return false;
 		} else {
 			return true;
@@ -309,9 +355,8 @@ public class TaggedMessage {
 		// 第一列为分词后的句子和在句子中的成分
 		String text = "";
 		String emojis = "";
-		String score_str = "";
 		for (int i = 0; i < this.tokens.size(); i++) {
-			text += tokens.get(i).toLowerCase()+" ";
+			text += tokens.get(i).toLowerCase() + " ";
 		}
 		res.add(text.trim());
 		// 第二列为Emoji表情列表
@@ -319,27 +364,38 @@ public class TaggedMessage {
 			emojis += emoji_list.get(i) + " ";
 		}
 		res.add(emojis.trim());
-		double score = 0;
 		// 第三列为情绪得分
-		for (int i = 0; i < emotion_value.size(); i++) {
-			score += emotion_value.get(i);
-		}
-		score = score / (double) emotion_value.size();
-		res.add(score_str + score);
+		res.add("" + getScore());
 		// 第四列为最终情绪
 		// 如果没有被标记，显示unknown
+		res.add(getFinalEmotion());
+		return res.toArray(new String[0]);
+	}
+
+	public double getScore() {
+		double res = 0;
+		for (int i = 0; i < emotion_value.size(); i++) {
+			res += emotion_value.get(i);
+		}
+		res = res / (double) emotion_value.size();
+		return res;
+	}
+
+	public String getFinalEmotion() {
+		String res = "";
+		double score = getScore();
 		if (emotion.size() == 0) {
-			res.add("unknown");
+			res = "unknown";
 		} else {
 			if (score > 1.65) {
-				res.add("positive");
+				res = "positive";
 			} else if (score < -1.65) {
-				res.add("negative");
+				res = "negative";
 			} else {
-				res.add("neutral");
+				res = "neutral";
 			}
 		}
-		return res.toArray(new String[0]);
+		return res;
 	}
 
 	/**
@@ -408,7 +464,26 @@ public class TaggedMessage {
 		}
 
 		// 2. create Instances object
-		System.out.println("Create new datas");
+		// System.out.println("Create new datas");
 		return new Instances("training_data", atts, 0);
+	}
+
+	public void motifyOneRecord() {
+		ArrayList<String> newTokens = new ArrayList<String>();
+		ArrayList<String> newTags = new ArrayList<String>();
+		// 首先根据词性筛选
+		for (int i = 0; i < this.tags.size(); i++) {
+			String tag = this.tags.get(i);
+			if (remove_POS_set.contains(tag)) {
+				// skip
+			} else {
+				newTokens.add(this.tokens.get(i));
+				newTags.add(this.tags.get(i));
+			}
+		}
+
+		// 将新的列表写入对象
+		this.tags = newTags;
+		this.tokens = newTokens;
 	}
 }

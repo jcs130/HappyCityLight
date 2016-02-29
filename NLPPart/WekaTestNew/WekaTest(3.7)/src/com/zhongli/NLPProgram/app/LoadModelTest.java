@@ -1,13 +1,9 @@
 package com.zhongli.NLPProgram.app;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.Tokenizer;
@@ -16,12 +12,10 @@ import opennlp.tools.tokenize.TokenizerModel;
 import cmu.arktweetnlp.Tagger;
 
 import com.zhongli.NLPProgram.model.TaggedMessage;
+import com.zhongli.NLPProgram.model.WordFeature;
 
 import weka.classifiers.Classifier;
-import weka.core.Instance;
 import weka.core.Instances;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class LoadModelTest {
 	private Tagger ARK_POStagger_en;
@@ -32,44 +26,6 @@ public class LoadModelTest {
 		LoadModelTest tm = new LoadModelTest();
 		tm.init();
 		tm.dosth();
-	}
-
-	private void dosth() {
-		// load model
-		String rootPath = "data/";
-		String originalTrain_filename = "training_set(Befor_remove_stopwords).arff";
-		String classifier_filename = "J48_1(Befor_remove_stopwords).model";
-		Classifier cls;
-		try {
-			cls = (Classifier) weka.core.SerializationHelper.read(rootPath
-					+ classifier_filename);
-			// predict instance class values
-			Instances originalTrain = new Instances(new BufferedReader(
-					new FileReader(rootPath + originalTrain_filename)));
-
-			// load or create Instances to predict
-			originalTrain.setClassIndex(originalTrain.numAttributes() - 1);
-			// which instance to predict class value
-			// int s1 = 2600;
-			// 新建Instance，转换为训练数据格式
-			TaggedMessage test = new TaggedMessage(ARK_POStagger_en,
-					sentence_etector_en, tokenizer, 0, "Hello, Good Good Day~~");
-			Instances data = TaggedMessage.getWekaInstances(false);
-			Instance test_ins = test.toWekaInstance(data, false,false);
-			
-			double value = cls.classifyInstance(test_ins);
-
-			System.out.println(originalTrain.instance(0));
-			// get the name of the class value
-			String prediction = originalTrain.classAttribute().value(
-					(int) value);
-
-			System.out.println("The predicted value of instance:" + prediction);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	private void init() {
@@ -117,5 +73,133 @@ public class LoadModelTest {
 				}
 			}
 		}
+	}
+
+	private void dosth() {
+		// load model
+		String rootPath = "data/";
+		String classifier_text_img_filename = "training_data_normal_before_remove_useless_part.model";
+		String classifier_text_only_filename = "Saimadata/SMO_training_data_normal_before_remove_useless_part.model";
+		String classifier_text_img_feature_only_filename = "training_data_fratures_before_remove_useless_part.model";
+		String classifier_text_only_feature_only_filename = "Saimadata/training_data_fratures_before_remove_useless_part.model";
+		// String classifier_text_img_filename =
+		// "training_data_normal_after_remove_useless_part.model";
+		// String classifier_text_only_filename =
+		// "Saimadata/SMO_training_data_normal_after_remove_useless_part.model";
+		Classifier cls_full;
+		Classifier cls_feature;
+		String test_text = "Congratulations @LeoDiCaprio YOU DESERVE IT #Oscar ";
+		// String test_text =
+		// "'Shots fired' at Carleton University actually just balloons popping #ottnews http://ow.ly/YRgXC  ";
+		System.out.println("Text: " + test_text);
+		try {
+			// 载入分类器
+			cls_full = (Classifier) weka.core.SerializationHelper.read(rootPath
+					+ classifier_text_img_filename);
+			cls_feature = (Classifier) weka.core.SerializationHelper
+					.read(rootPath + classifier_text_img_feature_only_filename);
+			// 新建要被标记的数据集，可以静态创建
+			Instances unlabeled_full = TaggedMessage.getWekaInstances(false);
+			Instances unlabeled_feature = WordFeature.getWekaInstances();
+			// set class attribute
+			unlabeled_full.setClassIndex(unlabeled_full.numAttributes() - 1);
+			unlabeled_feature
+					.setClassIndex(unlabeled_feature.numAttributes() - 1);
+			// 新建Instance，转换为训练数据格式
+			TaggedMessage test = new TaggedMessage(ARK_POStagger_en,
+					sentence_etector_en, tokenizer, 0, test_text);
+			// test.motifyOneRecord();
+			// System.out.println(test.getTokens());
+			// System.out.println(test.getTags());
+			System.out.println("Big training set:");
+			unlabeled_full.add(test
+					.toWekaInstance(unlabeled_full, false, false));
+			unlabeled_feature.add(WordFeature.getWekaInstance(
+					unlabeled_feature, test));
+			// create copy
+			Instances labeled_full = new Instances(unlabeled_full);
+			Instances labeled_feature = new Instances(unlabeled_feature);
+			// label instances
+			for (int i = 0; i < unlabeled_full.numInstances(); i++) {
+				double clsLabel = cls_full.classifyInstance(unlabeled_full
+						.instance(i));
+				labeled_full.instance(i).setClassValue(clsLabel);
+				// System.out.println(unlabeled.instance(i));
+				// get the name of the class value
+				String prediction = unlabeled_full.classAttribute().value(
+						(int) clsLabel);
+				System.out.println("Classifier 1" + " -- " + prediction);
+			}
+			for (int i = 0; i < unlabeled_feature.numInstances(); i++) {
+				double clsLabel = cls_feature
+						.classifyInstance(unlabeled_feature.instance(i));
+				labeled_feature.instance(i).setClassValue(clsLabel);
+				// System.out.println(unlabeled.instance(i));
+				// get the name of the class value
+				String prediction = unlabeled_feature.classAttribute().value(
+						(int) clsLabel);
+				System.out.println("Classifier 2" + " -- " + prediction);
+			}
+			System.out.println("Small training set:");
+			// System.out.println(labeled.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		/********* 小规模数据库 ***************/
+		try {
+			// 载入分类器
+			cls_full = (Classifier) weka.core.SerializationHelper.read(rootPath
+					+ classifier_text_only_filename);
+			cls_feature = (Classifier) weka.core.SerializationHelper
+					.read(rootPath + classifier_text_only_feature_only_filename);
+			// 新建要被标记的数据集，可以静态创建
+			Instances unlabeled_full = TaggedMessage.getWekaInstances(false);
+			Instances unlabeled_feature = WordFeature.getWekaInstances();
+			// set class attribute
+			unlabeled_full.setClassIndex(unlabeled_full.numAttributes() - 1);
+			unlabeled_feature
+					.setClassIndex(unlabeled_feature.numAttributes() - 1);
+			// 新建Instance，转换为训练数据格式
+			TaggedMessage test = new TaggedMessage(ARK_POStagger_en,
+					sentence_etector_en, tokenizer, 0, test_text);
+			// test.motifyOneRecord();
+			// System.out.println(test.getTokens());
+			// System.out.println(test.getTags());
+			unlabeled_full.add(test
+					.toWekaInstance(unlabeled_full, false, false));
+			unlabeled_feature.add(WordFeature.getWekaInstance(
+					unlabeled_feature, test));
+			// create copy
+			Instances labeled_full = new Instances(unlabeled_full);
+			Instances labeled_feature = new Instances(unlabeled_feature);
+			// label instances
+			for (int i = 0; i < unlabeled_full.numInstances(); i++) {
+				double clsLabel = cls_full.classifyInstance(unlabeled_full
+						.instance(i));
+				labeled_full.instance(i).setClassValue(clsLabel);
+				// System.out.println(unlabeled.instance(i));
+				// get the name of the class value
+				String prediction = unlabeled_full.classAttribute().value(
+						(int) clsLabel);
+				System.out.println("Classifier 1" + " -- " + prediction);
+			}
+			for (int i = 0; i < unlabeled_feature.numInstances(); i++) {
+				double clsLabel = cls_feature
+						.classifyInstance(unlabeled_feature.instance(i));
+				labeled_feature.instance(i).setClassValue(clsLabel);
+				// System.out.println(unlabeled.instance(i));
+				// get the name of the class value
+				String prediction = unlabeled_feature.classAttribute().value(
+						(int) clsLabel);
+				System.out.println("Classifier 2" + " -- " + prediction);
+			}
+			// System.out.println(labeled.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

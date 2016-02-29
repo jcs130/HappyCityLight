@@ -1,5 +1,6 @@
 package com.zhongli.NLPProgram.app;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,13 +11,12 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.zhongli.NLPProgram.model.TaggedMessage;
+import com.zhongli.NLPProgram.model.WordFeature;
 
 import cmu.arktweetnlp.Tagger;
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -24,6 +24,7 @@ import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
+import weka.core.Instance;
 import weka.core.Instances;
 
 public class NLP_PreProessing {
@@ -31,14 +32,15 @@ public class NLP_PreProessing {
 	private Tagger ARK_POStagger_en;
 	private SentenceDetectorME sentence_etector_en;
 	private Tokenizer tokenizer;
-	private Set<String> remove_POS_set;
 
 	public static void main(String[] args) {
 		NLP_PreProessing ot = new NLP_PreProessing();
 		HashMap<Integer, TaggedMessage> records = null;
 		ot.init();
+		/*************************************/
+		// 自行标注的两万条数据
 		// 将原文分词，并且将分词与标记联合输出
-		records = ot.loadRecordsFromFile("data/mark_records.txt");
+		records = ot.loadRecordsFromCSVFile("data/mark_records.txt");
 		// 将数据写入ARFF格式
 		ot.writeRecords2Arff(records,
 				"data/training_data_combined_before_remove_useless_part.arff",
@@ -46,6 +48,10 @@ public class NLP_PreProessing {
 		ot.writeRecords2Arff(records,
 				"data/training_data_normal_before_remove_useless_part.arff",
 				false);
+		// 直接提取特征输出特征数据
+		ot.writeFeatures2Arff(records,
+				"data/training_data_fratures_before_remove_useless_part.arff");
+
 		// 去掉句子的多余成分(人称代词等)
 		ot.removeUselessPart(records);
 		ot.writeRecords2Arff(records,
@@ -54,38 +60,73 @@ public class NLP_PreProessing {
 		ot.writeRecords2Arff(records,
 				"data/training_data_normal_after_remove_useless_part.arff",
 				false);
+
+		/****************************************/
+		// 加载课堂上老师给的ARFF的训练数据
+		records = ot.loadRecordsFromARFFFile("data/Saimadata/Saimadata.arff");
+		// 将数据写入ARFF格式
+		ot.writeRecords2Arff(
+				records,
+				"data/Saimadata/training_data_combined_before_remove_useless_part.arff",
+				true);
+		ot.writeRecords2Arff(
+				records,
+				"data/Saimadata/training_data_normal_before_remove_useless_part.arff",
+				false);
+		// 直接提取特征输出特征数据
+		ot.writeFeatures2Arff(records,
+				"data/Saimadata/training_data_fratures_before_remove_useless_part.arff");
+
+		// 去掉句子的多余成分(人称代词等)
+		ot.removeUselessPart(records);
+		ot.writeRecords2Arff(
+				records,
+				"data/Saimadata/training_data_combined_after_remove_useless_part.arff",
+				true);
+		ot.writeRecords2Arff(
+				records,
+				"data/Saimadata/training_data_normal_after_remove_useless_part.arff",
+				false);
+	}
+
+	private HashMap<Integer, TaggedMessage> loadRecordsFromARFFFile(
+			String fileFPath) {
+		HashMap<Integer, TaggedMessage> records = new HashMap<Integer, TaggedMessage>();
+		Instances originalTrain;
+		try {
+			originalTrain = new Instances(new BufferedReader(new FileReader(
+					fileFPath)));
+			originalTrain.setClassIndex(originalTrain.numAttributes() - 1);
+			// 逐行获取数据
+			for (int i = 0; i < originalTrain.size(); i++) {
+				Instance temp = originalTrain.get(i);
+				// System.out.println(temp.stringValue(0) + " <> "
+				// + temp.stringValue(1));
+				TaggedMessage firstRecord = new TaggedMessage(ARK_POStagger_en,
+						sentence_etector_en, tokenizer, i, temp.stringValue(0));
+				firstRecord.addEmotion(temp.stringValue(1));
+				records.put(i, firstRecord);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return records;
 	}
 
 	private void removeUselessPart(HashMap<Integer, TaggedMessage> records) {
 		List<Integer> key_list = new ArrayList<Integer>();
 		key_list.addAll(records.keySet());
 		for (int i = 0; i < key_list.size(); i++) {
-			motifyOneRecord(records.get(key_list.get(i)));
+			records.get(key_list.get(i)).motifyOneRecord();
 		}
 
-	}
-
-	private void motifyOneRecord(TaggedMessage taggedMessage) {
-		ArrayList<String> newTokens = new ArrayList<String>();
-		ArrayList<String> newTags = new ArrayList<String>();
-		// 首先根据词性筛选
-		for (int i = 0; i < taggedMessage.getTags().size(); i++) {
-			String tag = taggedMessage.getTags().get(i);
-			if (remove_POS_set.contains(tag)) {
-				// skip
-			} else {
-				newTokens.add(taggedMessage.getTokens().get(i));
-				newTags.add(taggedMessage.getTags().get(i));
-			}
-		}
-
-		// 将新的列表写入对象
-		taggedMessage.setTags(newTags);
-		taggedMessage.setTokens(newTokens);
 	}
 
 	@SuppressWarnings("resource")
-	private HashMap<Integer, TaggedMessage> loadRecordsFromFile(String filePaht) {
+	private HashMap<Integer, TaggedMessage> loadRecordsFromCSVFile(
+			String filePaht) {
 		// 1.从数据库中读取训练数据到文件
 		HashMap<Integer, TaggedMessage> records = new HashMap<Integer, TaggedMessage>();
 		CSVReader reader;
@@ -117,6 +158,37 @@ public class NLP_PreProessing {
 			e.printStackTrace();
 		}
 		return records;
+	}
+
+	/**
+	 * 直接将被分词的数据写入ARFF
+	 * 
+	 * @param records
+	 * @param filePath
+	 */
+	private void writeFeatures2Arff(HashMap<Integer, TaggedMessage> records,
+			String filePath) {
+		List<TaggedMessage> records_list = new ArrayList<TaggedMessage>();
+		Instances data = WordFeature.getWekaInstances();
+		records_list.addAll(records.values());
+		for (int i = 0; i < records_list.size(); i++) {
+			// 如果为有效记录则写入文件
+			if (records_list.get(i).isUseful()) {
+				data.add(WordFeature.getWekaInstance(data, records_list.get(i)));
+			}
+		}
+
+		// Write to the Arff file
+		try {
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath), Charset.forName("utf-8")));
+			bw.write(data.toString());
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -196,45 +268,6 @@ public class NLP_PreProessing {
 				}
 			}
 		}
-		/**
-		 * Alphabetical list of part-of-speech tags used in the Penn Treebank
-		 * Project: https://www.ling.upenn.edu/courses/Fall_2003/ling001/
-		 * penn_treebank_pos.html
-		 */
-		// 需要去掉的词性列表
-		remove_POS_set = new HashSet<String>();
-		// @username
-		remove_POS_set.add("USR");
-		// URL
-		remove_POS_set.add("URL");
-		// 名词
-		// Noun, singular or mass
-		remove_POS_set.add("NN");
-		// 专有名词，单数
-		// Proper noun, singular
-		remove_POS_set.add("NNP");
-		// 专有名词，复数
-		// Proper noun, plural
-		remove_POS_set.add("NNPS");
-		// 名词，复数
-		// Noun, plural
-		remove_POS_set.add("NNS");
-		// 数字
-		// Cardinal number
-		remove_POS_set.add("CD");
-		// to
-		remove_POS_set.add("TO");
-		// 人称代词
-		// Personal pronoun
-		remove_POS_set.add("PRP");
-		// 物主代词
-		// Possessive pronoun
-		remove_POS_set.add("PRP$");
-		// 限定词
-		// Determiner
-		remove_POS_set.add("DT");
-		// 介词或从属连词
-		// Preposition or subordinating conjunction
-		remove_POS_set.add("IN");
+
 	}
 }

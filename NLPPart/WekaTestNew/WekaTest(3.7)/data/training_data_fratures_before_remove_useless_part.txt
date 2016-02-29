@@ -1,0 +1,118 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.SMO -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"
+Relation:     training_data
+Instances:    18624
+Attributes:   11
+              ag_num
+              dg_num
+              fr_num
+              hp_num
+              sd_num
+              sp_num
+              turn_num
+              no_num
+              positive_num
+              negative_num
+              emotion
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+SMO
+
+Kernel used:
+  Linear Kernel: K(x,y) = <x,y>
+
+Classifier for classes: positive, neutral
+
+BinarySMO
+
+Machine linear: showing attribute weights, not support vectors.
+
+         0      * (normalized) ag_num
+ +       0.0008 * (normalized) dg_num
+ +       0      * (normalized) fr_num
+ +       0.0004 * (normalized) hp_num
+ +      -0.0005 * (normalized) sd_num
+ +       0.0004 * (normalized) sp_num
+ +      -0.0001 * (normalized) turn_num
+ +       0.0024 * (normalized) no_num
+ +      -0.0004 * (normalized) positive_num
+ +      -0.0021 * (normalized) negative_num
+ -       0.9998
+
+Number of kernel evaluations: 1771156 (49.757% cached)
+
+Classifier for classes: positive, negative
+
+BinarySMO
+
+Machine linear: showing attribute weights, not support vectors.
+
+         0.003  * (normalized) ag_num
+ +       0.0004 * (normalized) fr_num
+ +       0.0002 * (normalized) hp_num
+ +       0.0009 * (normalized) sd_num
+ +       0      * (normalized) sp_num
+ +      -0.0005 * (normalized) turn_num
+ +      -0.0014 * (normalized) no_num
+ +       0.0004 * (normalized) positive_num
+ +       0.0015 * (normalized) negative_num
+ -       1.0005
+
+Number of kernel evaluations: 1269766 (50.387% cached)
+
+Classifier for classes: neutral, negative
+
+BinarySMO
+
+Machine linear: showing attribute weights, not support vectors.
+
+        -0.0024 * (normalized) ag_num
+ +       0.5193 * (normalized) dg_num
+ +      -1.5    * (normalized) fr_num
+ +       0.0013 * (normalized) hp_num
+ +       1.5567 * (normalized) sd_num
+ +       0.0001 * (normalized) sp_num
+ +       0.0008 * (normalized) turn_num
+ +      -1.9196 * (normalized) no_num
+ +       0      * (normalized) positive_num
+ +      10.3587 * (normalized) negative_num
+ -       0.9999
+
+Number of kernel evaluations: 612499 (61.349% cached)
+
+
+
+Time taken to build model: 1.29 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances       14087               75.639  %
+Incorrectly Classified Instances      4537               24.361  %
+Kappa statistic                         -0.0002
+Mean absolute error                      0.2934
+Root mean squared error                  0.3811
+Relative absolute error                110.819  %
+Root relative squared error            104.7534 %
+Coverage of cases (0.95 level)          92.3378 %
+Mean rel. region size (0.95 level)      66.6667 %
+Total Number of Instances            18624     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    1.000    0.756      1.000    0.861      -0.006   0.500     0.756     positive
+                 0.000    0.000    0.000      0.000    0.000      0.000    0.506     0.146     neutral
+                 0.000    0.000    0.000      0.000    0.000      -0.003   0.659     0.179     negative
+Weighted Avg.    0.756    0.757    0.572      0.756    0.652      -0.005   0.517     0.611     
+
+=== Confusion Matrix ===
+
+     a     b     c   <-- classified as
+ 14087     0     2 |     a = positive
+  2684     0     0 |     b = neutral
+  1851     0     0 |     c = negative
+
