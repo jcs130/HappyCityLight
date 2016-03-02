@@ -29,26 +29,27 @@ import com.citydigitalpulse.OfflineStatistic.tool.senitool.*;
  * @author Zhongli Li
  *
  */
-public class SplitDBandAnalysis {
+public class SplitDB {
 	private StatisticDaoImpl statisticDB;
-	private SentimentClassifier sentiStrength_en;
-	private SentimentClassifier ZLSentiment_en;
+
+	// private SentimentClassifier sentiStrength_en;
+	// private SentimentClassifier ZLSentiment_en;
 
 	public static void main(String[] args) {
-		SplitDBandAnalysis sm = new SplitDBandAnalysis();
+		SplitDB sm = new SplitDB();
 		sm.work();
 	}
 
 	private void init() {
 		Tools.readSplitSettingFile();
 		statisticDB = new StatisticDaoImpl();
-//		sentiStrength_en = new SentiStrengthNLP_en("SentStrength_Data/");
-		ZLSentiment_en = new ZLSentiment_en(
-				"models/",
-				"big_training_data_word_vector_before_remove_useless_part.model",
-				"small_training_data_word_vector_before_remove_useless_part.model",
-				"big_training_data_fratures_before_remove_useless_part.model",
-				"small_training_data_fratures_before_remove_useless_part.model");
+		// sentiStrength_en = new SentiStrengthNLP_en("SentStrength_Data/");
+		// ZLSentiment_en = new ZLSentiment_en(
+		// "models/",
+		// "big_training_data_word_vector_before_remove_useless_part.model",
+		// "small_training_data_word_vector_before_remove_useless_part.model",
+		// "big_training_data_fratures_before_remove_useless_part.model",
+		// "small_training_data_fratures_before_remove_useless_part.model");
 	}
 
 	/**
@@ -81,14 +82,13 @@ public class SplitDBandAnalysis {
 				StructuredFullMessage temp = queryResult.get(i);
 				// 更新语言标记
 				if (temp.getLang().equals("en")) {
-//					EmotionObj emo = sentiStrength_en.getTextSentiment(temp
-//							.getText());
-					EmotionObj emo = ZLSentiment_en.getTextSentiment(temp
-							.getText());
-					//综合两个给出的分数?
-					
-					temp.setEmotion_text(emo.getEmotion());
-					temp.setEmotion_text_value(emo.getValue());
+					// EmotionObj emo = sentiStrength_en.getTextSentiment(temp
+					// .getText());
+					// EmotionObj emo = ZLSentiment_en.getTextSentiment(temp
+					// .getText());
+					// 综合两个给出的分数?
+					// temp.setEmotion_text(emo.getEmotion());
+					// temp.setEmotion_text_value(emo.getValue());
 				} else {
 					// other language.
 				}
