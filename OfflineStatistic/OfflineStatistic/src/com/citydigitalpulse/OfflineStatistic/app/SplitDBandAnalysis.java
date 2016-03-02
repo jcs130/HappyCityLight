@@ -20,8 +20,8 @@ import com.citydigitalpulse.OfflineStatistic.dao.impl.StatisticDaoImpl;
 import com.citydigitalpulse.OfflineStatistic.model.EmotionObj;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
 import com.citydigitalpulse.OfflineStatistic.model.StructuredFullMessage;
-import com.citydigitalpulse.OfflineStatistic.tool.NLPModel;
 import com.citydigitalpulse.OfflineStatistic.tool.Tools;
+import com.citydigitalpulse.OfflineStatistic.tool.senitool.*;
 
 /**
  * 分库与感情识别
@@ -31,6 +31,8 @@ import com.citydigitalpulse.OfflineStatistic.tool.Tools;
  */
 public class SplitDBandAnalysis {
 	private StatisticDaoImpl statisticDB;
+	private SentimentClassifier sentiStrength_en;
+	private SentimentClassifier ZLSentiment_en;
 
 	public static void main(String[] args) {
 		SplitDBandAnalysis sm = new SplitDBandAnalysis();
@@ -40,6 +42,13 @@ public class SplitDBandAnalysis {
 	private void init() {
 		Tools.readSplitSettingFile();
 		statisticDB = new StatisticDaoImpl();
+//		sentiStrength_en = new SentiStrengthNLP_en("SentStrength_Data/");
+		ZLSentiment_en = new ZLSentiment_en(
+				"models/",
+				"big_training_data_word_vector_before_remove_useless_part.model",
+				"small_training_data_word_vector_before_remove_useless_part.model",
+				"big_training_data_fratures_before_remove_useless_part.model",
+				"small_training_data_fratures_before_remove_useless_part.model");
 	}
 
 	/**
@@ -72,7 +81,12 @@ public class SplitDBandAnalysis {
 				StructuredFullMessage temp = queryResult.get(i);
 				// 更新语言标记
 				if (temp.getLang().equals("en")) {
-					EmotionObj emo = NLPModel.getTextEmotion_en(temp.getText());
+//					EmotionObj emo = sentiStrength_en.getTextSentiment(temp
+//							.getText());
+					EmotionObj emo = ZLSentiment_en.getTextSentiment(temp
+							.getText());
+					//综合两个给出的分数?
+					
 					temp.setEmotion_text(emo.getEmotion());
 					temp.setEmotion_text_value(emo.getValue());
 				} else {
@@ -88,9 +102,9 @@ public class SplitDBandAnalysis {
 					temp.setTime_zone(tempReg.getTime_zone());
 					isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"
 							+ tempReg.getTime_zone()));
-					long timestamp=temp.getCreat_at();
-					if(timestamp<Long.parseLong("10000000000")){
-						timestamp=timestamp*1000;
+					long timestamp = temp.getCreat_at();
+					if (timestamp < Long.parseLong("10000000000")) {
+						timestamp = timestamp * 1000;
 					}
 					Date time = new Date(timestamp);
 					date_string = isoFormat.format(time);

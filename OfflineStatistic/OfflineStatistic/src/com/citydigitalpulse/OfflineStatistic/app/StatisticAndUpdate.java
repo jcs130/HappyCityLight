@@ -22,8 +22,10 @@ import com.citydigitalpulse.OfflineStatistic.model.EmotionObj;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
 import com.citydigitalpulse.OfflineStatistic.model.StatiisticsRecord;
 import com.citydigitalpulse.OfflineStatistic.model.StructuredFullMessage;
-import com.citydigitalpulse.OfflineStatistic.tool.NLPModel;
 import com.citydigitalpulse.OfflineStatistic.tool.Tools;
+import com.citydigitalpulse.OfflineStatistic.tool.senitool.SentiStrengthNLP_en;
+import com.citydigitalpulse.OfflineStatistic.tool.senitool.SentimentClassifier;
+import com.citydigitalpulse.OfflineStatistic.tool.senitool.ZLSentiment_en;
 
 /**
  * 用于统计数据和更新信息
@@ -35,13 +37,21 @@ public class StatisticAndUpdate {
 	private StatisticDaoImpl statisticDB;
 	// private String date_start, date_end;
 	private SimpleDateFormat sdf;
+	private SentimentClassifier sentiStrength_en;
+	private SentimentClassifier ZLSentiment_en;
 
 	private void init() {
 		statisticDB = new StatisticDaoImpl();
 		Tools.readStatisticSettingFile();
 		this.sdf = new SimpleDateFormat(AppConfig.date_format);
-		// this.date_start = sdf.format(AppConfig.START_DATE);
-		// this.date_end = sdf.format(AppConfig.END_DATE);
+		// sentiStrength_en = new SentiStrengthNLP_en("SentStrength_Data/");
+		ZLSentiment_en = new ZLSentiment_en(
+				"models/",
+				"big_training_data_word_vector_before_remove_useless_part.model",
+				"small_training_data_word_vector_before_remove_useless_part.model",
+				"big_training_data_fratures_before_remove_useless_part.model",
+				"small_training_data_fratures_before_remove_useless_part.model");
+
 	}
 
 	public static void main(String[] args) {
@@ -62,6 +72,7 @@ public class StatisticAndUpdate {
 		long dayTime = 3600000 * 24;
 		String table_name = "";
 		String date_string = "";
+		List<StructuredFullMessage> change_list = new ArrayList<StructuredFullMessage>();
 		// 用来地区统计记录的键值对(reg_ig,record)
 		HashMap<Integer, StatiisticsRecord> oneDayRecord = new HashMap<Integer, StatiisticsRecord>();
 		// 读取指定天的数据 数据库的格式为part_message_yyyy_MM_dd
@@ -83,23 +94,27 @@ public class StatisticAndUpdate {
 				}
 				for (int j = 0; j < queryResult.size(); j++) {
 					StructuredFullMessage temp = queryResult.get(j);
-					if (j == 0) {
-						// 更新语言标记
-						if (temp.getLang().equals("en")) {
-							EmotionObj emo = NLPModel.getTextEmotion_en(temp
-									.getText());
-							// 如果结果不同，则更新数据库中结果
-							if (temp.getEmotion_text_value() != emo.getValue()
-									|| !temp.getEmotion_text().equals(
-											emo.getEmotion())) {
-								temp.setEmotion_text(emo.getEmotion());
-								temp.setEmotion_text_value(emo.getValue());
-								statisticDB.insertMessage2Table(table_name,
-										temp);
-							}
-						} else {
-							// other language.
+					// 更新语言标记
+					if (temp.getLang().equals("en")) {
+						// EmotionObj emo =
+						// sentiStrength_en.getTextSentiment(temp
+						// .getText());
+						EmotionObj emo = ZLSentiment_en.getTextSentiment(temp
+								.getText());
+						// System.out.println(temp.getText() + emo);
+						// 如果结果不同，则更新数据库中结果
+						if (temp.getEmotion_text_value() != emo.getValue()
+								|| !temp.getEmotion_text().equals(
+										emo.getEmotion())) {
+							temp.setEmotion_text(emo.getEmotion());
+							temp.setEmotion_text_value(emo.getValue());
+							// 一次更新多条记录，新建一个列表
+							change_list.add(temp);
+							// statisticDB.insertMessage2Table(table_name,
+							// temp);
 						}
+					} else {
+						// other language.
 					}
 					ArrayList<RegInfo> cotainRegs = statisticDB
 							.getRegInfoByLocation(regList,
@@ -123,6 +138,10 @@ public class StatisticAndUpdate {
 					start_id = temp.getNum_id();
 				}
 				if (queryResult.size() < AppConfig.LIMIT) {
+					// 一次性更新更改的数据
+					statisticDB.updateMutipalRecords(table_name, change_list);
+					System.out.println("Changes:" + change_list.size());
+					change_list.clear();
 					break;
 				}
 			}
@@ -133,7 +152,7 @@ public class StatisticAndUpdate {
 			AppConfig.START_DATE = new Date(i);
 			System.out.println("Date: " + sdf.format(AppConfig.START_DATE)
 					+ " Done.");
-			// Tools.updateStatisticStartDate();;
+			// Tools.updateStatisticStartDate();
 		}
 	}
 }

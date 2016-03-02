@@ -291,7 +291,7 @@ public class StatisticDaoImpl {
 	public void createNewSubTable(String table_name) {
 		String sqlString = "CREATE TABLE if not exists `"
 				+ table_name
-				+ "` (\n  `num_id` int(11) unsigned NOT NULL,\n  `raw_id_str` varchar(45) DEFAULT NULL,\n  `user_name` varchar(100) DEFAULT NULL,\n  `creat_at` bigint(20) DEFAULT NULL,\n  `text` MEDIUMTEXT DEFAULT NULL,\n  `emotion_text` varchar(255) DEFAULT NULL,\n  `emotion_text_value` double DEFAULT NULL,\n  `media_types` varchar(255) DEFAULT NULL,\n  `media_urls` varchar(255) DEFAULT NULL,\n  `media_urls_local` varchar(255) DEFAULT NULL,\n  `emotion_medias` varchar(255) DEFAULT NULL,\n  `emotion_all` varchar(255) DEFAULT NULL,\n  `place_type` varchar(45) DEFAULT NULL,\n  `place_name` varchar(45) DEFAULT NULL,\n  `place_fullname` varchar(100) DEFAULT NULL,\n  `country` varchar(45) DEFAULT NULL,\n  `province` varchar(45) DEFAULT NULL,\n  `city` varchar(45) DEFAULT NULL,\n  `query_location_latitude` double DEFAULT NULL,\n  `query_location_langtitude` double DEFAULT NULL,\n  `is_real_location` varchar(10) DEFAULT \'0\',\n  `hashtags` varchar(100) DEFAULT NULL,\n  `replay_to` varchar(45) DEFAULT NULL,\n  `lang` varchar(45) DEFAULT NULL,\n  `message_from` varchar(45) DEFAULT NULL,\n  `time_zone` int(11) DEFAULT \'0\',\n  PRIMARY KEY (`num_id`),\n  UNIQUE KEY `raw_id_str_UNIQUE` (`raw_id_str`),\n  KEY `time_and_location` (`creat_at`,`query_location_latitude`,`query_location_langtitude`) USING BTREE,\n  KEY `location` (`query_location_latitude`,`query_location_langtitude`) USING BTREE,\n  KEY `time` (`creat_at`) USING BTREE,\n  FULLTEXT KEY `text` (`text`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+				+ "` (\n  `num_id` int(11) unsigned NOT NULL,\n  `raw_id_str` varchar(45) DEFAULT NULL,\n  `user_name` varchar(100) DEFAULT NULL,\n  `creat_at` bigint(20) DEFAULT NULL,\n  `text` MEDIUMTEXT DEFAULT NULL,\n  `emotion_text` varchar(255) DEFAULT NULL,\n  `emotion_text_value` double DEFAULT NULL,\n  `media_types` varchar(255) DEFAULT NULL,\n  `media_urls` varchar(255) DEFAULT NULL,\n  `media_urls_local` varchar(255) DEFAULT NULL,\n  `emotion_medias` varchar(255) DEFAULT NULL,\n  `emotion_all` varchar(255) DEFAULT NULL,\n  `place_type` varchar(45) DEFAULT NULL,\n  `place_name` varchar(45) DEFAULT NULL,\n  `place_fullname` varchar(100) DEFAULT NULL,\n  `country` varchar(45) DEFAULT NULL,\n  `province` varchar(45) DEFAULT NULL,\n  `city` varchar(45) DEFAULT NULL,\n  `query_location_latitude` double DEFAULT NULL,\n  `query_location_langtitude` double DEFAULT NULL,\n  `is_real_location` varchar(10) DEFAULT \'0\',\n  `hashtags` MEDIUMTEXT DEFAULT NULL,\n  `replay_to` varchar(45) DEFAULT NULL,\n  `lang` varchar(45) DEFAULT NULL,\n  `message_from` varchar(45) DEFAULT NULL,\n  `time_zone` int(11) DEFAULT \'0\',\n  PRIMARY KEY (`num_id`),\n  UNIQUE KEY `raw_id_str_UNIQUE` (`raw_id_str`),\n  KEY `time_and_location` (`creat_at`,`query_location_latitude`,`query_location_langtitude`) USING BTREE,\n  KEY `location` (`query_location_latitude`,`query_location_langtitude`) USING BTREE,\n  KEY `time` (`creat_at`) USING BTREE,\n  FULLTEXT KEY `text` (`text`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 		PreparedStatement ps = null;
 		Connection conn = null;
 		try {
@@ -374,6 +374,57 @@ public class StatisticDaoImpl {
 					conn.close();
 				} catch (SQLException e) {
 				}
+			}
+		}
+
+	}
+
+	public void updateMutipalRecords(String table_name,
+			List<StructuredFullMessage> changeList) {
+
+		Connection conn = null;
+		Statement statement = null;
+		StructuredFullMessage msg;
+		try {
+			conn = saveDB.getConnection();
+			// 指定在事物中提交
+			conn.setAutoCommit(false);
+			statement = conn.createStatement();
+			// 循环添加新消息
+			for (int i = 0; i < changeList.size(); i++) {
+				msg = changeList.get(i);
+				String sqlString = "UPDATE "
+						+ table_name
+						+ " SET emotion_text=?, emotion_text_value=? WHERE num_id=?;";
+				PreparedStatement ps = conn.prepareStatement(sqlString);
+				ps.setString(1, msg.getEmotion_text());
+				ps.setDouble(2, msg.getEmotion_text_value());
+				ps.setLong(3, msg.getNum_id());
+				ps.executeUpdate();
+			}
+			// 提交更改
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// // 有错误发生回滚修改
+			// try {
+			// conn.rollback();
+			// } catch (SQLException e1) {
+			// e1.printStackTrace();
+			// throw new RuntimeException(e1);
+			// }
+			// throw new RuntimeException(e);
+		} finally {
+			try {
+				if (statement != null) {
+					statement.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 
@@ -492,15 +543,9 @@ public class StatisticDaoImpl {
 				record.setRank(i + 1);
 				String sqlString = "INSERT INTO statiistics_record (record_key, date_timestamp_ms, local_date, place_id, place_name, place_obj, pulse_value, pulse_obj, rank, hot_topics, message_from, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE pulse_value=?,pulse_obj=?,rank=?,hot_topics=?;";
 				PreparedStatement ps = conn.prepareStatement(sqlString);
-				ps.setString(
-						1,
-						record.getRegInfo().getCountry().toLowerCase()
-								+ ","
-								+ record.getRegInfo().getRegName()
-										.toLowerCase() + ","
-								+ record.getLocal_date() + ","
-								+ record.getLanguage() + ","
-								+ record.getMessage_from());
+				ps.setString(1, "reg_" + record.getRegInfo().getRegID() + ","
+						+ record.getLocal_date() + "," + record.getLanguage()
+						+ "," + record.getMessage_from());
 				ps.setLong(2, record.getDate_timestamp_ms());
 				ps.setString(3, record.getLocal_date());
 				ps.setLong(4, record.getRegInfo().getRegID());
