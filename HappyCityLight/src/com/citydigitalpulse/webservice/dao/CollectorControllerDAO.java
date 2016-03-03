@@ -50,6 +50,13 @@ public interface CollectorControllerDAO {
 	public RegInfo getRegInfoByName(String place_name);
 
 	/**
+	 * 获取指定地点的所有区域快
+	 * 
+	 * @return
+	 */
+	public RegInfo getRegInfoByID(long regID);
+	
+	/**
 	 * 获取指定区域内的所有用户自定义区块
 	 * 
 	 * @param north

@@ -427,6 +427,7 @@ function init_map_after_load() {
         mapTypeControl: false
     });
     proj = map.getProjection();
+    $.getScript("http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js");
 
     //init autocomplete
     var input = (document.getElementById('pac-input'));
@@ -537,7 +538,6 @@ function init_map_after_load() {
         E = markerPlace.lng() + range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
         W = markerPlace.lng() - range * 180 / (Math.PI * r_earth * Math.cos(Math.PI * markerPlace.lat() / 180));
 
-
         drawRegionBoundary(setLocationAreas(N, E, S, W));
 
     });
@@ -632,31 +632,6 @@ function init_map_after_load() {
     });
 
 
-    //resize & show/hide elements when window size changes
-    $(window).resize(function () {
-        setTimeout(function () {
-            //footer & logo styles, map size
-            if ($(window).width() < 768) {
-                $("footer").hide();
-                $("#header-logo").hide();
-                $("#titleForPhone").show();
-                $('#titleForPhone').css('margin-left', $(window).width() / 2 - 82);
-                $('#map-div').css('height', ($(window).height() - $(".main-header").height()));
-            } else {
-                $("footer").show();
-                $("#header-logo").show();
-                $("#titleForPhone").hide();
-                $('#map-div').css('height', ($(window).height() - $(".main-header").height() - 51));
-            }
-            //slider size
-            $(".slider").width(function () {
-                return $("#pac-input").width() / 2.2;
-            });
-        }, 30);
-
-
-    });
-
 }
 
 
@@ -678,18 +653,14 @@ $(function () {
 
 
     //initialization of some elements 
-    if ($(window).width() < 768) {
-        $("footer").hide();
-        $("#header-logo").hide();
-        $("#titleForPhone").show();
-        $('#titleForPhone').css('margin-left', $(window).width() / 2 - 82);
-        $('#map-div').css('height', ($(window).height() - $(".main-header").height()));
-    } else {
-        $("footer").show();
-        $("#header-logo").show();
-        $("#titleForPhone").hide();
-        $('#map-div').css('height', ($(window).height() - $(".main-header").height() - 51));
-    }
+    $('#map-div').css('height', ($(window).height() - 101));
+    $('.content').css('height', $(window).height() - 101);
+    $(window).resize(function () {
+        setTimeout(function () {
+            $('#map-div').css('height', ($(window).height() - 101));
+            $('.content').css('height', $(window).height() - 101);
+        }, 30);
+    });
 
 
     $("#rangeSlider").slider({

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Digital City Pulse</title>
+    <title>City Digital Pulse</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -16,8 +16,8 @@
     <!-- AdminLTE Template Style -->
     <link rel="stylesheet" href="resources/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="resources/dist/css/skins/skin-blue.min.css">
-    <!-- DCP All Page Style Style -->
-    <link rel="stylesheet" href="resources/dist/css/DCPall.css">
+    <!-- CDP All Page Style Style -->
+    <link rel="stylesheet" href="resources/dist/css/CDPall.css">
     <!--------------------------------------------------------------------------------------------------------->
 
     <!-- Style for This Page -->
@@ -33,9 +33,9 @@
             <!-- Logo -->
             <a href="dashboard.html" class="logo inside-link" id="header-logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>DCP</b></span>
+                <span class="logo-mini"><b>CDP</b></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>DigitalCityPulse</b></span>
+                <span class="logo-lg"><b>CityDigitalPulse</b></span>
             </a>
 
             <!-- Header Navbar -->
@@ -44,7 +44,7 @@
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span>
                 </a>
                 <a id="titleForPhone">
-                    <span><b>DCP</b></span>
+                    <span><b>CDP</b></span>
                 </a>
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
@@ -139,253 +139,59 @@
             <!-- Main content -->
             <section class="content">
                 <div class="row">
-                    <!-- /.col -->
-                    <div class="col-md-12">
-                        <div class="nav-tabs-custom">
-                            <ul class="nav nav-tabs">
-                                <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
-                                <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
-                                <li><a href="#settings" data-toggle="tab">Settings</a></li>
-                            </ul>
-                            <div class="tab-content">
-                                <div class="active tab-pane" id="profile">
 
-                                    <div class="row">
-                                        <div class="col-md-6">
+                </div>
+                <!-- /.row -->
 
-                                            <div class="row">
+                <div class="row">
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>Message on Map</h3>
 
-                                                <div class="col-md-12">
-
-                                                    <img class="profile-user-img img-responsive img-circle" src="resources/img/user.ico" alt="User profile picture">
-
-                                                    <h3 class="profile-username text-center">Nina Mcintire</h3>
-
-                                                    <p class="text-muted text-center">Software Engineer</p>
-
-                                                </div>
-
-                                                <div class="col-md-12">
-                                                    <ul class="list-group list-group-unbordered">
-                                                        <li class="list-group-item">
-                                                            <b>Annotations</b> <a class="pull-right">1,322</a>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <b>Regions</b> <a class="pull-right">17</a>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <b>Analysis</b> <a class="pull-right">33</a>
-                                                        </li>
-                                                    </ul>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-md-6">
-
-                                            <div class="row">
-                                                <div class="col-md-12">
-
-                                                    <ul class="list-group list-group-unbordered">
-                                                        <li class="list-group-item">
-                                                            <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
-
-                                                            <p class="text-muted">
-                                                                huiwen.hong@gmail.com
-                                                            </p>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
-
-                                                            <p class="text-muted">
-                                                                B.S. in Computer Science from the University of Tennessee at Knoxville
-                                                            </p>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-
-                                                            <p class="text-muted">Malibu, California</p>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-
-                                                            <p>
-                                                                <span class="label label-danger">UI Design</span>
-                                                                <span class="label label-success">Coding</span>
-                                                                <span class="label label-info">Javascript</span>
-                                                                <span class="label label-warning">PHP</span>
-                                                                <span class="label label-primary">Node.js</span>
-                                                            </p>
-                                                        </li>
-
-                                                        <li class="list-group-item">
-                                                            <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
-                                                        </li>
-                                                    </ul>
-                                                    <button class="btn btn-flat btn-success">Edit Profile</button>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /.tab-pane -->
-                                <div class="tab-pane" id="timeline">
-                                    <!-- The timeline -->
-                                    <ul class="timeline timeline-inverse">
-                                        <!-- timeline time label -->
-                                        <li class="time-label">
-                                            <span class="bg-red">
-                          10 Feb. 2014
-                        </span>
-                                        </li>
-                                        <!-- /.timeline-label -->
-                                        <!-- timeline item -->
-                                        <li>
-                                            <i class="fa fa-envelope bg-blue"></i>
-
-                                            <div class="timeline-item">
-                                                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                                <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                                <div class="timeline-body">
-                                                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle quora plaxo ideeli hulu weebly balihoo...
-                                                </div>
-                                                <div class="timeline-footer">
-                                                    <a class="btn btn-primary btn-xs">Read more</a>
-                                                    <a class="btn btn-danger btn-xs">Delete</a>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <!-- END timeline item -->
-                                        <!-- timeline item -->
-                                        <li>
-                                            <i class="fa fa-user bg-aqua"></i>
-
-                                            <div class="timeline-item">
-                                                <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                                                <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
-                      </h3>
-                                            </div>
-                                        </li>
-                                        <!-- END timeline item -->
-                                        <!-- timeline item -->
-                                        <li>
-                                            <i class="fa fa-comments bg-yellow"></i>
-
-                                            <div class="timeline-item">
-                                                <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                                                <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                                                <div class="timeline-body">
-                                                    Take me to your leader! Switzerland is small and neutral! We are more like Germany, ambitious and misunderstood!
-                                                </div>
-                                                <div class="timeline-footer">
-                                                    <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <!-- END timeline item -->
-                                        <!-- timeline time label -->
-                                        <li class="time-label">
-                                            <span class="bg-green">
-                          3 Jan. 2014
-                        </span>
-                                        </li>
-                                        <!-- /.timeline-label -->
-                                        <!-- timeline item -->
-                                        <li>
-                                            <i class="fa fa-camera bg-purple"></i>
-
-                                            <div class="timeline-item">
-                                                <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                                                <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
-                                                <div class="timeline-body">
-                                                    <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                    <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                    <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                    <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <!-- END timeline item -->
-                                        <li>
-                                            <i class="fa fa-clock-o bg-gray"></i>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- /.tab-pane -->
-
-                                <div class="tab-pane" id="settings">
-                                    <form class="form-horizontal">
-                                        <div class="form-group">
-                                            <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                                            <div class="col-sm-10">
-                                                <input type="email" class="form-control" id="inputName" placeholder="Name">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-
-                                            <div class="col-sm-10">
-                                                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputName" placeholder="Name">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
-
-                                            <div class="col-sm-10">
-                                                <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
-
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <button type="submit" class="btn btn-danger">Submit</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!-- /.tab-pane -->
+                                <p>Message on Map</p>
                             </div>
-                            <!-- /.tab-content -->
+                            <div class="icon">
+                                <i class="fa fa-map-marker"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Try this function <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
-                        <!-- /.nav-tabs-custom -->
                     </div>
-                    <!-- /.col -->
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-green">
+                            <div class="inner">
+                                <h3>Data Analysis</h3>
+
+                                <p>Data Analysis</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-bar-chart"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Try this function <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-yellow">
+                            <div class="inner">
+                                <h3>Corpus Annotation</h3>
+
+                                <p>Corpus Annotation</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-book"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Try this function <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- /.row -->
+                <div class="row">
+
                 </div>
                 <!-- /.row -->
             </section>
@@ -420,11 +226,11 @@
     <!-- AdminLTE Template Script -->
     <script src="resources/dist/js/app.min.js"></script>
     <script src="resources/dist/js/demo.js"></script>
-    <!-- DCP All Page Script -->
+    <!-- CDP All Page Script -->
     <script src="resources/dist/js/serverConfig.js"></script>
     <script src="resources/dist/js/checkin.js"></script>
     <script src="resources/dist/js/examplepage.js"></script>
-    <script src="resources/dist/js/DCPall.js"></script>
+    <script src="resources/dist/js/CDPall.js"></script>
     <!-- DataTables -->
     <script src="resources/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="resources/plugins/datatables/dataTables.bootstrap.min.js"></script>

@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,6 +42,7 @@ import com.citydigitalpulse.webservice.model.message.EmotionObj;
 import com.citydigitalpulse.webservice.model.message.HotTopic;
 import com.citydigitalpulse.webservice.model.message.PulseValue;
 import com.citydigitalpulse.webservice.model.message.QueryOption;
+import com.citydigitalpulse.webservice.model.message.RecordKey;
 import com.citydigitalpulse.webservice.model.message.RegStatisticInfo;
 import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.message.StatiisticsRecord;
@@ -67,11 +69,13 @@ public class MessageResource {
 	// 计划用全局缓存数据库代替
 	// private String UPLOAD_CACHE_KEY = "UploadStructuredMessageTemp";// 先进后出
 	private static String TAGGED_CACHE_KEY = "TaggedStructuredMessageTemp";// 先进后出
+
 	static ObjectMapper mapper = new ObjectMapper();
 	// 监听城市列表
 	private static ArrayList<String> streamPlaceNames = new ArrayList<String>();
 	// 保存统计查询的历史数据，以后可以存到数据库中永久保存
 	private static HashMap<QueryOption, Object> auery_history = new HashMap<QueryOption, Object>();
+	private static HashMap<String, RegStatisticInfo[]> rank_history = new HashMap<String, RegStatisticInfo[]>();
 
 	static {
 		Jedis cacheDB = RedisUtil.getJedis();
@@ -551,8 +555,13 @@ public class MessageResource {
 			ArrayList<HotTopic> shortList = new ArrayList<HotTopic>();
 			// 缩减关键词列表的长度
 			for (int i = 0; i < record.getHot_topics().length; i++) {
-				shortList.add(record.getHot_topics()[i]);
-				if (i == 20) {
+				if (record.getHot_topics()[i].getPulse().getPositive_num() != 0
+						&& record.getHot_topics()[i].getPulse()
+								.getNeutral_num() != 0
+						&& record.getHot_topics()[i].getPulse()
+								.getNegative_num() != 0)
+					shortList.add(record.getHot_topics()[i]);
+				if (shortList.size() == 20) {
 					break;
 				}
 			}
@@ -590,37 +599,48 @@ public class MessageResource {
 		if (date_str.equals("")) {
 			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 			res.setType(Response.Status.BAD_REQUEST.name());
-			res.setMessage("Missing Date Input, format: yyyy_MM_dd");
+			res.setMessage("Missing Date Input, format: yyyy-MM-dd");
 			return res;
 		}
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			sdf.parse(date_str);
 		} catch (ParseException e) {
 			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 			res.setType(Response.Status.BAD_REQUEST.name());
-			res.setMessage("Date Format Error. format: yyyy_MM_dd");
+			res.setMessage("Date Format Error. format: yyyy-MM-dd");
 			return res;
 		}
-		List<RegStatisticInfo> records = msgSav
-				.getStatisticRecordsByDate(date_str);
-		if (records.size() == 0) {
-			res.setCode(Response.Status.NOT_FOUND.getStatusCode());
-			res.setType(Response.Status.NOT_FOUND.name());
-			res.setMessage("Record not found");
-			return res;
-		} else {
-			// 对数组进行排序
-			RegStatisticInfo[] infoArray = records
-					.toArray(new RegStatisticInfo[0]);
-			Arrays.sort(infoArray);
+		if (rank_history.containsKey(date_str)) {
 			// 返回数据
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());
 			res.setMessage("Get Record Success.");
-			res.setObj(infoArray);
+			res.setObj(rank_history.get(date_str));
 			return res;
+		} else {
+			List<RegStatisticInfo> records = msgSav
+					.getStatisticRecordsByDate(date_str);
+			if (records.size() == 0) {
+				res.setCode(Response.Status.NOT_FOUND.getStatusCode());
+				res.setType(Response.Status.NOT_FOUND.name());
+				res.setMessage("Record not found");
+				return res;
+			} else {
+				RegStatisticInfo[] infoArray = records
+						.toArray(new RegStatisticInfo[0]);
+				// 对数组进行排序
+				Arrays.sort(infoArray);
+				rank_history.put(date_str, infoArray);
+				// 返回数据
+				res.setCode(Response.Status.OK.getStatusCode());
+				res.setType(Response.Status.OK.name());
+				res.setMessage("Get Record Success.");
+				res.setObj(infoArray);
+				return res;
+			}
 		}
+
 	}
 
 	@GET
@@ -628,11 +648,13 @@ public class MessageResource {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getHistoryImpiseInfos(@QueryParam("userID") long userID,
 			@QueryParam("token") @DefaultValue("") String token,
-			@QueryParam("place_id") @DefaultValue("") String place_id_str,
+			@QueryParam("place_ids") @DefaultValue("") String place_ids_str,
 			@QueryParam("date_start") @DefaultValue("") String date_start,
 			@QueryParam("date_end") @DefaultValue("") String date_end) {
 		ResMsg res = new ResMsg();
-		int place_id = 0;
+		Date start, end;
+		HashMap<Integer, List<RegStatisticInfo>> records = new HashMap<Integer, List<RegStatisticInfo>>();
+		List<Integer> place_id = new ArrayList<Integer>();
 		if (!userAccountDAO.tokenCheck(userID, token)) {
 			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 			res.setType(Response.Status.BAD_REQUEST.name());
@@ -650,22 +672,35 @@ public class MessageResource {
 		if (date_start.equals("") || date_end.equals("")) {
 			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 			res.setType(Response.Status.BAD_REQUEST.name());
-			res.setMessage("Missing Date Input, format: yyyy_MM_dd");
+			res.setMessage("Missing Date Input, format: yyyy-MM-dd");
 			return res;
 		}
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
-			sdf.parse(date_start);
-			sdf.parse(date_end);
-			place_id = Integer.parseInt(place_id_str);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			start = sdf.parse(date_start);
+			end = sdf.parse(date_end);
+			String[] places = place_ids_str.split(",");
+			for (int i = 0; i < places.length; i++) {
+				place_id.add(Integer.parseInt(places[i]));
+			}
+
 		} catch (ParseException e) {
 			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 			res.setType(Response.Status.BAD_REQUEST.name());
-			res.setMessage("Data Format Error. Date format: yyyy_MM_dd");
+			res.setMessage("Data Format Error. Date format: yyyy-MM-dd");
 			return res;
 		}
-		List<RegStatisticInfo> records = msgSav.getPlaceHistoryInfos(place_id,
-				date_start, date_end);
+
+		// // 使用老方法逐条查询
+		// for (int i = 0; i < place_id.size(); i++) {
+		// records.put(place_id.get(i), msgSav.getPlaceHistoryInfos(
+		// place_id.get(i), date_start, date_end));
+		// }
+		// 使用新的缓存方法获得历史记录
+		for (int i = 0; i < place_id.size(); i++) {
+			records.put(place_id.get(i), msgSav.getPlaceHistoryInfos_fast(
+					place_id.get(i), start, end));
+		}
 		if (records.size() == 0) {
 			res.setCode(Response.Status.NOT_FOUND.getStatusCode());
 			res.setType(Response.Status.NOT_FOUND.name());

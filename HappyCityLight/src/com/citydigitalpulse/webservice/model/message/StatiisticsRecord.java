@@ -21,6 +21,7 @@ import com.citydigitalpulse.webservice.model.collector.RegInfo;
  */
 public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 	private long record_id;
+	private String record_key;
 	// 标准Unix timestamp
 	private long date_timestamp_ms;
 	// 加上时区之后的日期，方便进行更合理的多城市比较
@@ -39,6 +40,7 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 	public StatiisticsRecord() {
 		super();
 		this.date_timestamp_ms = 0;
+		this.record_key="";
 		this.local_date = "";
 		this.regInfo = new RegInfo();
 		this.setPulse(new PulseValue());
@@ -140,6 +142,14 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 
 	public void setRecord_id(long record_id) {
 		this.record_id = record_id;
+	}
+
+	public String getRecord_key() {
+		return record_key;
+	}
+
+	public void setRecord_key(String record_key) {
+		this.record_key = record_key;
 	}
 
 }

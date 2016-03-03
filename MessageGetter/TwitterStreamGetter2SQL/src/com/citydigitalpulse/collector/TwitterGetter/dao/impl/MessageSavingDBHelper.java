@@ -70,7 +70,7 @@ public class MessageSavingDBHelper implements DataSource {
 	@Override
 	public Connection getConnection(String username, String password)
 			throws SQLException {
-		return DriverManager.getConnection(Config.MESSAGE_SAVING_DATABASE_URL,
+		return DriverManager.getConnection(Config.MESSAGE_RAW_DATABASE_URL,
 				username, password);// 获取连接
 	}
 
@@ -82,9 +82,9 @@ public class MessageSavingDBHelper implements DataSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}// 指定连接类型
-		return DriverManager.getConnection(Config.MESSAGE_SAVING_DATABASE_URL,
-				Config.MESSAGE_SAVING_DATABASE_USER_NAME,
-				Config.MESSAGE_SAVING_DATABASE_USER_PASSWORD);// 获取连接
+		return DriverManager.getConnection(Config.MESSAGE_RAW_DATABASE_URL,
+				Config.MESSAGE_RAW_DATABASE_USER_NAME,
+				Config.MESSAGE_RAW_DATABASE_USER_PASSWORD);// 获取连接
 	}
 
 }

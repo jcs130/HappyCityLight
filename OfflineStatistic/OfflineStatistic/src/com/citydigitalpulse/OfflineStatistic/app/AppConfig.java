@@ -21,12 +21,17 @@ public class AppConfig {
 	public static Date END_DATE = new Date();
 
 	// 用于控制爬虫程序的数据库
-	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_URL = "jdbc:mysql://137.122.89.207:3306/happycityproject?useSSL=false";
+	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_URL = "jdbc:mysql://citypulse2.site.uottawa.ca:3306/happycityproject?useSSL=false";
 	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_USER_NAME = "jcs130";
 	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_USER_PASSWORD = "jcsss130";
 
-	// 用于存储结构化后的数据的数据库
-	public static String MESSAGE_SAVING_DATABASE_URL = "jdbc:mysql://137.122.89.207:3306/MsgSaving?useSSL=false";
+	// 用于存储原始消息的数据的数据库
+	public static String MESSAGE_RAW_DATABASE_URL = "jdbc:mysql://citypulse2.site.uottawa.ca:3306/MsgSaving?useSSL=false";
+	public static String MESSAGE_RAW_DATABASE_USER_NAME = "jcs130";
+	public static String MESSAGE_RAW_DATABASE_USER_PASSWORD = "jcsss130";
+
+	// 用于存储分库后化后的数据的数据库
+	public static String MESSAGE_SAVING_DATABASE_URL = "jdbc:mysql://citypulse1.site.uottawa.ca:3306/MsgSaving?useSSL=false";
 	public static String MESSAGE_SAVING_DATABASE_USER_NAME = "jcs130";
 	public static String MESSAGE_SAVING_DATABASE_USER_PASSWORD = "jcsss130";
 

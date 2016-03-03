@@ -470,7 +470,6 @@ public class UserResource {
 			} else {
 				// 查询自己的详细信息
 				res.setObj(userAccountDAO.getUserDetailByUserId(userID));
-
 			}
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());

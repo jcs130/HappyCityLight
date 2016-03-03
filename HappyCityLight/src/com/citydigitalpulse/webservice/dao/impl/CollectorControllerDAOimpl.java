@@ -283,4 +283,46 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.citydigitalpulse.webservice.dao.CollectorControllerDAO#getRegInfoByID(long)
+	 */
+	@Override
+	public RegInfo getRegInfoByID(long regID) {
+		// 根据type获取大区域的信息
+		String sqlString = "SELECT * FROM regnames where regid =?;";
+		RegInfo reg = null;
+		// 查询数据库，获取结果
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ps.setLong(1, regID);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				reg = new RegInfo(rs.getString("regname"));
+				reg.setRegID(rs.getInt("regid"));
+				reg.setCountry(rs.getString("country"));
+				reg.setBox_points(rs.getString("box_points"));
+				reg.setCenter_lat(rs.getDouble("center_lat"));
+				reg.setCenter_lan(rs.getDouble("center_lan"));
+				reg.setTime_zone(rs.getInt("time_zone"));
+				getAreasByReg(reg);
+				// System.out.println(reg);
+				return reg;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		// System.out.println(result.size());
+		return reg;
+	}
 }

@@ -282,12 +282,12 @@ function getColorFromHex(hex) {
     var yellow = d3.rgb(255, 215, 0); //深蓝
     if (hex.positive > hex.negative) {
         var color = d3.interpolate(yellow, green); //颜色插值函数
-        var linear = d3.scale.linear().domain([0, 1]).range([0, 1]);
+        var linear = d3.scale.linear().domain([0, 5]).range([0, 1]);
         var value = (hex.positive - hex.negative) / (hex.positive + hex.neutral + hex.negative);
         return color(linear(value));
     } else {
         var color = d3.interpolate(red, yellow); //颜色插值函数
-        var linear = d3.scale.linear().domain([-1, 0]).range([0, 1]);
+        var linear = d3.scale.linear().domain([-5, 0]).range([0, 1]);
         var value = (hex.positive - hex.negative) / (hex.positive + hex.neutral + hex.negative);
         return color(linear(value));
     }

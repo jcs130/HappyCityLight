@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Digital City Pulse</title>
+    <title>City Digital Pulse</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -16,8 +16,8 @@
     <!-- AdminLTE Template Style -->
     <link rel="stylesheet" href="resources/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="resources/dist/css/skins/skin-blue.min.css">
-    <!-- DCP All Page Style Style -->
-    <link rel="stylesheet" href="resources/dist/css/DCPall.css">
+    <!-- CDP All Page Style Style -->
+    <link rel="stylesheet" href="resources/dist/css/CDPall.css">
     <!--------------------------------------------------------------------------------------------------------->
     <!-- iCheck -->
     <link rel="stylesheet" href="resources/plugins/iCheck/all.css">
@@ -30,8 +30,12 @@
     <link rel="stylesheet" href="resources/plugins/datatables/dataTables.bootstrap.css">
     <!--  nailthumb  -->
     <link rel="stylesheet" href="resources/plugins/nailthumb/jquery.nailthumb.1.1.css">
+    <!--  yoxview  -->
+    <link rel="stylesheet" href="resources/plugins/yoxview/yoxview.css">
     <!--  amcharts-export  -->
     <link rel="stylesheet" href="resources/plugins/amcharts/plugins/export/export.css">
+    <!-- bootstrap-datepicker -->
+    <link rel="stylesheet" href="resources/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
 
     <!-- Style for This Page -->
     <link rel="stylesheet" href="resources/dist/css/dataanalysis.css">
@@ -47,9 +51,9 @@
             <!-- Logo -->
             <a href="dashboard.html" class="logo inside-link" id="header-logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>DCP</b></span>
+                <span class="logo-mini"><b>CDP</b></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>DigitalCityPulse</b></span>
+                <span class="logo-lg"><b>CityDigitalPulse</b></span>
             </a>
 
             <!-- Header Navbar -->
@@ -58,7 +62,7 @@
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span>
                 </a>
                 <a id="titleForPhone">
-                    <span><b>DCP</b></span>
+                    <span><b>CDP</b></span>
                 </a>
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
@@ -154,31 +158,30 @@
                 <div class="row">
                     <div class="col-md-12">
 
-                        <div class="box box-solid bg-light-blue-gradient">
+                        <div class="box box-solid bg-light-blue-gradient" id="CityRanking-box">
                             <div class="box-header">
                                 <!-- tools box -->
                                 <div class="pull-right box-tools">
-                                    <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="Date range">
+                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle  pull-right" data-toggle="dropdown">
                                         <i class="fa fa-calendar"></i></button>
-                                    <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
-                                        <i class="fa fa-minus"></i></button>
+                                    <ul class="dropdown-menu pull-right" role="menu" id="cityRankDateMenu">
+                                        <li>
+                                            <div id="cityRankDate"></div>
+                                            <input type="hidden" id="my_hidden_input">
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a class="btn" id="getCityRank" href="#" style="color:#fff;font-weight: bold;">Browse City Rank</a></li>
+                                    </ul>
+
                                 </div>
                                 <!-- /. tools -->
-
                                 <i class="fa fa-dashboard"></i>
-
-                                <h3 class="box-title">
-                Listened City Score Ranking
-              </h3>
+                                <h3 class="box-title"> Listened City Score Ranking  </h3>
                             </div>
                             <div class="box-body">
                                 <div class="row">
                                     <div class="col-md-12" id="CityRanking-col">
                                         <div id="owl-demo" class="owl-carousel owl-theme"></div>
-                                        <div class="customNavigation">
-                                            <a class="btn prev">Previous</a>
-                                            <a class="btn next">Next</a>
-                                        </div>
                                     </div>
                                     <!-- /.col -->
                                 </div>
@@ -196,10 +199,27 @@
 
                 <div class="row">
                     <div class="col-md-12">
-
-                        <button type="button" class="btn btn-info btn-flat" id="mutipleAnalysis">
-                            Multiple Comparision</button>
-
+                        <div class="box box-solid">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Select cities and see comparison analysis! (Maximum 6 cities)</h4>
+                                    </div>
+                                    <div class="col-md-12" id="selectedCity" style="margin-bottom:12px;">
+                                        <span class="label label-info" style='margin-right:5px;'>Selected Cities: </span>
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-md-12">
+                                        <button class="btn btn-flat btn-info" id="mutipleAnalysis">
+                                            <i class="fa fa-bar-chart"></i> See Multiple Comparision Result
+                                        </button>
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -237,38 +257,46 @@
                             </div>
                             <div class='col-md-6'>
                                 <div class="card" id="cityHotHashtagsCard">
-                                    <div id='cityHotHashtags' class="front row">
-                                        <h4 class='col-md-12' style="text-align: center;"><b>Hot Hashtags Today</b></h4>
-                                        <ul class="col-md-12 nav nav-pills nav-stacked">
-                                        </ul>
+                                    <div id='cityHotHashtags' class="front">
+                                        <div class='row'>
+                                            <h4 class='col-md-12' style="text-align: center;" id="hothashtag-title"><b>Hot Hashtags</b></h4>
+                                            <ul class="col-md-12 nav nav-pills nav-stacked">
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <div class="back row">
-                                        <div class="col-md-12" id="HashtagInfo"></div>
-                                        <div class="col-md-12" id="HashtagChart"></div>
-                                        <div class="col-md-12" id="HashtagImg"></div>
+                                    <div class="back">
+                                        <div class='row'>
+                                            <div class="col-md-12" id="HashtagInfo"></div>
+                                            <div class="col-md-12" id="HashtagChart"></div>
+                                            <div class="col-md-12 yoxview" id="HashtagImg"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class='row' hidden>
-                            <div class='col-md-5 col-md-offset-6'>
-                                <div class="input-daterange input-group" id="datepicker">
-                                    <span class="input-group-addon">From</span>
-                                    <input type="text" class="input form-control" name="start" />
-                                    <span class="input-group-addon">To</span>
-                                    <input type="text" class="input form-control" name="end" />
-                                </div>
-                            </div>
+                        <!--
+                       <div class='row' hidden>
+    <div class='col-md-5 col-md-offset-6'>
+        <div class="input-daterange input-group" id="datepicker">
+            <span class="input-group-addon">From</span>
+            <input type="text" class="input form-control" name="start" />
+            <span class="input-group-addon">To</span>
+            <input type="text" class="input form-control" name="end" />
+        </div>
+    </div>
 
-                        </div>
+</div>
+-->
                         <div class='row'>
-                            <div class='col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2'>
-                                <h3><b>Emotion Change Within last Week</b></h3>
+                            <div class='col-md-12 col-sm-12 col-xs-12'>
+                                <h3 style="text-align: center;"><b id="emotionchange-title"></b></h3>
                             </div>
-                            <div class='col-md-1 col-md-offset-2 col-sm-1 col-sm-offset-2 col-xs-1 col-xs-offset-1'>
-                                <button type="button" class="btn btn-primary btn-sm pull-right active" id="GOCityEmotionChange" style="margin-top:18px;margin-bottom:10px;">
-                                    <i class="fa fa-calendar"></i></button>
-                            </div>
+                            <!--
+<div class='col-md-1 col-md-offset-2 col-sm-1 col-sm-offset-2 col-xs-1 col-xs-offset-1'>
+    <button type="button" class="btn btn-primary btn-sm pull-right active" id="GOCityEmotionChange" style="margin-top:18px;margin-bottom:10px;">
+        <i class="fa fa-calendar"></i></button>
+</div>
+-->
                         </div>
                         <div class='row'>
                             <div class='col-md-12'>
@@ -332,13 +360,12 @@
     <!-- AdminLTE Template Script -->
     <script src="resources/dist/js/app.min.js"></script>
     <script src="resources/dist/js/demo.js"></script>
-    <!-- DCP All Page Script -->
+    <!-- CDP All Page Script -->
     <script src="resources/dist/js/serverConfig.js"></script>
     <script src="resources/dist/js/checkin.js"></script>
     <script src="resources/dist/js/examplepage.js"></script>
-    <script src="resources/dist/js/DCPall.js"></script>
+    <script src="resources/dist/js/CDPall.js"></script>
     <!--------------------------------------------------------------------------------------------------------->
-
     <!-- iCheck -->
     <script src="resources/plugins/iCheck/icheck.min.js"></script>
     <!-- toastr -->
@@ -350,6 +377,8 @@
     <script src="resources/plugins/datatables/dataTables.bootstrap.min.js"></script>
     <!--  nailthumb  -->
     <script type="text/javascript" src="resources/plugins/nailthumb/jquery.nailthumb.1.1.min.js"></script>
+    <!--  yoxview  -->
+    <script type="text/javascript" src="resources/plugins/yoxview/yoxview-init.js"></script>
     <!-- amChart -->
     <script src="resources/plugins/amcharts/amcharts.js"></script>
     <script src="resources/plugins/amcharts/serial.js"></script>
@@ -357,7 +386,7 @@
     <script src="resources/plugins/amcharts/themes/light.js"></script>
     <script src="resources/plugins/amcharts/plugins/export/export.js"></script>
     <!-- flip -->
-    <script src="resources/plugins/jquery.flip.min.js"></script>
+    <script src="resources/plugins/flip/jquery.flip.js"></script>
     <!-- sparkline -->
     <script src="resources/plugins/jquery.sparkline.min.js"></script>
     <!-- bootstrap-datepicker -->
@@ -370,7 +399,7 @@
 
     <!--Script for This Page-->
     <script src="resources/dist/js/mergePolygon.js"></script>
-    <script src="resources/dist/js/hex.js"></script>
+    <script src="resources/dist/js/hex.general.js"></script>
     <script src="resources/dist/js/dataanalysis.js"></script>
 
 

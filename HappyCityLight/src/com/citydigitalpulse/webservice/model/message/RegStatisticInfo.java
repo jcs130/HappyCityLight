@@ -10,8 +10,6 @@
  */
 package com.citydigitalpulse.webservice.model.message;
 
-import com.citydigitalpulse.webservice.model.collector.RegInfo;
-
 /**
  * @author Zhongli Li
  *
@@ -38,10 +36,7 @@ public class RegStatisticInfo implements Comparable<RegStatisticInfo> {
 		this.regName = record.getRegInfo().getRegName();
 		this.rank = record.getRank();
 		this.record_id = record.getRecord_id();
-		this.record_key = record.getRegInfo().getCountry().toLowerCase() + ","
-				+ record.getRegInfo().getRegName().toLowerCase() + ","
-				+ record.getLocal_date() + "," + record.getLanguage() + ","
-				+ record.getMessage_from();
+		this.record_key = record.getRecord_key();
 		this.pulse = record.getPulse();
 		this.date = record.getLocal_date();
 	}

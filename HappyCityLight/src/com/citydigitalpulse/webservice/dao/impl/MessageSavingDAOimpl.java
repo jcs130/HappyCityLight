@@ -15,9 +15,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.glassfish.hk2.utilities.reflection.Logger;
@@ -27,6 +29,7 @@ import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.collector.RegInfo;
 import com.citydigitalpulse.webservice.model.message.HotTopic;
 import com.citydigitalpulse.webservice.model.message.PulseValue;
+import com.citydigitalpulse.webservice.model.message.RecordKey;
 import com.citydigitalpulse.webservice.model.message.RegStatisticInfo;
 import com.citydigitalpulse.webservice.model.message.StatiisticsRecord;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
@@ -35,12 +38,19 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MessageSavingDAOimpl implements MessageSavingDAO {
+	private static final int CACHE_SIZE = 1000;
 	private MySQLHelper_Save saveDB;
 	private ObjectMapper mapper;
+	private HashMap<RecordKey, StatiisticsRecord> statistic_history;
+	private ArrayList<RecordKey> cached_key_list;
+	private DateFormat key_sdf;
 
 	public MessageSavingDAOimpl() {
 		this.saveDB = new MySQLHelper_Save();
-		mapper = new ObjectMapper();
+		this.mapper = new ObjectMapper();
+		this.statistic_history = new HashMap<RecordKey, StatiisticsRecord>();
+		this.cached_key_list = new ArrayList<RecordKey>();
+		this.key_sdf = new SimpleDateFormat("yyyy_MM_dd");
 	}
 
 	@Override
@@ -247,42 +257,62 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 	 * @return
 	 */
 	public StatiisticsRecord getStatisticRecordByID(long record_id) {
-		// 根据type获取大区域的信息
-		String sqlString = "SELECT * FROM statiistics_record where record_id ="
-				+ record_id + ";";
 		StatiisticsRecord rec = null;
-		// 查询数据库，获取结果
-		Connection conn = null;
-		try {
-			conn = saveDB.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sqlString);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				rec = new StatiisticsRecord();
-				rec.setRecord_id(record_id);
-				rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
-				rec.setLocal_date(rs.getString("local_date"));
-				rec.setLanguage(rs.getString("language"));
-				rec.setMessage_from(rs.getString("message_from"));
-				rec.setRank(rs.getInt("rank"));
-				rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
-						PulseValue.class));
-				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
-						RegInfo.class));
-				rec.setHot_topics((HotTopic[]) mapper.readValue(
-						rs.getString("hot_topics"),
-						new TypeReference<HotTopic[]>() {
-						}));
-				return rec;
-			}
-		} catch (SQLException | IOException e) {
-			throw new RuntimeException(e);
+		RecordKey key = new RecordKey(record_id);
+		// 如果缓存中有数据，则直接读取缓存
+		if (statistic_history.containsKey(key)) {
+			rec = statistic_history.get(key);
+		} else {
+			// 根据type获取大区域的信息
+			String sqlString = "SELECT * FROM statiistics_record where record_id ="
+					+ record_id + ";";
 
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
+			// 查询数据库，获取结果
+			Connection conn = null;
+			try {
+				conn = saveDB.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sqlString);
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {
+					rec = new StatiisticsRecord();
+					rec.setRecord_id(record_id);
+					rec.setRecord_key(rs.getString("record_key"));
+					rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
+					rec.setLocal_date(rs.getString("local_date"));
+					rec.setLanguage(rs.getString("language"));
+					rec.setMessage_from(rs.getString("message_from"));
+					rec.setRank(rs.getInt("rank"));
+					rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
+							PulseValue.class));
+					rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
+							RegInfo.class));
+					rec.setHot_topics((HotTopic[]) mapper.readValue(
+							rs.getString("hot_topics"),
+							new TypeReference<HotTopic[]>() {
+							}));
+					key.setRecord_id(rec.getRecord_id());
+					key.setRecord_key(rec.getRecord_key());
+
+					if (statistic_history.containsKey(key)) {
+						statistic_history.put(key, rec);
+					} else {
+						statistic_history.put(key, rec);
+						if (cached_key_list.size() > CACHE_SIZE) {
+							cached_key_list.remove(0);
+						}
+						cached_key_list.add(key);
+					}
+					return rec;
+				}
+			} catch (SQLException | IOException e) {
+				throw new RuntimeException(e);
+
+			} finally {
+				if (conn != null) {
+					try {
+						conn.close();
+					} catch (SQLException e) {
+					}
 				}
 			}
 		}
@@ -295,42 +325,62 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 	 * @return
 	 */
 	public StatiisticsRecord getStatisticRecordByKey(String record_key) {
-		// 根据type获取大区域的信息
-		String sqlString = "SELECT * FROM statiistics_record where record_key = ? ;";
 		StatiisticsRecord rec = null;
-		// 查询数据库，获取结果
-		Connection conn = null;
-		try {
-			conn = saveDB.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sqlString);
-			ps.setString(1, record_key);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				rec = new StatiisticsRecord();
-				rec.setRecord_id(rs.getLong("record_id"));
-				rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
-				rec.setLocal_date(rs.getString("local_date"));
-				rec.setLanguage(rs.getString("language"));
-				rec.setMessage_from(rs.getString("message_from"));
-				rec.setRank(rs.getInt("rank"));
-				rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
-						PulseValue.class));
-				rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
-						RegInfo.class));
-				rec.setHot_topics((HotTopic[]) mapper.readValue(
-						rs.getString("hot_topics"),
-						new TypeReference<HotTopic[]>() {
-						}));
-				return rec;
-			}
-		} catch (SQLException | IOException e) {
-			throw new RuntimeException(e);
+		RecordKey key = new RecordKey(record_key);
+		// 如果缓存中有数据，则直接读取缓存
+		if (statistic_history.containsKey(key)) {
+			rec = statistic_history.get(key);
+		} else {
+			// 根据type获取大区域的信息
+			String sqlString = "SELECT * FROM statiistics_record where record_key = ? ;";
+			// 查询数据库，获取结果
+			Connection conn = null;
+			try {
+				conn = saveDB.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sqlString);
+				ps.setString(1, record_key);
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {
+					rec = new StatiisticsRecord();
+					rec.setRecord_id(rs.getLong("record_id"));
+					rec.setRecord_key(rs.getString("record_key"));
+					rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
+					rec.setLocal_date(rs.getString("local_date"));
+					rec.setLanguage(rs.getString("language"));
+					rec.setMessage_from(rs.getString("message_from"));
+					rec.setRank(rs.getInt("rank"));
+					rec.setPulse(mapper.readValue(rs.getString("pulse_obj"),
+							PulseValue.class));
+					rec.setRegInfo(mapper.readValue(rs.getString("place_obj"),
+							RegInfo.class));
+					rec.setHot_topics((HotTopic[]) mapper.readValue(
+							rs.getString("hot_topics"),
+							new TypeReference<HotTopic[]>() {
+							}));
 
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
+					key.setRecord_id(rec.getRecord_id());
+					key.setRecord_key(rec.getRecord_key());
+
+					if (statistic_history.containsKey(key)) {
+						statistic_history.put(key, rec);
+					} else {
+						statistic_history.put(key, rec);
+						if (cached_key_list.size() > CACHE_SIZE) {
+							cached_key_list.remove(0);
+						}
+						cached_key_list.add(key);
+					}
+					return rec;
+				}
+			} catch (SQLException | IOException e) {
+				throw new RuntimeException(e);
+
+			} finally {
+				if (conn != null) {
+					try {
+						conn.close();
+					} catch (SQLException e) {
+					}
 				}
 			}
 		}
@@ -347,6 +397,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 		ArrayList<RegStatisticInfo> res = new ArrayList<RegStatisticInfo>();
 		Connection conn = null;
 		StatiisticsRecord rec;
+		RecordKey key;
 		try {
 			conn = saveDB.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sqlString);
@@ -355,6 +406,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 			while (rs.next()) {
 				rec = new StatiisticsRecord();
 				rec.setRecord_id(rs.getLong("record_id"));
+				rec.setRecord_key(rs.getString("record_key"));
 				rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
 				rec.setLocal_date(rs.getString("local_date"));
 				rec.setLanguage(rs.getString("language"));
@@ -368,6 +420,20 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 						rs.getString("hot_topics"),
 						new TypeReference<HotTopic[]>() {
 						}));
+
+				key = new RecordKey(rec.getRecord_id());
+				key.setRecord_key(rec.getRecord_key());
+
+				if (statistic_history.containsKey(key)) {
+					statistic_history.put(key, rec);
+				} else {
+					statistic_history.put(key, rec);
+					if (cached_key_list.size() > CACHE_SIZE) {
+						cached_key_list.remove(0);
+					}
+					cached_key_list.add(key);
+				}
+
 				res.add(new RegStatisticInfo(rec));
 			}
 		} catch (SQLException | IOException e) {
@@ -393,6 +459,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 	 */
 	public ArrayList<RegStatisticInfo> getPlaceHistoryInfos(int place_id,
 			String date_start, String date_end) {
+		// 解析开始日期和结束日期，如果缓存中存在该日期则不用查询数据库，如果没有改日期则直接使用==查询
 		String sqlString = "SELECT * FROM statiistics_record where place_id = ? and (local_date between ? and ? ) order by local_date ASC;";
 		ArrayList<RegStatisticInfo> res = new ArrayList<RegStatisticInfo>();
 		Connection conn = null;
@@ -407,6 +474,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 			while (rs.next()) {
 				rec = new StatiisticsRecord();
 				rec.setRecord_id(rs.getLong("record_id"));
+				rec.setRecord_key(rs.getString("record_key"));
 				rec.setDate_timestamp_ms(rs.getLong("date_timestamp_ms"));
 				rec.setLocal_date(rs.getString("local_date"));
 				rec.setLanguage(rs.getString("language"));
@@ -420,12 +488,23 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 						rs.getString("hot_topics"),
 						new TypeReference<HotTopic[]>() {
 						}));
+
+				RecordKey key = new RecordKey(rec.getRecord_id());
+				key.setRecord_key(rec.getRecord_key());
+				if (statistic_history.containsKey(key)) {
+					statistic_history.put(key, rec);
+				} else {
+					statistic_history.put(key, rec);
+					if (cached_key_list.size() > CACHE_SIZE) {
+						cached_key_list.remove(0);
+					}
+					cached_key_list.add(key);
+				}
 				res.add(new RegStatisticInfo(rec));
 			}
 			return res;
 		} catch (SQLException | IOException e) {
 			throw new RuntimeException(e);
-
 		} finally {
 			if (conn != null) {
 				try {
@@ -434,6 +513,31 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param place_id
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public ArrayList<RegStatisticInfo> getPlaceHistoryInfos_fast(int place_id,
+			Date start, Date end) {
+		ArrayList<RegStatisticInfo> res = new ArrayList<RegStatisticInfo>();
+		long dayTime = 3600000 * 24;
+		long start_time = Math.min(start.getTime(), end.getTime());
+		long end_time = Math.max(start.getTime(), end.getTime());
+		// 通过日期算出具体要查那天的，再通过日期得到record_key
+		String record_key;
+		// 解析开始日期和结束日期，如果缓存中存在该日期则不用查询数据库，如果没有改日期则直接使用==查询
+		for (long i = start_time; i <= end_time; i += dayTime) {
+			record_key = "reg_" + place_id + ","
+					+ key_sdf.format(new Date(start_time + i * dayTime))
+					+ ",all,all";
+			res.add(new RegStatisticInfo(getStatisticRecordByKey(record_key)));
+		}
+		return res;
 	}
 
 }

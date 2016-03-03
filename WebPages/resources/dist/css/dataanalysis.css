@@ -8,10 +8,11 @@
         min-height: 200px;
     }
     #cityHotHashtagsCard {
-        min-height: 350px;
+        margin-top: 5px;
+        min-height: 360px;
     }
     #cityHotHashtagsCard .back {
-        min-height: 200px;
+        min-height: 360px;
     }
     #cityHotHashtagsCard .back #HashtagImg {
         max-height: 100px;
@@ -35,21 +36,21 @@
         padding-top: 15px;
     }
     #cityBoundary {
-        min-height: 360px;
+        min-height: 200px;
         margin: 0;
     }
     #map {
         min-height: 360px;
     }
     #cityHotHashtagsCard {
+        margin-top: 10px;
         min-height: 360px;
     }
     #cityHotHashtagsCard .back {
         min-height: 360px;
-        overflow-y: scroll;
     }
     #cityHotHashtagsCard .back #HashtagImg {
-        max-height: 180px;
+        max-height: 100px;
         overflow-y: scroll;
     }
     #cityHotHashtagsCard .back #HashtagChart {
@@ -57,24 +58,24 @@
     }
 }
 
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 990px) {
     /* For desktop: */
     #cityBoundary {
-        min-height: 350px;
+        min-height: 360px;
         margin: 0;
     }
     #map {
         min-height: 360px;
     }
     #cityHotHashtagsCard {
+        margin-top: 0px;
         min-height: 360px;
     }
     #cityHotHashtagsCard .back {
         min-height: 360px;
-        overflow-y: scroll;
     }
     #cityHotHashtagsCard .back #HashtagImg {
-        max-height: 180px;
+        max-height: 100px;
         overflow-y: scroll;
     }
     #cityHotHashtagsCard .back #HashtagChart {
@@ -96,7 +97,7 @@
 
 #cityHotHashtags .hashtag-word {
     color: #0F2540;
-/*    font-weight: bold;*/
+    /*    font-weight: bold;*/
 }
 
 #cityHotHashtags li .label-number {
@@ -130,15 +131,33 @@
 
 #cityHotHashtagsCard .front {
     background-color: #EEEEEE;
+    margin-left: 0px;
 }
 
 #cityHotHashtagsCard .back {
     background-color: #BDC0BA;
+    margin-left: 0px;
 }
 
-#HashtagChart {
+#cityHotHashtagsCard .front .row,
+#cityHotHashtagsCard .back .row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#cityHotHashtagsCard .back #HashtagInfo:hover {
+    cursor: pointer;
+    background-color: #cccfc9;
+}
+
+#cityHotHashtagsCard .back #HashtagChart {
     width: 100%;
     min-height: : 50px;
+}
+
+#cityHotHashtagsCard .back .nailthumb-container {
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 #CityInfoChart,
@@ -153,4 +172,18 @@
 
 #CityRanking-col tbody .selected {
     background-color: #8bbdda;
+}
+
+.datepicker-inline,
+.datepicker table {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#cityRankDateMenu {
+    background-color: #F17C67;
+}
+
+#yoxview_popupWrap {
+    z-index: 2000;
 }

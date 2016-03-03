@@ -17,11 +17,9 @@ import java.util.List;
 import java.util.TimeZone;
 
 import com.citydigitalpulse.OfflineStatistic.dao.impl.StatisticDaoImpl;
-import com.citydigitalpulse.OfflineStatistic.model.EmotionObj;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
 import com.citydigitalpulse.OfflineStatistic.model.StructuredFullMessage;
 import com.citydigitalpulse.OfflineStatistic.tool.Tools;
-import com.citydigitalpulse.OfflineStatistic.tool.senitool.*;
 
 /**
  * 分库与感情识别
@@ -119,6 +117,7 @@ public class SplitDB {
 
 					} else {
 						statisticDB.createNewSubTable(table_name);
+						inMemeryRecordKey.add(date_string);
 						if (j == 0) {
 							statisticDB.insertMessage2Table(table_name, temp);
 							del_list.add(temp.getNum_id());
