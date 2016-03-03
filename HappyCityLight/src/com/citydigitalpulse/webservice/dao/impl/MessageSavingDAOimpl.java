@@ -327,6 +327,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 	public StatiisticsRecord getStatisticRecordByKey(String record_key) {
 		StatiisticsRecord rec = null;
 		RecordKey key = new RecordKey(record_key);
+		System.out.println(record_key);
 		// 如果缓存中有数据，则直接读取缓存
 		if (statistic_history.containsKey(key)) {
 			rec = statistic_history.get(key);
@@ -533,9 +534,12 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 		// 解析开始日期和结束日期，如果缓存中存在该日期则不用查询数据库，如果没有改日期则直接使用==查询
 		for (long i = start_time; i <= end_time; i += dayTime) {
 			record_key = "reg_" + place_id + ","
-					+ key_sdf.format(new Date(start_time + i * dayTime))
+					+ key_sdf.format(new Date(i))
 					+ ",all,all";
-			res.add(new RegStatisticInfo(getStatisticRecordByKey(record_key)));
+			StatiisticsRecord rec = getStatisticRecordByKey(record_key);
+			if (rec != null) {
+				res.add(new RegStatisticInfo(rec));
+			}
 		}
 		return res;
 	}
