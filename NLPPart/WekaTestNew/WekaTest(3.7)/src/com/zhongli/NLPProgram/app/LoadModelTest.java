@@ -78,7 +78,7 @@ public class LoadModelTest {
 	private void dosth() {
 		// load model
 		String rootPath = "data/";
-		String classifier_text_img_filename = "training_data_normal_before_remove_useless_part.model";
+		String classifier_text_img_filename = "libSVM_(LAB Data Set).model";
 		String classifier_text_only_filename = "Saimadata/SMO_training_data_normal_before_remove_useless_part.model";
 		String classifier_text_img_feature_only_filename = "training_data_fratures_before_remove_useless_part.model";
 		String classifier_text_only_feature_only_filename = "Saimadata/training_data_fratures_before_remove_useless_part.model";
