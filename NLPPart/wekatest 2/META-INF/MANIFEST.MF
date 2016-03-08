@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Rsrc-Class-Path: ./ ark-tweet-nlp-0.3.2.jar commons-codec-1.4.jar comm
+ ons-lang-2.3.jar commons-math-2.1.jar twitter-text-1.6.1.jar snakeyam
+ l-1.12.jar lucene-core-3.0.3.jar guava-10.0.1.jar jsr305-1.3.9.jar ju
+ nit-4.8.2.jar hamcrest-all-1.1.jar jackson-databind-2.0.0.jar jackson
+ -annotations-2.0.0.jar stanford-corenlp-1.2.0.jar xom-1.2.5.jar xml-a
+ pis-1.3.03.jar xercesImpl-2.8.0.jar xalan-2.7.0.jar joda-time-2.0.jar
+  berkeleyparser-r32.jar trove4j-3.0.3.jar opennlp-tools-1.6.0.jar wek
+ a-dev-3.7.13.jar java-cup-11b-2015.03.26.jar java-cup-11b-runtime-201
+ 5.03.26.jar pentaho-package-manager-1.0.11.jar LibSVM-1.0.7.jar libsv
+ m-3.17.jar opencsv-2.3.jar emoji4j-5.0.jar jackson-core-2.7.0.jar lam
+ bdaj-2.3.3.jar objenesis-1.2.jar cglib-nodep-2.2.jar
+Class-Path: .
+Rsrc-Main-Class: com.zhongli.NLPProgram.app.LoadModelTest
+Main-Class: org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader
+
