@@ -42,7 +42,6 @@ import com.citydigitalpulse.webservice.model.message.EmotionObj;
 import com.citydigitalpulse.webservice.model.message.HotTopic;
 import com.citydigitalpulse.webservice.model.message.PulseValue;
 import com.citydigitalpulse.webservice.model.message.QueryOption;
-import com.citydigitalpulse.webservice.model.message.RecordKey;
 import com.citydigitalpulse.webservice.model.message.RegStatisticInfo;
 import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.message.StatiisticsRecord;
@@ -60,6 +59,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MessageResource {
 	private static MessageSavingDAOimpl msgSav = new MessageSavingDAOimpl();
 	private static UserAccountDAO userAccountDAO = new userAccountDAOimpl();
+	private static NLPModel nlpTool;
 	private static String RequreRole = "ROLE_USER";
 	// 设置缓存数据的大小
 	private static int CACHE_NUMBER = 5000;
@@ -102,6 +102,7 @@ public class MessageResource {
 			System.out.println("Have data.");
 		}
 		RedisUtil.returnResource(cacheDB);
+		nlpTool = new NLPModel();
 	}
 
 	/**
@@ -200,7 +201,7 @@ public class MessageResource {
 			msg.setLang(lang);
 			msg.setMessage_from(message_from);
 			if (msg.getLang().equals("en")) {
-				EmotionObj emotion = NLPModel.getTextEmotion(msg.getText());
+				EmotionObj emotion = nlpTool.getTextEmotion(msg.getText());
 				msg.setEmotion_text(emotion.getEmotion());
 				msg.setEmotion_text_value(emotion.getValue());
 			} else {
@@ -229,7 +230,7 @@ public class MessageResource {
 							mapper.writeValueAsString(msg));
 				}
 			} else {
-				cacheDB.lpush(TAGGED_CACHE_KEY, mapper.writeValueAsString(msg));
+				cacheDB.rpush(TAGGED_CACHE_KEY, mapper.writeValueAsString(msg));
 			}
 			RedisUtil.returnResource(cacheDB);
 			// 将该数据存储到数据库?
@@ -385,7 +386,7 @@ public class MessageResource {
 		// 如果没有感情数据则通过API获取并且将情感标记存入数据库
 		if (temp.getLang().equals("en")) {
 			try {
-				EmotionObj emotionObj = NLPModel.getTextEmotion(temp.getText());
+				EmotionObj emotionObj = nlpTool.getTextEmotion(temp.getText());
 				temp.setEmotion_text(emotionObj.getEmotion());
 				temp.setEmotion_text_value(emotionObj.getValue());
 				// // 将情感标记存入数据库
@@ -699,6 +700,79 @@ public class MessageResource {
 		// 使用新的缓存方法获得历史记录
 		for (int i = 0; i < place_id.size(); i++) {
 			records.put(place_id.get(i), msgSav.getPlaceHistoryInfos_fast(
+					place_id.get(i), start, end));
+		}
+		if (records.size() == 0) {
+			res.setCode(Response.Status.NOT_FOUND.getStatusCode());
+			res.setType(Response.Status.NOT_FOUND.name());
+			res.setMessage("Record not found");
+			return res;
+		} else {
+			// 返回数据
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Get Record Success.");
+			res.setObj(records);
+			return res;
+		}
+	}
+	
+	@GET
+	@Path("/getfullhistoryinfo")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public ResMsg getFullHistoryImpiseInfos(@QueryParam("userID") long userID,
+			@QueryParam("token") @DefaultValue("") String token,
+			@QueryParam("place_ids") @DefaultValue("") String place_ids_str,
+			@QueryParam("date_start") @DefaultValue("") String date_start,
+			@QueryParam("date_end") @DefaultValue("") String date_end) {
+		ResMsg res = new ResMsg();
+		Date start, end;
+		HashMap<Integer, List<StatiisticsRecord>> records = new HashMap<Integer, List<StatiisticsRecord>>();
+		List<Integer> place_id = new ArrayList<Integer>();
+		if (!userAccountDAO.tokenCheck(userID, token)) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Token expaired. Please login again.");
+			return res;
+		}
+		// 检察权限,若权限不足则返回错误信息
+		if (!userAccountDAO.getUserRolesByUserId(userID).contains(
+				new Role(RequreRole))) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Primition decline.");
+			return res;
+		}
+		if (date_start.equals("") || date_end.equals("")) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Missing Date Input, format: yyyy-MM-dd");
+			return res;
+		}
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			start = sdf.parse(date_start);
+			end = sdf.parse(date_end);
+			String[] places = place_ids_str.split(",");
+			for (int i = 0; i < places.length; i++) {
+				place_id.add(Integer.parseInt(places[i]));
+			}
+
+		} catch (ParseException e) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Data Format Error. Date format: yyyy-MM-dd");
+			return res;
+		}
+
+		// // 使用老方法逐条查询
+		// for (int i = 0; i < place_id.size(); i++) {
+		// records.put(place_id.get(i), msgSav.getPlaceHistoryInfos(
+		// place_id.get(i), date_start, date_end));
+		// }
+		// 使用新的缓存方法获得历史记录
+		for (int i = 0; i < place_id.size(); i++) {
+			records.put(place_id.get(i), msgSav.getPlaceHistoryRecord_fast(
 					place_id.get(i), start, end));
 		}
 		if (records.size() == 0) {

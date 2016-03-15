@@ -533,12 +533,38 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 		String record_key;
 		// 解析开始日期和结束日期，如果缓存中存在该日期则不用查询数据库，如果没有改日期则直接使用==查询
 		for (long i = start_time; i <= end_time; i += dayTime) {
-			record_key = "reg_" + place_id + ","
-					+ key_sdf.format(new Date(i))
+			record_key = "reg_" + place_id + "," + key_sdf.format(new Date(i))
 					+ ",all,all";
 			StatiisticsRecord rec = getStatisticRecordByKey(record_key);
 			if (rec != null) {
 				res.add(new RegStatisticInfo(rec));
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param place_id
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public ArrayList<StatiisticsRecord> getPlaceHistoryRecord_fast(
+			int place_id, Date start, Date end) {
+		ArrayList<StatiisticsRecord> res = new ArrayList<StatiisticsRecord>();
+		long dayTime = 3600000 * 24;
+		long start_time = Math.min(start.getTime(), end.getTime());
+		long end_time = Math.max(start.getTime(), end.getTime());
+		// 通过日期算出具体要查那天的，再通过日期得到record_key
+		String record_key;
+		// 解析开始日期和结束日期，如果缓存中存在该日期则不用查询数据库，如果没有改日期则直接使用==查询
+		for (long i = start_time; i <= end_time; i += dayTime) {
+			record_key = "reg_" + place_id + "," + key_sdf.format(new Date(i))
+					+ ",all,all";
+			StatiisticsRecord rec = getStatisticRecordByKey(record_key);
+			if (rec != null) {
+				res.add(rec);
 			}
 		}
 		return res;
