@@ -124,19 +124,24 @@ function HexBoundary(hom, rec) {
     if (hom instanceof HexOnMap) {
         this.hom = hom;
         this.rec = rec;
-        this.defaultColor = "#6A8372";
-        this.defaultOpacity = 0.5;
+        this.defaultColor = "#dbdbdb";
+        this.defaultOpacity = 0.7;
         this.currentColor = null;
         this.currentOpacity = null;
+        this.fadeOutColor = "#b2b1ad";
         this.hexBoundaryPolygon = new Array();
+        this.colorAnimationInterval = null;
         console.log("Create HexBoundary Object.");
     } else {
         console.error("Error:Fail in HexBoundary Initialisation.");
     }
 };
 
+HexBoundary.negativeColor = d3.rgb(0, 92, 175); //color for negative
+HexBoundary.positiveColor = d3.rgb(225, 107, 140); //color for positive
+
 HexBoundary.prototype.getHexInsideRec = function () {
-    console.log("HexBoundary.getHexInsideRec.");
+    //    console.log("HexBoundary.getHexInsideRec.");
     var _this = this;
     var calHexArrayS = new Array();
     $.each(_this.rec, function () {
@@ -203,11 +208,11 @@ HexBoundary.prototype.getHexInsideRec = function () {
 };
 
 HexBoundary.prototype.createHexBoundary = function () {
-    console.log("HexBoundary.createHexBoundary.");
+    //    console.log("HexBoundary.createHexBoundary.");
     var _this = this;
     var hexArray = this.getHexInsideRec();
     $.each(hexArray, function () {
-        console.log(this.q + "," + this.r + "," + this.s);
+        //        console.log(this.q + "," + this.r + "," + this.s);
         var paths = _this.hom.getHexPolygonPathFromHex(this);
         var hexPolygon = new google.maps.Polygon({
             map: _this.hom.map,
@@ -222,15 +227,15 @@ HexBoundary.prototype.createHexBoundary = function () {
     _this.currentOpacity = _this.defaultOpacity;
 };
 HexBoundary.prototype.hideHexBoundary = function () {
-    console.log("HexBoundary.hideHexBoundary.");
+    //    console.log("HexBoundary.hideHexBoundary.");
     var _this = this;
 };
 HexBoundary.prototype.showHexBoundary = function () {
-    console.log("HexBoundary.showHexBoundary.");
+    //    console.log("HexBoundary.showHexBoundary.");
     var _this = this;
 };
 HexBoundary.prototype.deleteHexBoundary = function () {
-    console.log("HexBoundary.deleteHexBoundary.");
+    //    console.log("HexBoundary.deleteHexBoundary.");
     var _this = this;
     if ((_this.hexBoundaryPolygon != []) && (_this.hexBoundaryPolygon.length != 0)) {
         $.each(_this.hexBoundaryPolygon, function () {
@@ -242,7 +247,7 @@ HexBoundary.prototype.deleteHexBoundary = function () {
     }
 };
 HexBoundary.prototype.updateHexBoundary = function () {
-    console.log("HexBoundary.updateHexBoundary.");
+    //    console.log("HexBoundary.updateHexBoundary.");
     var color = this.currentColor;
     var opacity = this.currentOpacity;
     this.deleteHexBoundary();
@@ -251,7 +256,7 @@ HexBoundary.prototype.updateHexBoundary = function () {
     this.changeHexBoundaryOpacity(opacity);
 };
 HexBoundary.prototype.changeHexBoundaryColor = function (color) {
-    console.log("HexBoundary.changeHexBoundaryColor.");
+    //    console.log("HexBoundary.changeHexBoundaryColor: " + color);
     var _this = this;
     if ((_this.hexBoundaryPolygon != []) && (_this.hexBoundaryPolygon.length != 0)) {
         $.each(_this.hexBoundaryPolygon, function () {
@@ -265,11 +270,11 @@ HexBoundary.prototype.changeHexBoundaryColor = function (color) {
     }
 };
 HexBoundary.prototype.changeHexBoundaryColorFromValue = function (value) {
-    console.log("HexBoundary.changeHexBoundaryColorFromValue.");
+    //    console.log("HexBoundary.changeHexBoundaryColorFromValue.");
     this.changeHexBoundaryColor(this.getColorFromValue(value));
 };
 HexBoundary.prototype.changeHexBoundaryOpacity = function (opacity) {
-    console.log("HexBoundary.changeHexBoundaryOpacity.");
+    //    console.log("HexBoundary.changeHexBoundaryOpacity.");
     var _this = this;
     if ((_this.hexBoundaryPolygon != []) && (_this.hexBoundaryPolygon.length != 0)) {
         $.each(_this.hexBoundaryPolygon, function () {
@@ -283,18 +288,77 @@ HexBoundary.prototype.changeHexBoundaryOpacity = function (opacity) {
     }
 };
 HexBoundary.prototype.getColorFromValue = function (value) {
-    console.log("HexBoundary.getColorFromValue.");
-    var red = d3.rgb(238, 44, 44); //color for negative
-    var green = d3.rgb(162, 205, 90); //color for positive
-    var yellow = d3.rgb(255, 215, 0); //color for neutral
-    if (value >= 0) {
-        var color = d3.interpolate(yellow, green); //颜色插值函数
-        var linear = d3.scale.linear().domain([0, 5]).range([0, 1]);
-        return color(linear(value));
-    } else {
-        var color = d3.interpolate(red, yellow); //颜色插值函数
-        var linear = d3.scale.linear().domain([-5, 0]).range([0, 1]);
-        return color(linear(value));
+    //    console.log("HexBoundary.getColorFromValue.");
+    //    var red = d3.rgb(238, 44, 44); //color for negative
+    //    var green = d3.rgb(162, 205, 90); //color for positive
+    //    var yellow = d3.rgb(255, 215, 0); //color for neutral
+    //    if (value >= 0) {
+    //        var color = d3.interpolate(yellow, green); //颜色插值函数
+    //        var linear = d3.scale.linear().domain([0, 5]).range([0, 1]);
+    //        return color(linear(value));
+    //    } else {
+    //        var color = d3.interpolate(red, yellow); //颜色插值函数
+    //        var linear = d3.scale.linear().domain([-5, 0]).range([0, 1]);
+    //        return color(linear(value));
+    //    }
+    //    console.log("HexBoundary.getColorFromValue: " + value);
+    var min = 0.4,
+        max = 0.6;
+    if (value > max) {
+        value = max;
+    } else if (value < min) {
+        value = min;
+    }
+    var negaColor = HexBoundary.negativeColor; //color for negative
+    var posiColor = HexBoundary.positiveColor; //color for positive
+    var color = d3.interpolate(negaColor, posiColor); //颜色插值函数
+    var linear = d3.scale.linear().domain([min, max]).range([0, 1]);
+    //    console.log(color(linear(0.493))); #0059f2
+    //    console.log(color(linear(0.573))); #00a5fc
+    return color(linear(value));
+};
+HexBoundary.prototype.playColorAnimation = function (graghDataArray, startIndex, intervalTime) {
+    var _this = this;
+    if (graghDataArray.length != 0) {
+        _this.stopColorAnimation();
+        console.log("HexBoundary.playColorAnimation.");
+        var index = startIndex;
+        var step = 20;
+        var i = 0;
+        var value = graghDataArray[index]["pulse_value"];
+        var startColor = _this.currentColor;
+        var endColor = _this.getColorFromValue(value);
+        var interpolator = d3.interpolate(startColor, endColor);
+        var linear = d3.scale.linear().domain([0, step]).range([0, 1]);
+        _this.colorAnimationInterval = setInterval(function () {
+            _this.changeHexBoundaryColor(interpolator(linear(i)));
+            i++;
+            if (i > step) {
+                if ((index + 1) == graghDataArray.length) {
+                    console.log("HexBoundary.playColorAnimation:FADEOUT.");
+                    startColor = _this.currentColor;
+                    endColor = _this.fadeOutColor;
+                    interpolator = d3.interpolate(startColor, endColor);
+                    i = 0;
+                    index = 0;
+                } else {
+                    index = (index + 1) % (graghDataArray.length);
+                    value = graghDataArray[index]["pulse_value"];
+                    startColor = _this.currentColor;
+                    endColor = _this.getColorFromValue(value);
+                    interpolator = d3.interpolate(startColor, endColor);
+                    i = 0;
+                }
+            }
+        }, intervalTime / step);
+    }
+};
+HexBoundary.prototype.stopColorAnimation = function () {
+    var _this = this;
+    if (_this.colorAnimationInterval != null) {
+        console.log("HexBoundary.stopColorAnimation.");
+        clearInterval(_this.colorAnimationInterval);
+        _this.colorAnimationInterval = null;
     }
 };
 //-------------

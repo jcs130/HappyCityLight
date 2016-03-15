@@ -188,7 +188,7 @@ function getPlaceEdge(place) {
                             data: {
                                 userID: user_id,
                                 token: logintoken,
-                                place_name: place,
+                                place_id: data.obj.regID,
                                 box_points: JSON.stringify(regionBoundary.getPath().getArray())
                             },
                             dataType: "json",
@@ -201,7 +201,6 @@ function getPlaceEdge(place) {
                                 console.log("error: " + JSON.stringify(data));
                             }
                         });
-
 
                     }
 
@@ -319,7 +318,7 @@ function getLatestData() {
                         }
 
 
-                        content += "alt='User Image'><span class='username'><a href='#'>" + msgData.user_name + "</a></span><span class='description'>" + placeName + " - " + createAt.getFullYear() + "/" + createAt.getMonth() + "/" + createAt.getDate() + "</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool' data-toggle='tooltip' title='Mark as read'><i class='fa fa-circle-o'></i></button><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button><button type='button' class='btn btn-box-tool btn-close' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'>";
+                        content += "alt='User Image'><span class='username'><a href='#'>" + msgData.user_name + "</a></span><span class='description'>" + placeName + " - " + createAt.getFullYear() + "/" + (createAt.getMonth() + 1) + "/" + createAt.getDate() + "</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button><button type='button' class='btn btn-box-tool btn-close' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'>";
                         if ((msgData.media_type != null) && (msgData.media_type != []) && (msgData.media_type[0] == 'photo') && (msgData.media_urls[0] != null)) {
                             content += "<img class='img-responsive' src='" + msgData.media_urls[0] + "' alt='Photo' style='width:120px;'>"
                         }

@@ -1,4 +1,5 @@
 var apiToken = "ArashiArashiFordream";
+var map;
 var numPerTable = 10;
 var topicNum = 10;
 var multiThreshold = 6;
@@ -12,6 +13,16 @@ var hexBoundaryObj = null;
 //实现登陆成功后的初始化数据操作
 function checkin_afterChencin() {
 
+}
+
+function drawRegionBoundary(areas) {
+    var cityBoundaryPaths = new Array();
+    $.each(areas, function () {
+        var cityPaths = [new google.maps.LatLng(this.north, this.east), new google.maps.LatLng(this.south, this.east), new google.maps.LatLng(this.south, this.west), new google.maps.LatLng(this.north, this.west)];
+        cityBoundaryPaths.push(cityPaths);
+    });
+    var regionBoundary = mergeRegions(cityBoundaryPaths);
+    return regionBoundary;
 }
 
 
@@ -40,6 +51,12 @@ function toggleSelectDate() {
     $("#selectDate").toggle();
 }
 
+Date.prototype.addDays = function (days) {
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+}
+
 
 
 function drawCityBoundaryAndHashtags(record_id) {
@@ -62,11 +79,7 @@ function drawCityBoundaryAndHashtags(record_id) {
                 if (data.code == 200) {
                     console.log("Success in message/getonestatisticrecord: " + JSON.stringify(data));
                     getOneStatisticRecordData = data;
-                    var map = new google.maps.Map(document.getElementById('map'), {
-                        center: new google.maps.LatLng(45.360332, -75.772822),
-                        zoom: 10,
-                        mapTypeControl: false
-                    });
+                    google.maps.event.trigger(map, 'resize');
 
                     $("#historyinfo .overlay").remove();
 
@@ -99,24 +112,50 @@ function drawCityBoundaryAndHashtags(record_id) {
 
 
                     google.maps.event.addListenerOnce(map, "tilesloaded", function () {
+
                         if (regionBoundary != null) {
                             regionBoundary.setMap(null);
                         }
 
-                        if ((data.obj.regInfo.box_points != null) && (data.obj.regInfo.box_points != [])) {
-                            console.log("box_points exists.");
+                        regionBoundary = new google.maps.Polyline({
+                            map: map,
+                            strokeColor: "#9F353A",
+                            strokeOpacity: 0.6,
+                            strokeWeight: 1
+                        });
 
-                            regionBoundary = new google.maps.Polyline({
-                                path: $.parseJSON(data.obj.regInfo.box_points),
-                                map: map,
-                                strokeColor: "#9F353A",
-                                strokeOpacity: 0.6,
-                                strokeWeight: 1
-                            });
 
-                        } else {
-                            console.log("box_points not exists.");
-                        }
+                        //                        if ((data.obj.regInfo.box_points != null) && (data.obj.regInfo.box_points != [])) {
+                        //                            console.log("box_points exists.");
+                        //
+                        //                            regionBoundary.setPath($.parseJSON(data.obj.regInfo.box_points));
+                        //
+                        //                        } else {
+
+                        regionBoundary = drawRegionBoundary(data.obj.regInfo.areas);
+                        regionBoundary.setMap(map);
+
+
+                        //                            $.ajax({
+                        //                                type: "PUT",
+                        //                                crossDomain: true,
+                        //                                url: serverURL + "collector/updateareabox",
+                        //                                data: {
+                        //                                    userID: user_id,
+                        //                                    token: logintoken,
+                        //                                    place_id: data.obj.regInfo.regID,
+                        //                                    box_points: JSON.stringify(regionBoundary.getPath().getArray())
+                        //                                },
+                        //                                dataType: "json",
+                        //                                success: function (data, textStatus) {
+                        //                                    console.log("Update Area Box successfully......");
+                        //                                },
+                        //                                error: function (jqXHR, textStatus, errorThrown) {
+                        //                                    console.log("error: " + JSON.stringify(data));
+                        //                                }
+                        //                            });
+                        //
+                        //                        }
 
 
                         var hom = new HexOnMap(map);
@@ -253,7 +292,7 @@ function dataAnalysis(place_id, startDate, endDate) {
     $.ajax({
         type: "GET",
         crossDomain: true,
-        url: serverURL + "message/gethistoryinfo",
+        url: serverURL + "message/getfullhistoryinfo",
         data: {
             userID: user_id,
             token: logintoken,
@@ -435,7 +474,7 @@ function dataAnalysis(place_id, startDate, endDate) {
                 });
 
                 cityInfoChart.addListener("rollOverGraphItem", function (e) {
-//                    console.log((e.item.serialDataItem.axes["v2"].graphs["g5"].values.value) / ((e.item.serialDataItem.axes["v1"].graphs["g1"].values.value) + (e.item.serialDataItem.axes["v1"].graphs["g3"].values.value)));
+                    //                    console.log((e.item.serialDataItem.axes["v2"].graphs["g5"].values.value) / ((e.item.serialDataItem.axes["v1"].graphs["g1"].values.value) + (e.item.serialDataItem.axes["v1"].graphs["g3"].values.value)));
                     var value = (e.item.serialDataItem.axes["v2"].graphs["g5"].values.value) / ((e.item.serialDataItem.axes["v1"].graphs["g1"].values.value) + (e.item.serialDataItem.axes["v1"].graphs["g3"].values.value));
                     if (hexBoundaryObj != null) {
                         hexBoundaryObj.changeHexBoundaryColorFromValue(value);
@@ -764,8 +803,13 @@ function getCityRanking(date) {
                         drawCityBoundaryAndHashtags(record_id);
                         var modalHTML = "";
                         $("#cityInfoModalTitle").html($(this).html());
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            center: new google.maps.LatLng(45.360332, -75.772822),
+                            zoom: 10,
+                            mapTypeControl: false
+                        });
                         $("#cityInfoModal").modal().on("shown.bs.modal", function () {
-
+                            google.maps.event.trigger(map, 'resize');
                         });
                     });
                     //-------------
@@ -788,11 +832,7 @@ function getCityRanking(date) {
 }
 
 
-Date.prototype.addDays = function (days) {
-    var dat = new Date(this.valueOf());
-    dat.setDate(dat.getDate() + days);
-    return dat;
-}
+
 
 
 
@@ -802,7 +842,7 @@ $(function () {
     //- DATE PICKER FOR CITY RANK -
     //-------------
     $('#cityRankDate').datepicker({
-        startDate: "01/01/2015",
+        startDate: "01/23/2015",
         endDate: "today",
         todayHighlight: false,
         todayBtn: true,
@@ -885,7 +925,7 @@ $(function () {
     //- SET DEFAULT DATE FOR CITY RANK TO YESTERDAY -
     //-------------
     var today = new Date();
-    getCityRanking(today.addDays(-17));
+    getCityRanking(today.addDays(-10));
     //    getCityRanking(today.addDays(-1));
 
 

@@ -277,17 +277,17 @@ function getColorFromHex(hex) {
         //        return d3.rgb(222, 222, 222);
     }
 
-    var red = d3.rgb(238, 44, 44); //浅蓝
-    var green = d3.rgb(162, 205, 90); //深蓝
-    var yellow = d3.rgb(255, 215, 0); //深蓝
+    var red = d3.rgb(238, 44, 44); //
+    var green = d3.rgb(162, 205, 90); //
+    var yellow = d3.rgb(255, 215, 0); //
     if (hex.positive > hex.negative) {
         var color = d3.interpolate(yellow, green); //颜色插值函数
-        var linear = d3.scale.linear().domain([0, 5]).range([0, 1]);
+        var linear = d3.scale.linear().domain([0, 1]).range([0, 1]);
         var value = (hex.positive - hex.negative) / (hex.positive + hex.neutral + hex.negative);
         return color(linear(value));
     } else {
         var color = d3.interpolate(red, yellow); //颜色插值函数
-        var linear = d3.scale.linear().domain([-5, 0]).range([0, 1]);
+        var linear = d3.scale.linear().domain([-1, 0]).range([0, 1]);
         var value = (hex.positive - hex.negative) / (hex.positive + hex.neutral + hex.negative);
         return color(linear(value));
     }
@@ -333,7 +333,7 @@ function drawHexFromHex(hex) {
                 }
             } else {
                 //            alert(proj.fromPointToLatLng(getCenter(hex)));
-                var content = "<div id='infobox' class='box box-widget infobox'><div class='box-header with-border'><div class='user-block'><span class='username'><a href='#'>Region</a></span><span class='description'>Public Region</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool closeInfobox' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'><p>Region Info</p></div><div class='box-footer box-comments'>";
+                var content = "<div id='infobox' class='box box-widget infobox'><div class='box-header with-border'><div class='user-block'><span class='username'><a href='#'>Region</a></span><span class='description'>Public Region</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool closeInfobox' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-footer box-comments'>";
                 if (hex.msg != null) {
                     console.log("Display msg in the hex.");
                     $.each(hex.msg, function () {
