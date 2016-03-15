@@ -358,7 +358,6 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 							rs.getString("hot_topics"),
 							new TypeReference<HotTopic[]>() {
 							}));
-
 					key.setRecord_id(rec.getRecord_id());
 					key.setRecord_key(rec.getRecord_key());
 
@@ -552,6 +551,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 	 */
 	public ArrayList<StatiisticsRecord> getPlaceHistoryRecord_fast(
 			int place_id, Date start, Date end) {
+		HotTopic tempTopic;
 		ArrayList<StatiisticsRecord> res = new ArrayList<StatiisticsRecord>();
 		long dayTime = 3600000 * 24;
 		long start_time = Math.min(start.getTime(), end.getTime());
@@ -564,6 +564,21 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 					+ ",all,all";
 			StatiisticsRecord rec = getStatisticRecordByKey(record_key);
 			if (rec != null) {
+				// 限制热门话题的数量和话题中的图片
+				ArrayList<HotTopic> topics = new ArrayList<HotTopic>();
+
+				for (int j = 0; j < rec.getHot_topics().length; j++) {
+					tempTopic = rec.getHot_topics()[j];
+					if (tempTopic.getImages().size() > 50) {
+						tempTopic.setImages(tempTopic.getImages()
+								.subList(0, 49));
+					}
+					topics.add(tempTopic);
+					if (j > 50) {
+						break;
+					}
+				}
+				rec.setHot_topics(topics.toArray(new HotTopic[0]));
 				res.add(rec);
 			}
 		}

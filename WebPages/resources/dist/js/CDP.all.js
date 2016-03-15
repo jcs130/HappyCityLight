@@ -11,7 +11,7 @@
         $("#header-logo").show();
         $("#titleForPhone").hide();
     }
-    $('.content-wrapper').css('height', $(window).height() - 101);
+//    $('.content-wrapper').css('height', $(window).height() - 101);
 
     //resize & show/hide elements when window size changes
     $(window).resize(function () {
@@ -24,7 +24,7 @@
                 $("#header-logo").show();
                 $("#titleForPhone").hide();
             }
-            $('.content-wrapper').css('height', $(window).height() - 101);
+//            $('.content-wrapper').css('height', $(window).height() - 101);
         }, 30);
     });
 
