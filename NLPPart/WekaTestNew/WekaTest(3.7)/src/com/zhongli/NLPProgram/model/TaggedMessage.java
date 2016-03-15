@@ -146,8 +146,9 @@ public class TaggedMessage {
 			temp_text = temp_text.replaceAll(" won't ", " will not ");
 			temp_text = temp_text.replaceAll("n't ", " not ");
 		}
-		// 将字符表情转化为Emoji並且加上空格
-		String full_tweet = addSpace(EmojiUtils.emojify(temp_text));
+		// // 将字符表情转化为Emoji並且加上空格
+		// String full_tweet = addSpace(EmojiUtils.emojify(temp_text));
+		String full_tweet = temp_text;
 		// System.out.println(full_tweet);
 		// 首先进行分句
 		String[] sentences = sentence_etector_en.sentDetect(full_tweet);

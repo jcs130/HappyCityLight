@@ -516,18 +516,35 @@ public class StatisticDaoImpl {
 	 */
 	public void saveRecord2Database(
 			HashMap<Integer, StatiisticsRecord> oneDayResult) {
+		ArrayList<StatiisticsRecord> allList = new ArrayList<StatiisticsRecord>();
+		allList.addAll(oneDayResult.values());
+		ArrayList<StatiisticsRecord> unranks = new ArrayList<StatiisticsRecord>();
+		ArrayList<StatiisticsRecord> ranks = new ArrayList<StatiisticsRecord>();
+		for (int i = 0; i < allList.size(); i++) {
+			if (allList.get(i).getPulse().getSum_num()
+					- allList.get(i).getPulse().getUnknown_num() < 500) {
+				unranks.add(allList.get(i));
+			} else {
+				ranks.add(allList.get(i));
+			}
+		}
+		allList.clear();
+		// 将数量不足的城市不排名
 		// 将HashMap转化为列表，按照分数排序，再更新相应的Rank值，最后存入数据库中
-		StatiisticsRecord[] resultArray = oneDayResult.values().toArray(
-				new StatiisticsRecord[0]);
+		StatiisticsRecord[] resultArray = ranks
+				.toArray(new StatiisticsRecord[0]);
 		Arrays.sort(resultArray);
-		insertMutipalRecord(resultArray);
+		insertMutipalRecord(0, resultArray);
+		insertMutipalRecord(ranks.size(),
+				unranks.toArray(new StatiisticsRecord[0]));
 	}
 
 	/**
 	 * @Author Zhongli Li Email: lzl19920403@gmail.com
 	 * @param resultArray
 	 */
-	private void insertMutipalRecord(StatiisticsRecord[] resultArray) {
+	private void insertMutipalRecord(int start_rank,
+			StatiisticsRecord[] resultArray) {
 		Connection conn = null;
 		Statement statement = null;
 		StatiisticsRecord record;
@@ -541,7 +558,7 @@ public class StatisticDaoImpl {
 			for (int i = 0; i < resultArray.length; i++) {
 				record = resultArray[i];
 				record.sortHotTopics();
-				record.setRank(i + 1);
+				record.setRank(start_rank + i + 1);
 				String sqlString = "INSERT INTO statiistics_record (record_key, date_timestamp_ms, local_date, place_id, place_name, place_obj, pulse_value, pulse_obj, rank, hot_topics, message_from, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE pulse_value=?,pulse_obj=?,rank=?,hot_topics=?;";
 				PreparedStatement ps = conn.prepareStatement(sqlString);
 				ps.setString(1, "reg_" + record.getRegInfo().getRegID() + ","

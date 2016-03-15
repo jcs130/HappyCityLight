@@ -68,12 +68,7 @@ public class PulseValue {
 		double s = this.sum_num;
 		double u = this.unknown_num;
 		double t = this.score;
-		if ((s - u) > 500) {
-			this.pulse_value = t / (s - u);
-		} else {
-			this.pulse_value = 0;
-		}
-
+		this.pulse_value = t / (s - u);
 	}
 
 	public long getTimestamp() {

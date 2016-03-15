@@ -12,11 +12,13 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.zhongli.NLPProgram.model.TaggedMessage;
 import com.zhongli.NLPProgram.model.WordFeature;
+import com.zhongli.NLPProgram.model.WordFeatureShiai;
 
 import cmu.arktweetnlp.Tagger;
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -41,52 +43,95 @@ public class NLP_PreProessing {
 		// 自行标注的两万条数据
 		// 将原文分词，并且将分词与标记联合输出
 		records = ot.loadRecordsFromCSVFile("data/mark_records.txt");
-		// 将数据写入ARFF格式
-		ot.writeRecords2Arff(records,
-				"data/training_data_combined_before_remove_useless_part.arff",
-				true);
-		ot.writeRecords2Arff(records,
-				"data/training_data_normal_before_remove_useless_part.arff",
-				false);
-		// 直接提取特征输出特征数据
-		ot.writeFeatures2Arff(records,
-				"data/training_data_fratures_before_remove_useless_part.arff");
+		HashMap<Integer, WordFeatureShiai> fets=ot.loadWordFeaturesFromForder("data/labdb/feasot/", records);
+		ot.writeShiaiFeatures2Arff(fets, "data/labdb/training_data_fratures_before_remove_useless_part.arff");
+		//		// 将数据写入ARFF格式
+//		ot.writeRecords2Arff(records,
+//				"data/training_data_combined_before_remove_useless_part.arff",
+//				true);
+//		ot.writeRecords2Arff(records,
+//				"data/training_data_normal_before_remove_useless_part.arff",
+//				false);
+//		// 直接提取特征输出特征数据
+//		ot.writeFeatures2Arff(records,
+//				"data/training_data_fratures_before_remove_useless_part.arff");
+//
+//		// 去掉句子的多余成分(人称代词等)
+//		ot.removeUselessPart(records);
+//		ot.writeRecords2Arff(records,
+//				"data/training_data_combined_after_remove_useless_part.arff",
+//				true);
+//		ot.writeRecords2Arff(records,
+//				"data/training_data_normal_after_remove_useless_part.arff",
+//				false);
+//
+//		/****************************************/
+//		// 加载课堂上老师给的ARFF的训练数据
+//		records = ot.loadRecordsFromARFFFile("data/Saimadata/Saimadata.arff");
+//		// 将数据写入ARFF格式
+//		ot.writeRecords2Arff(
+//				records,
+//				"data/Saimadata/training_data_combined_before_remove_useless_part.arff",
+//				true);
+//		ot.writeRecords2Arff(
+//				records,
+//				"data/Saimadata/training_data_normal_before_remove_useless_part.arff",
+//				false);
+//		// 直接提取特征输出特征数据
+//		ot.writeFeatures2Arff(records,
+//				"data/Saimadata/training_data_fratures_before_remove_useless_part.arff");
+//
+//		// 去掉句子的多余成分(人称代词等)
+//		ot.removeUselessPart(records);
+//		ot.writeRecords2Arff(
+//				records,
+//				"data/Saimadata/training_data_combined_after_remove_useless_part.arff",
+//				true);
+//		ot.writeRecords2Arff(
+//				records,
+//				"data/Saimadata/training_data_normal_after_remove_useless_part.arff",
+//				false);
+	}
 
-		// 去掉句子的多余成分(人称代词等)
-		ot.removeUselessPart(records);
-		ot.writeRecords2Arff(records,
-				"data/training_data_combined_after_remove_useless_part.arff",
-				true);
-		ot.writeRecords2Arff(records,
-				"data/training_data_normal_after_remove_useless_part.arff",
-				false);
+	private HashMap<Integer, WordFeatureShiai> loadWordFeaturesFromForder(
+			String forderPaht, HashMap<Integer, TaggedMessage> records) {
+		HashMap<Integer, WordFeatureShiai> res = new HashMap<Integer, WordFeatureShiai>();
+		// 循环情绪列表并从文件中读取特征值
+		List<Integer> keys = new ArrayList<Integer>();
+		keys.addAll(records.keySet());
+		for (int i = 0; i < keys.size(); i++) {
+			// 如果为有效记录则转换
+			if (records.get(keys.get(i)).isUseful()) {// 根据key读取文件
+				try {
+					FileReader fr = new FileReader(forderPaht + keys.get(i)
+							+ ".txt");
+					BufferedReader br = new BufferedReader(fr);
+					String line = "";
+					double[] features = new double[12];
+					int f_num = 0;
+					while ((line = br.readLine()) != null) {
+						if (!line.equals("")) {
+							features[f_num] = Double.parseDouble(line.trim());
+							f_num++;
+						}
+					}
+					if (f_num != 12) {
+						System.out.println("feature not right");
+					}
+					br.close();
+					fr.close();
+					// 新建feature对象
+					WordFeatureShiai record = new WordFeatureShiai(features,
+							records.get(keys.get(i)).getFinalEmotion());
+					res.put(keys.get(i), record);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 
-		/****************************************/
-		// 加载课堂上老师给的ARFF的训练数据
-		records = ot.loadRecordsFromARFFFile("data/Saimadata/Saimadata.arff");
-		// 将数据写入ARFF格式
-		ot.writeRecords2Arff(
-				records,
-				"data/Saimadata/training_data_combined_before_remove_useless_part.arff",
-				true);
-		ot.writeRecords2Arff(
-				records,
-				"data/Saimadata/training_data_normal_before_remove_useless_part.arff",
-				false);
-		// 直接提取特征输出特征数据
-		ot.writeFeatures2Arff(records,
-				"data/Saimadata/training_data_fratures_before_remove_useless_part.arff");
-
-		// 去掉句子的多余成分(人称代词等)
-		ot.removeUselessPart(records);
-		ot.writeRecords2Arff(
-				records,
-				"data/Saimadata/training_data_combined_after_remove_useless_part.arff",
-				true);
-		ot.writeRecords2Arff(
-				records,
-				"data/Saimadata/training_data_normal_after_remove_useless_part.arff",
-				false);
+		}
+		return res;
 	}
 
 	private HashMap<Integer, TaggedMessage> loadRecordsFromARFFFile(
@@ -161,7 +206,7 @@ public class NLP_PreProessing {
 	}
 
 	/**
-	 * 直接将被分词的数据写入ARFF
+	 * 直接将提取特征后的数据写入ARFF
 	 * 
 	 * @param records
 	 * @param filePath
@@ -208,6 +253,34 @@ public class NLP_PreProessing {
 				data.add(records_list.get(i).toWekaInstance(data, false,
 						isCombined));
 			}
+		}
+
+		// Write to the Arff file
+		try {
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath), Charset.forName("utf-8")));
+			bw.write(data.toString());
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	/**
+	 * 直接将提取特征后的数据写入ARFF
+	 * 
+	 * @param records
+	 * @param filePath
+	 */
+	private void writeShiaiFeatures2Arff(HashMap<Integer, WordFeatureShiai> records,
+			String filePath) {
+		List<WordFeatureShiai> records_list = new ArrayList<WordFeatureShiai>();
+		Instances data = WordFeatureShiai.getWekaInstances();
+		records_list.addAll(records.values());
+		for (int i = 0; i < records_list.size(); i++) {
+			data.add(records_list.get(i).getWekaInstance(data));
 		}
 
 		// Write to the Arff file

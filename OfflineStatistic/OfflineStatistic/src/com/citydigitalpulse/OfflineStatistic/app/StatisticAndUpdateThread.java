@@ -47,7 +47,7 @@ public class StatisticAndUpdateThread extends Thread {
 		this.regList = regList;
 		this.statisticDB = statisticDB;
 		this.ZLSentiment_en = new ZLSentiment_en("models/",
-				"libSVM_(Saima Aman Data Set).model");
+				"training_data_normal_before_remove_useless_part.model");
 		this.date = date;
 	}
 
@@ -118,11 +118,11 @@ public class StatisticAndUpdateThread extends Thread {
 				}
 				start_id = temp.getNum_id();
 			}
+			// 一次性更新更改的数据
+			statisticDB.updateMutipalRecords(table_name, change_list);
+			System.out.println("Changes:" + change_list.size());
+			change_list.clear();
 			if (queryResult.size() < AppConfig.LIMIT) {
-				// 一次性更新更改的数据
-				statisticDB.updateMutipalRecords(table_name, change_list);
-				System.out.println("Changes:" + change_list.size());
-				change_list.clear();
 				break;
 			}
 		}

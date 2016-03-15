@@ -12,18 +12,11 @@ package com.citydigitalpulse.OfflineStatistic.app;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import com.citydigitalpulse.OfflineStatistic.dao.impl.StatisticDaoImpl;
-import com.citydigitalpulse.OfflineStatistic.model.EmotionObj;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
-import com.citydigitalpulse.OfflineStatistic.model.StatiisticsRecord;
-import com.citydigitalpulse.OfflineStatistic.model.StructuredFullMessage;
 import com.citydigitalpulse.OfflineStatistic.tool.Tools;
-import com.citydigitalpulse.OfflineStatistic.tool.senitool.SentimentClassifier;
-import com.citydigitalpulse.OfflineStatistic.tool.senitool.ZLSentiment_en;
 
 /**
  * 用于统计数据和更新信息
@@ -68,31 +61,31 @@ public class StatisticAndUpdate {
 		// 读取指定天的数据 数据库的格式为part_message_yyyy_MM_dd
 		for (long i = AppConfig.START_DATE.getTime(); i <= AppConfig.END_DATE
 				.getTime(); i += dayTime) {
-			// int work_num = 0;
+			int work_num = 0;
 			System.out.println(i);
 			StatisticAndUpdateThread t = new StatisticAndUpdateThread(
 					statisticDB, regList, sdf, i);
 			threads.add(t);
 			t.start();
-			// while (true) {
-			// work_num = 0;
-			// // 判断同时进行的任务数是否超过5个，如果超过，则等待
-			// for (int j = 0; j < threads.size(); j++) {
-			// if (!threads.get(j).isDone()) {
-			// work_num += 1;
-			// }
-			// }
-			// if (work_num <2) {
-			// break;
-			// } else {
-			// try {
-			// Thread.sleep(500);
-			// } catch (InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			// }
-			// }
+			while (true) {
+				work_num = 0;
+				// 判断同时进行的任务数是否超过5个，如果超过，则等待
+				for (int j = 0; j < threads.size(); j++) {
+					if (!threads.get(j).isDone()) {
+						work_num += 1;
+					}
+				}
+				if (work_num < 6) {
+					break;
+				} else {
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 		System.out.println("Waiting.....");
 		// 循环等待知道所有进程结束
@@ -108,7 +101,7 @@ public class StatisticAndUpdate {
 				break;
 			} else {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
