@@ -251,21 +251,31 @@ public class UserResource {
 				res.setMessage("Username or password wrong. Please try again.");
 				return res;
 			}
-			// 更新用户的Token和Token过期时间
-			String token = userAccountDAO.updateToken(user.getUser_id());
-			if (!"".equals(token)) {
+			if (user.getEmail().equals("test@test.com")) {
 				ud = userAccountDAO.getUserDetailByUserId(user.getUser_id());
 				res.setCode(Response.Status.OK.getStatusCode());
 				res.setType(Response.Status.OK.name());
-				res.setMessage(token);
+				res.setMessage(user.getLogin_token());
 				res.setObj(ud);
 				return res;
 			} else {
-				res.setCode(Response.Status.INTERNAL_SERVER_ERROR
-						.getStatusCode());
-				res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
-				res.setMessage("Server busy. Pleasy try again.");
-				return res;
+				// 更新用户的Token和Token过期时间
+				String token = userAccountDAO.updateToken(user.getUser_id());
+				if (!"".equals(token)) {
+					ud = userAccountDAO
+							.getUserDetailByUserId(user.getUser_id());
+					res.setCode(Response.Status.OK.getStatusCode());
+					res.setType(Response.Status.OK.name());
+					res.setMessage(token);
+					res.setObj(ud);
+					return res;
+				} else {
+					res.setCode(Response.Status.INTERNAL_SERVER_ERROR
+							.getStatusCode());
+					res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
+					res.setMessage("Server busy. Pleasy try again.");
+					return res;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

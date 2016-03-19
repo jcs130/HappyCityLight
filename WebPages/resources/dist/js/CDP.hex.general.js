@@ -302,8 +302,8 @@ HexBoundary.prototype.getColorFromValue = function (value) {
     //        return color(linear(value));
     //    }
     //    console.log("HexBoundary.getColorFromValue: " + value);
-    var min = 0.4,
-        max = 0.6;
+    var min = 0.5,
+        max = 1.2;
     if (value > max) {
         value = max;
     } else if (value < min) {

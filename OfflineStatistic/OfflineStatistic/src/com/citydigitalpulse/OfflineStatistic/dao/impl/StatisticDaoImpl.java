@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.citydigitalpulse.OfflineStatistic.app.AppConfig;
 import com.citydigitalpulse.OfflineStatistic.model.LocArea;
 import com.citydigitalpulse.OfflineStatistic.model.LocPoint;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
@@ -35,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class StatisticDaoImpl {
 	private MySQLHelper_Save saveDB;
+	private MySQLHelper_Statistic statisticDB;
 	private MySQLHelper_Raw rawDB;
 	private MySQLHelper_Controller collectorDB;
 
@@ -46,6 +48,7 @@ public class StatisticDaoImpl {
 		this.saveDB = new MySQLHelper_Save();
 		this.rawDB = new MySQLHelper_Raw();
 		this.collectorDB = new MySQLHelper_Controller();
+		this.statisticDB = new MySQLHelper_Statistic();
 	}
 
 	/**
@@ -549,6 +552,7 @@ public class StatisticDaoImpl {
 		Statement statement = null;
 		StatiisticsRecord record;
 		ObjectMapper mapper = new ObjectMapper();
+		// 先在分库数据库中存储数据
 		try {
 			conn = saveDB.getConnection();
 			// 指定在事物中提交
@@ -609,6 +613,79 @@ public class StatisticDaoImpl {
 				throw new RuntimeException(e);
 			}
 		}
+		// 如果数据库地址不同则在统计数据库中存储数据
+		if (!AppConfig.MESSAGE_SAVING_DATABASE_URL
+				.equals(AppConfig.MESSAGE_SAVING_DATABASE_STATISTIC_URL)) {
+			try {
+				conn = statisticDB.getConnection();
+				// 指定在事物中提交
+				conn.setAutoCommit(false);
+				statement = conn.createStatement();
+				// 循环添加新消息
+				for (int i = 0; i < resultArray.length; i++) {
+					record = resultArray[i];
+					record.sortHotTopics();
+					record.setRank(start_rank + i + 1);
+					String sqlString = "INSERT INTO statiistics_record (record_key, date_timestamp_ms, local_date, place_id, place_name, place_obj, pulse_value, pulse_obj, rank, hot_topics, message_from, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE pulse_value=?,pulse_obj=?,rank=?,hot_topics=?;";
+					PreparedStatement ps = conn.prepareStatement(sqlString);
+					ps.setString(
+							1,
+							"reg_" + record.getRegInfo().getRegID() + ","
+									+ record.getLocal_date() + ","
+									+ record.getLanguage() + ","
+									+ record.getMessage_from());
+					ps.setLong(2, record.getDate_timestamp_ms());
+					ps.setString(3, record.getLocal_date());
+					ps.setLong(4, record.getRegInfo().getRegID());
+					ps.setString(5, record.getRegInfo().getCountry()
+							.toLowerCase()
+							+ ","
+							+ record.getRegInfo().getRegName().toLowerCase());
+					ps.setString(6,
+							mapper.writeValueAsString(record.getRegInfo()));
+					ps.setDouble(7, record.getPulse().getPulse_value());
+					ps.setString(8,
+							mapper.writeValueAsString(record.getPulse()));
+					ps.setInt(9, record.getRank());
+					ps.setString(10,
+							mapper.writeValueAsString(record.getHot_topics()));
+					ps.setString(11, record.getMessage_from());
+					ps.setString(12, record.getLanguage());
+					ps.setDouble(13, record.getPulse().getPulse_value());
+					ps.setString(14,
+							mapper.writeValueAsString(record.getPulse()));
+					ps.setInt(15, record.getRank());
+					ps.setString(16,
+							mapper.writeValueAsString(record.getHot_topics()));
+					ps.executeUpdate();
+				}
+				// 提交更改
+				conn.commit();
+			} catch (SQLException | JsonProcessingException e) {
+				e.printStackTrace();
+				// // 有错误发生回滚修改
+				// try {
+				// conn.rollback();
+				// } catch (SQLException e1) {
+				// e1.printStackTrace();
+				// throw new RuntimeException(e1);
+				// }
+				// throw new RuntimeException(e);
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (conn != null) {
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+		}
+
 	}
 
 }

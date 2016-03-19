@@ -159,50 +159,50 @@ function getPlaceEdge(place) {
                     });
 
 
-                    if ((data.obj.box_points != null) && (data.obj.box_points != [])) {
-                        console.log("box_points exists.");
-
-                        if (regionBoundary != null) {
-                            regionBoundary.setMap(null);
-                        }
-
-                        regionBoundary = new google.maps.Polyline({
-                            path: $.parseJSON(data.obj.box_points),
-                            map: map,
-                            strokeColor: "#9F353A",
-                            strokeOpacity: 0.6,
-                            strokeWeight: 1
-                        });
-
-
-                    } else {
-
-                        drawRegionBoundary(data.obj.areas);
-
-                        //alert(resultRegion.getPath().getArray().toString());
-
-                        $.ajax({
-                            type: "PUT",
-                            crossDomain: true,
-                            url: serverURL + "collector/updateareabox",
-                            data: {
-                                userID: user_id,
-                                token: logintoken,
-                                place_id: data.obj.regID,
-                                box_points: JSON.stringify(regionBoundary.getPath().getArray())
-                            },
-                            dataType: "json",
-                            success: function (data, textStatus) {
-                                //alert(JSON.stringify(data));
-                                console.log("Update Area Box successfully......" + data.obj.box_points);
-
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                console.log("error: " + JSON.stringify(data));
-                            }
-                        });
-
-                    }
+//                    if ((data.obj.box_points != null) && (data.obj.box_points != [])) {
+    //                        console.log("box_points exists.");
+    //
+    //                        if (regionBoundary != null) {
+    //                            regionBoundary.setMap(null);
+    //                        }
+    //
+    //                        regionBoundary = new google.maps.Polyline({
+    //                            path: $.parseJSON(data.obj.box_points),
+    //                            map: map,
+    //                            strokeColor: "#9F353A",
+    //                            strokeOpacity: 0.6,
+    //                            strokeWeight: 1
+    //                        });
+    //
+    //
+    //                    } else {
+    //
+    //                        drawRegionBoundary(data.obj.areas);
+    //
+    //                        //alert(resultRegion.getPath().getArray().toString());
+    //
+    //                        $.ajax({
+    //                            type: "PUT",
+    //                            crossDomain: true,
+    //                            url: serverURL + "collector/updateareabox",
+    //                            data: {
+    //                                userID: user_id,
+    //                                token: logintoken,
+    //                                place_id: data.obj.regID,
+    //                                box_points: JSON.stringify(regionBoundary.getPath().getArray())
+    //                            },
+    //                            dataType: "json",
+    //                            success: function (data, textStatus) {
+    //                                //alert(JSON.stringify(data));
+    //                                console.log("Update Area Box successfully......" + data.obj.box_points);
+    //
+    //                            },
+    //                            error: function (jqXHR, textStatus, errorThrown) {
+    //                                console.log("error: " + JSON.stringify(data));
+    //                            }
+    //                        });
+    //
+    //                    }
 
 
                 } else {
@@ -423,7 +423,9 @@ function init_map_after_load() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(45.42929873257377, -75.38818359375),
         zoom: 9,
-        mapTypeControl: false
+        mapTypeControl: false,
+        streetViewControl: false,
+        signInControl: false,
     });
     proj = map.getProjection();
     $.getScript("http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js");

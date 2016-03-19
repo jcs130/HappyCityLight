@@ -183,4 +183,74 @@ $(document).ready(function () {
         }
         return false;
     });
+
+    $('#loginAsGuest').click(function () {
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: serverURL + "user/login",
+            data: {
+                "email": "test@test.com",
+                "password": "test"
+            },
+            cache: false,
+            beforeSend: function () {
+                $("#loginBtn").val('Connecting...');
+            },
+            success: function (data) {
+                //alert(JSON.stringify(data));
+                if (data.code == 200) {
+                    //如果启用了cookie则存储在cookie中
+                    //向浏览器cookie中保存登录信息
+                    $.cookie("user_id", data.obj.user_id, {
+                        expires: 30
+                    });
+                    $.cookie("token", data.message, {
+                        expires: 30
+                    });
+                    //同时向本地存储存(Chrome禁用了本地Cookie)
+                    localStorage.setItem("user_id", data.obj.user_id);
+                    localStorage.setItem("token", data.message);
+                    $.cookie("email", data.obj.email, {
+                        expires: 30
+                    });
+                    $.cookie("firstname", data.obj.firstname, {
+                        expires: 30
+                    });
+                    $.cookie("lastname", data.obj.lastname, {
+                        expires: 30
+                    });
+                    $.cookie("user_picture", data.obj.user_picture, {
+                        expires: 30
+                    });
+                    $.cookie("user_roles", data.obj.user_roles, {
+                        expires: 30
+                    });
+                    if ($.cookie("user_id") == null || $.cookie("token") == null) {
+                        //如果cookie被禁用，则使用HTML5的本地存储
+                        localStorage.setItem("user_id", data.obj.user_id);
+                        localStorage.setItem("token", data.message);
+                        //既不能用cookie也不能用本地存储
+                        if (localStorage.user_id == null || localStorage.token == null) {
+                            homepage = homepage + "?user_id=" + data.obj.user_id + "&token=" + data.message;
+                        }
+                    }
+                    localStorage.setItem("email", data.obj.email);
+                    localStorage.setItem("firstname", data.obj.firstname);
+                    localStorage.setItem("lastname", data.obj.lastname);
+                    localStorage.setItem("user_picture", data.obj.user_picture);
+                    localStorage.setItem("user_roles", data.obj.user_roles);
+                    window.location.href = homepage;
+                } else {
+                    $("#loginBtn").val('Sign In');
+                    alert(data.message);
+                }
+            },
+            error: function (data) {
+                $("#loginBtn").val('Sign In');
+                alert(JSON.stringify(data));
+            }
+        });
+    });
+
 });

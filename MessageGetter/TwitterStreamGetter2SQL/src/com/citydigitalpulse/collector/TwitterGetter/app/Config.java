@@ -16,8 +16,10 @@ package com.citydigitalpulse.collector.TwitterGetter.app;
  *
  */
 public class Config {
+	
 	// public static String DCI_SERVER_URL =
 	// "http://localhost:8080/HappyCityLight/api/";
+	public static final String DCI_SERVER_URL_AMAZON = "http://citydigitalpulse.us-west-2.elasticbeanstalk.com/api/";
 	public static String DCI_SERVER_URL = "http://citypulse1.site.uottawa.ca/api/";
 	public static String UPLOAD_TOKEN = "Imagoodboy";
 

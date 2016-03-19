@@ -71,7 +71,8 @@ public class MySQLHelper_Save implements DataSource {
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return DriverManager.getConnection(
-				AppConfig.MESSAGE_SAVING_DATABASE_URL, username, password);// 获取连接
+				AppConfig.MESSAGE_SAVING_DATABASE_STATISTIC_URL, username,
+				password);// 获取连接
 	}
 
 	@Override
@@ -83,9 +84,9 @@ public class MySQLHelper_Save implements DataSource {
 			e.printStackTrace();
 		}// 指定连接类型
 		return DriverManager.getConnection(
-				AppConfig.MESSAGE_SAVING_DATABASE_URL,
-				AppConfig.MESSAGE_SAVING_DATABASE_USER_NAME,
-				AppConfig.MESSAGE_SAVING_DATABASE_USER_PASSWORD);// 获取连接
+				AppConfig.MESSAGE_SAVING_DATABASE_STATISTIC_URL,
+				AppConfig.MESSAGE_SAVING_DATABASE_STATISTIC_USER_NAME,
+				AppConfig.MESSAGE_SAVING_DATABASE_STATISTIC_USER_PASSWORD);// 获取连接
 	}
 
 }

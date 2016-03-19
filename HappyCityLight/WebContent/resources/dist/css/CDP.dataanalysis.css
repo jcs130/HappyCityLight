@@ -261,6 +261,24 @@
     overflow-y: scroll;
 }
 
+#cityHotHashtagsCard .back #HashtagImg::-webkit-scrollbar {
+    width: 8px;
+    background-color: #dbdbdb;
+}
+
+#cityHotHashtagsCard .back #HashtagImg::-webkit-scrollbar-thumb {
+    background-color: #f4f4f4;
+    border-radius: 10px;
+}
+
+
+/*
+#cityHotHashtagsCard .back #HashtagImg::-webkit-scrollbar-track {
+    background-color: #dbdbdb;
+    color: #dbdbdb;
+}
+*/
+
 #cityHotHashtagsCard .back #HashtagInfo {
     cursor: pointer;
 }

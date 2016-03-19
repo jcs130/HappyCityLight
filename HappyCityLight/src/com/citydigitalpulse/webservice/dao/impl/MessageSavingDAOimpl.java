@@ -574,7 +574,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 								.subList(0, 49));
 					}
 					topics.add(tempTopic);
-					if (j > 50) {
+					if (j > 100) {
 						break;
 					}
 				}

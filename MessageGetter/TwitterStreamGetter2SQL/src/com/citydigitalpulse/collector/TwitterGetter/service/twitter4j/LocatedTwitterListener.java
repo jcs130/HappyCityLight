@@ -81,6 +81,10 @@ public class LocatedTwitterListener implements RawStreamListener {
 						Tools.sendNewMessage(Config.DCI_SERVER_URL
 								+ "message/uploadnewmessage",
 								Config.UPLOAD_TOKEN, msg);
+						//发送数据到亚马逊云服务器
+						Tools.sendNewMessage(Config.DCI_SERVER_URL_AMAZON
+								+ "message/uploadnewmessage",
+								Config.UPLOAD_TOKEN, msg);
 					}
 				} else {
 					System.out.println("Error with the num_id:" + num_id);
