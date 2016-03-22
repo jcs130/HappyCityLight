@@ -742,15 +742,15 @@ function getCityRanking(date) {
                     var tableHTMLArrray = new Array(numTables);
                     var tableHTML = "";
                     for (var i = 0; i < numTables; i++) {
-                        tableHTMLArrray[i] = "<div class='item'><div class='table-responsive'><table class='table no-margin cityRanking'><thead><tr><th>Select</th><th>Rank</th><th>City</th><th>Score</th><th>Value</th></tr></thead><tbody>";
+                        tableHTMLArrray[i] = "<div class='item'><div class='table-responsive'><table class='table no-margin cityRanking'><thead><tr><th>Select</th><th>Rank</th><th>City</th><th>Messages</th><th>Value</th></tr></thead><tbody>";
                     }
 
                     $.each(cityRankingData, function () {
 
                         if ((this.pulse.sum_num - this.pulse.unknown_num) >= 500) {
-                            tableHTMLArrray[Math.floor((this.rank - 1) / numPerTable)] += "<tr placeID='" + this.regID + "' recordID='" + this.record_id + "'><td><input type='checkbox' class='minimal'></td><td>" + this.rank + "</td><td><a class='cityName'>" + this.regName.toUpperCase() + "</a></td><td><span class='label label-warning'>" + this.pulse.score.toFixed(0) + "</span></td><td><span class='label label-success'>" + this.pulse.pulse_value.toFixed(4) + "</span></td></tr>";
+                            tableHTMLArrray[Math.floor((this.rank - 1) / numPerTable)] += "<tr placeID='" + this.regID + "' recordID='" + this.record_id + "'><td><input type='checkbox' class='minimal'></td><td>" + this.rank + "</td><td><a class='cityName'>" + this.regName.toUpperCase() + "</a></td><td><span class='label label-warning'>" + this.pulse.sum_num.toFixed(0) + "</span></td><td><span class='label label-success'>" + this.pulse.pulse_value.toFixed(4) + "</span></td></tr>";
                         } else {
-                            tableHTMLArrray[Math.floor((this.rank - 1) / numPerTable)] += "<tr placeID='" + this.regID + "' recordID='" + this.record_id + "'><td><input type='checkbox' class='minimal multiplecity'></td><td>" + this.rank + "</td><td><a class='cityName'>" + this.regName.toUpperCase() + "</a></td><td><span class='label label-warning'>" + this.pulse.score.toFixed(0) + "</span></td><td>undefined</td></tr>";
+                            tableHTMLArrray[Math.floor((this.rank - 1) / numPerTable)] += "<tr placeID='" + this.regID + "' recordID='" + this.record_id + "'><td><input type='checkbox' class='minimal multiplecity'></td><td>" + this.rank + "</td><td><a class='cityName'>" + this.regName.toUpperCase() + "</a></td><td><span class='label label-warning'>" + this.pulse.sum_num.toFixed(0) + "</span></td><td>undefined</td></tr>";
                         }
                     });
 
