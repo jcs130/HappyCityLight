@@ -84,7 +84,8 @@ public class CollectorControlResource {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getRegInfoByName(@QueryParam("userID") long userID,
 			@QueryParam("token") String token,
-			@QueryParam("place_name") @DefaultValue("") String place_name) {
+			@QueryParam("reg_id") @DefaultValue("-1") int reg_id,
+			@QueryParam("reg_name") @DefaultValue("") String reg_name) {
 		ResMsg res = new ResMsg();
 		try {
 			if (!userAccountDAO.tokenCheck(userID, token)) {
@@ -101,12 +102,17 @@ public class CollectorControlResource {
 				res.setMessage("Primition decline.");
 				return res;
 			}
-			// 从数据库中获得监听的城市列表
-			RegInfo reg = collectorControllerDAO.getRegInfoByName(place_name);
-			if (reg == null) {
-				res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
-				res.setType(Response.Status.BAD_REQUEST.name());
-				res.setMessage("No place name in the system.");
+			RegInfo reg = null;
+			if (reg_id != -1) {
+				reg = collectorControllerDAO.getRegInfoByID(reg_id);
+			} else {
+				// 从数据库中获得监听的城市列表
+				reg = collectorControllerDAO.getRegInfoByName(reg_name);
+				if (reg == null) {
+					res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+					res.setType(Response.Status.BAD_REQUEST.name());
+					res.setMessage("No place name in the system.");
+				}
 			}
 			res.setObj(reg);
 			res.setCode(Response.Status.OK.getStatusCode());
@@ -116,8 +122,8 @@ public class CollectorControlResource {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.printThrowable(e);
-			res.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-			res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
 			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}

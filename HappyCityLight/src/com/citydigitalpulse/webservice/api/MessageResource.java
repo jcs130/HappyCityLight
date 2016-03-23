@@ -47,6 +47,7 @@ import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.message.StatiisticsRecord;
 import com.citydigitalpulse.webservice.model.message.StructuredFullMessage;
 import com.citydigitalpulse.webservice.model.user.Role;
+import com.citydigitalpulse.webservice.model.user.UserReg;
 import com.citydigitalpulse.webservice.tool.Tools;
 import com.citydigitalpulse.webservice.tool.NLPPart.NLPModel;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -645,6 +646,82 @@ public class MessageResource {
 	}
 
 	@GET
+	@Path("/getuserregionranks")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public ResMsg getUserRegionRanks(@QueryParam("userID") long userID,
+			@QueryParam("token") @DefaultValue("") String token,
+			@QueryParam("date") @DefaultValue("") String date_str) {
+		ResMsg res = new ResMsg();
+		if (!userAccountDAO.tokenCheck(userID, token)) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Token expaired. Please login again.");
+			return res;
+		}
+		// 检察权限,若权限不足则返回错误信息
+		if (!userAccountDAO.getUserRolesByUserId(userID).contains(
+				new Role(RequreRole))) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Primition decline.");
+			return res;
+		}
+		if (date_str.equals("")) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Missing Date Input, format: yyyy-MM-dd");
+			return res;
+		}
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			sdf.parse(date_str);
+		} catch (ParseException e) {
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage("Date Format Error. format: yyyy-MM-dd");
+			return res;
+		}
+		if (rank_history.containsKey(userID + date_str)) {
+			// 返回数据
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Get Record Success.");
+			res.setObj(rank_history.get(date_str));
+			return res;
+		} else {
+			List<RegStatisticInfo> records = new ArrayList<RegStatisticInfo>();
+			// 获取用户收藏的城市列表
+			List<UserReg> user_reg = userAccountDAO.getUserRegInfo(userID);
+			for (int i = 0; i < user_reg.size(); i++) {
+				String record_key = "reg_" + user_reg.get(i).getReg_id() + ","
+						+ date_str.split("-")[0] + "_" + date_str.split("-")[1]
+						+ ",all,all";
+				records.add(new RegStatisticInfo(msgSav
+						.getStatisticRecordByKey(record_key)));
+			}
+			if (records.size() == 0) {
+				res.setCode(Response.Status.NOT_FOUND.getStatusCode());
+				res.setType(Response.Status.NOT_FOUND.name());
+				res.setMessage("Record not found");
+				return res;
+			} else {
+				RegStatisticInfo[] infoArray = records
+						.toArray(new RegStatisticInfo[0]);
+				// 对数组进行排序
+				Arrays.sort(infoArray);
+				rank_history.put(userID + date_str, infoArray);
+				// 返回数据
+				res.setCode(Response.Status.OK.getStatusCode());
+				res.setType(Response.Status.OK.name());
+				res.setMessage("Get Record Success.");
+				res.setObj(infoArray);
+				return res;
+			}
+		}
+
+	}
+
+	@GET
 	@Path("/gethistoryinfo")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ResMsg getHistoryImpiseInfos(@QueryParam("userID") long userID,
@@ -716,7 +793,7 @@ public class MessageResource {
 			return res;
 		}
 	}
-	
+
 	@GET
 	@Path("/getfullhistoryinfo")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")

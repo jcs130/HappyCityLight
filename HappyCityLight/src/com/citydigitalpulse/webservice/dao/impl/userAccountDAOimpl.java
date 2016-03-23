@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.el.ELException;
 
@@ -28,6 +29,7 @@ import com.citydigitalpulse.webservice.model.user.Privilege;
 import com.citydigitalpulse.webservice.model.user.Role;
 import com.citydigitalpulse.webservice.model.user.UserAccount;
 import com.citydigitalpulse.webservice.model.user.UserDetail;
+import com.citydigitalpulse.webservice.model.user.UserReg;
 import com.citydigitalpulse.webservice.tool.Tools;
 
 public class userAccountDAOimpl implements UserAccountDAO {
@@ -90,13 +92,67 @@ public class userAccountDAOimpl implements UserAccountDAO {
 		}
 		// 设置初始的角色
 		ArrayList<Role> roles = new ArrayList<Role>();
-		Role defaultRole = getRoleByRoleId(1);
-		roles.add(defaultRole);
-		if (setUserRoles(getUserIDbyEmail(email), roles)) {
+		roles.add(getRoleByRoleId(1));// ROLE_USER
+		roles.add(getRoleByRoleId(2));// ROLE_GUEST
+		long user_id = getUserIDbyEmail(email);
+		initUserProfile(user_id, email);
+		if (setUserRoles(user_id, roles)) {
 			return true;
 		} else {
 			// 回滚？
 			return false;
+		}
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param user_id
+	 * @param email
+	 */
+	private void initUserProfile(long user_id, String email) {
+		// 1.添加新的用户信息数据
+		Connection conn = null;
+		Statement statement = null;
+		try {
+			conn = userDB.getConnection();
+			// 指定在事物中提交
+			conn.setAutoCommit(false);
+			statement = conn.createStatement();
+			statement.executeUpdate("INSERT INTO user_detail "
+					+ "(user_id,email) VALUES" + "(" + user_id + ", '" + email
+					+ "');");
+			// 2.设置账户为启用
+			statement
+					.executeUpdate("UPDATE user_account SET enable = 1 WHERE user_id = "
+							+ user_id + ";");
+			// 提交更改
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			// 有错误发生回滚修改
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				Logger.printThrowable(e1);
+				throw new RuntimeException(e1);
+			}
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				if (statement != null) {
+
+					statement.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -502,23 +558,16 @@ public class userAccountDAOimpl implements UserAccountDAO {
 	}
 
 	@Override
-	public boolean userActive(long userID, String email) {
-
+	public boolean userActive(long userID) {
+		// 去除用户的GUEST属性
 		Connection conn = null;
 		Statement statement = null;
 		try {
 			conn = userDB.getConnection();
-			// 指定在事物中提交
-			conn.setAutoCommit(false);
+			// 更改权限
 			statement = conn.createStatement();
-			// 1.添加新的用户信息数据
-			statement.executeUpdate("INSERT INTO user_detail "
-					+ "(user_id,email) VALUES" + "(" + userID + ", '" + email
-					+ "');");
-			// 2.设置账户为启用
-			statement
-					.executeUpdate("UPDATE user_account SET enable = 1 WHERE user_id = "
-							+ userID + ";");
+			statement.executeUpdate("DELETE FROM user_role WHERE userID="
+					+ userID + " and role_id=2;");
 			// 提交更改
 			conn.commit();
 			return true;
@@ -549,6 +598,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 				throw new RuntimeException(e);
 			}
 		}
+
 	}
 
 	@Override
@@ -808,8 +858,8 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 			long time = new Date().getTime();
 			UserAccount user = getUserAccountByUserID(userID);
-			//测试账户
-			if (user.getEmail().equals("test@test.com")) {
+			// 测试账户
+			if (user.getRoles().contains("ROLE_GUEST")) {
 				return true;
 			} else {
 				if (user.getLogin_token().equals(token)
@@ -912,6 +962,82 @@ public class userAccountDAOimpl implements UserAccountDAO {
 					e.printStackTrace();
 					Logger.printThrowable(e);
 					throw new RuntimeException(e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 获取该用户收藏的地区列表
+	 * 
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param user_id
+	 * @return
+	 */
+	@Override
+	public List<UserReg> getUserRegInfo(long user_id) {
+		// 根据type获取大区域的信息
+		String sqlString = "SELECT * FROM user_reg where user_id =" + user_id
+				+ " and private=0;";
+		ArrayList<UserReg> result = new ArrayList<UserReg>();
+		// 查询数据库，获取结果
+		Connection conn = null;
+		try {
+			conn = userDB.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				UserReg ur = new UserReg();
+				ur.setUser_id(user_id);
+				ur.setAdd_date(rs.getLong("add_date"));
+				ur.setReg_id(rs.getInt("reg_id"));
+				ur.setReg_name(rs.getString("reg_name"));
+				result.add(ur);
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		// System.out.println(result.size());
+		return result;
+	}
+
+	@Override
+	public void addUserRegion(long userID, int reg_id, String reg_name) {
+		PreparedStatement ps = null;
+		Connection conn = null;
+		try {
+			conn = userDB.getConnection();
+			String sqlString = "INSERT INTO user_reg (user_id, reg_id, add_date, reg_name) VALUES (?, ?, ?, ?);";
+			ps = conn.prepareStatement(sqlString);
+			ps.setLong(1, userID);
+			ps.setInt(2, reg_id);
+			ps.setLong(3, new Date().getTime());
+			ps.setString(4, reg_name);
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
 				}
 			}
 		}

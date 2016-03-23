@@ -12,6 +12,7 @@ package com.citydigitalpulse.webservice.api;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -19,12 +20,16 @@ import javax.ws.rs.core.*;
 import org.glassfish.hk2.utilities.reflection.Logger;
 
 import com.citydigitalpulse.webservice.dao.UserAccountDAO;
+import com.citydigitalpulse.webservice.dao.impl.CollectorControllerDAOimpl;
 import com.citydigitalpulse.webservice.dao.impl.userAccountDAOimpl;
+import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.message.ResMsg;
 import com.citydigitalpulse.webservice.model.user.Role;
 import com.citydigitalpulse.webservice.model.user.UserAccount;
 import com.citydigitalpulse.webservice.model.user.UserDetail;
 import com.citydigitalpulse.webservice.tool.Tools;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 用于用户注册登陆以及验证
@@ -37,6 +42,7 @@ public class UserResource {
 	@Context
 	private UriInfo urlInfo;
 	private UserAccountDAO userAccountDAO = new userAccountDAOimpl();
+	private CollectorControllerDAOimpl collectorDAO = new CollectorControllerDAOimpl();
 	private static String RequreRole = "ROLE_USER";
 
 	// 测试方法
@@ -145,8 +151,7 @@ public class UserResource {
 					return res;
 				}
 				// 改变用户验证状态
-				if (userAccountDAO.userActive(user.getUser_id(),
-						user.getEmail())) {
+				if (userAccountDAO.userActive(user.getUser_id())) {
 					res.setMessage("Success. Please Login.");
 					res.setCode(Response.Status.OK.getStatusCode());
 					res.setType(Response.Status.OK.name());
@@ -251,7 +256,7 @@ public class UserResource {
 				res.setMessage("Username or password wrong. Please try again.");
 				return res;
 			}
-			if (user.getEmail().equals("test@test.com")) {
+			if (user.getRoles().contains(new Role("ROLE_GUEST"))) {
 				ud = userAccountDAO.getUserDetailByUserId(user.getUser_id());
 				res.setCode(Response.Status.OK.getStatusCode());
 				res.setType(Response.Status.OK.name());
@@ -494,6 +499,113 @@ public class UserResource {
 			return res;
 		}
 	}
+
 	// 用户资料修改
 
+	// 获取用户收藏/自定义的区域列表
+	@GET
+	@Path("/getuserregs")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public ResMsg getUserRegions(@QueryParam("userID") long userID,
+			@QueryParam("token") String token) {
+		ResMsg res = new ResMsg();
+		try {
+			// System.out.println(userID + " <> " + token);
+			if (!userAccountDAO.tokenCheck(userID, token)) {
+				res.setCode(Response.Status.FORBIDDEN.getStatusCode());
+				res.setType(Response.Status.FORBIDDEN.name());
+				res.setMessage("Token expaired. Please login again.");
+				return res;
+			}
+			ArrayList<Role> userRoles = userAccountDAO
+					.getUserRolesByUserId(userID);
+			// 检察权限,若权限不足则返回错误信息
+			if (!userRoles.contains(new Role(RequreRole))) {
+				res.setCode(Response.Status.FORBIDDEN.getStatusCode());
+				res.setType(Response.Status.FORBIDDEN.name());
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			// 查询用户的区域
+			res.setObj(userAccountDAO.getUserRegInfo(userID));
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Get user details success.");
+			return res;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			res.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+			res.setType(Response.Status.INTERNAL_SERVER_ERROR.name());
+			res.setMessage(e.getLocalizedMessage());
+			return res;
+		}
+	}
+
+	// 增加用户自定义城市
+	@POST
+	@Path("/adduserreg")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public ResMsg addUserRegion(
+			@FormParam("userID") long userID,
+			@FormParam("token") String token,
+			@FormParam("reg_name") @DefaultValue("") String reg_name,
+			@FormParam("center_lat") @DefaultValue("0") double center_lat,
+			@FormParam("center_lan") @DefaultValue("0") double center_lan,
+			@FormParam("country") @DefaultValue("") String country,
+			@FormParam("time_zone") @DefaultValue("-100") int time_zone,
+			@FormParam("reg_id") @DefaultValue("-1") int reg_id,
+			@FormParam("location_areas") @DefaultValue("{}") String location_area_json) {
+		ResMsg res = new ResMsg();
+		try {
+			// System.out.println(userID + " <> " + token);
+			res = tokenCheck(userID, token);
+			if (res.getCode() != 200) {
+				return res;
+			}
+			ArrayList<Role> userRoles = userAccountDAO
+					.getUserRolesByUserId(userID);
+			// 检察权限,若权限不足则返回错误信息
+			if (!userRoles.contains(new Role(RequreRole))) {
+				res.setCode(Response.Status.FORBIDDEN.getStatusCode());
+				res.setType(Response.Status.FORBIDDEN.name());
+				res.setMessage("Primition decline.");
+				return res;
+			}
+			ArrayList<LocArea> location_areas = null;
+			ObjectMapper mapper = new ObjectMapper();
+			// 如果有reg_id则直接添加，如果没有则向收集器控制数据库中增加区域
+			if (reg_id == -1) {
+				if (reg_name.equals("") || country.equals("")
+						|| center_lat == 0 || center_lan == 0 || time_zone > 12
+						|| time_zone < -12 || location_area_json.equals("{}")) {
+					res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+					res.setType(Response.Status.BAD_REQUEST.name());
+					res.setMessage("Wrong inputs");
+					return res;
+				}
+				location_areas = mapper.readValue(location_area_json,
+						new TypeReference<List<LocArea>>() {
+						});
+				// 向collector数据库中添加新的区域信息
+				reg_id = collectorDAO.addNewOnlineTask(userID, reg_name,
+						country, center_lat, center_lan, time_zone,
+						location_areas);
+			}
+			userAccountDAO.addUserRegion(userID, reg_id, reg_name);
+			res.setObj(collectorDAO.getRegInfoByID(reg_id));
+			res.setCode(Response.Status.OK.getStatusCode());
+			res.setType(Response.Status.OK.name());
+			res.setMessage("Add user region success.");
+			return res;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+			res.setType(Response.Status.BAD_REQUEST.name());
+			res.setMessage(e.getLocalizedMessage());
+			return res;
+		}
+	}
+	// 删除用户自定义城市
 }

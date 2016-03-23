@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,10 +41,10 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 	}
 
 	@Override
-	public List<RegInfo> getRegInfo(int type) {
+	public List<RegInfo> getPublicRegInfo(int type) {
 		// 根据type获取大区域的信息
 		String sqlString = "SELECT * FROM regnames where streamstate =" + type
-				+ ";";
+				+ " and private=0;";
 		ArrayList<RegInfo> result = new ArrayList<RegInfo>();
 		// 查询数据库，获取结果
 		Connection conn = null;
@@ -60,6 +61,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 				reg.setCenter_lat(rs.getDouble("center_lat"));
 				reg.setCenter_lan(rs.getDouble("center_lan"));
 				reg.setTime_zone(rs.getInt("time_zone"));
+				reg.setPrivate(rs.getBoolean("private"));
 				getAreasByReg(reg);
 				// System.out.println(reg);
 				result.add(reg);
@@ -172,7 +174,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 	@Override
 	public ArrayList<String> getListenPlaces() {
 		// 根据type获取大区域的信息
-		String sqlString = "SELECT regname FROM regnames where streamstate =1;";
+		String sqlString = "SELECT regname FROM regnames where streamstate =1 and private=0;";
 		ArrayList<String> result = new ArrayList<String>();
 		// 查询数据库，获取结果
 		Connection conn = null;
@@ -283,10 +285,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.citydigitalpulse.webservice.dao.CollectorControllerDAO#getRegInfoByID(long)
-	 */
+	
 	@Override
 	public RegInfo getRegInfoByID(long regID) {
 		// 根据type获取大区域的信息
@@ -325,4 +324,203 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 		// System.out.println(result.size());
 		return reg;
 	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param userID
+	 * @param reg_name
+	 * @param country
+	 * @param center_lat
+	 * @param center_lan
+	 * @param time_zone
+	 * @param location_areas
+	 * @return reg_id
+	 */
+	public int addNewOnlineTask(long userID, String reg_name, String country,
+			double center_lat, double center_lan, int time_zone,
+			ArrayList<LocArea> location_areas) {
+		ArrayList<Integer> area_ids = new ArrayList<Integer>();
+		// 添加新的区域信息并且返回ID
+		for (int i = 0; i < location_areas.size(); i++) {
+			area_ids.add(addNewArea(location_areas.get(i)));
+		}
+		// 添加新的大区域
+		int reg_id = addNewRegion(reg_name, country, center_lat, center_lan,
+				time_zone);
+		// 建立联系并且初始化状态
+		addRel(reg_id, area_ids);
+		// 更改区域状态
+		changeRegStates(reg_id,0);
+		return reg_id;
+	}
+
+	/**
+	 * @Author  Zhongli Li Email: lzl19920403@gmail.com
+	 * @param reg_id
+	 */
+	private void changeRegStates(int reg_id,int status) {
+		PreparedStatement ps = null;
+		String sqlString = "UPDATE regnames SET streamstate="+status+" WHERE regid="+reg_id+";";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			ps = conn.prepareStatement(sqlString);
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+	
+		
+	}
+
+	private void addRel(int reg_id, ArrayList<Integer> area_ids) {
+		// 添加大区域和小区域的对应关系
+		Connection conn = null;
+		Statement statement = null;
+		try {
+			conn = dataSource.getConnection();
+			// 指定在事物中提交
+			conn.setAutoCommit(false);
+			statement = conn.createStatement();
+			// 循环添加新消息
+			for (int i = 0; i < area_ids.size(); i++) {
+				String sqlString = "INSERT INTO regandarea (regid,areaid) VALUES (?, ?);";
+				PreparedStatement ps = conn.prepareStatement(sqlString);
+				ps.setInt(1, reg_id);
+				ps.setInt(2, area_ids.get(i));
+				ps.executeUpdate();
+			}
+			// 提交更改
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// // 有错误发生回滚修改
+			// try {
+			// conn.rollback();
+			// } catch (SQLException e1) {
+			// e1.printStackTrace();
+			// throw new RuntimeException(e1);
+			// }
+			// throw new RuntimeException(e);
+		} finally {
+			try {
+				if (statement != null) {
+					statement.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	private int addNewRegion(String reg_name, String country,
+			double center_lat, double center_lan, int time_zone) {
+		PreparedStatement ps = null;
+		Connection conn = null;
+		int key = 0;
+		try {
+			conn = dataSource.getConnection();
+			String sqlString = "INSERT INTO regnames (regname, country, streamstate, private, center_lat, center_lan, time_zone) VALUES (?, ?, ?, ?, ?, ?, ?);";
+			ps = conn.prepareStatement(sqlString,
+					Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, reg_name);
+			ps.setString(2, country);
+			ps.setInt(3, 1);
+			ps.setInt(4, 1);
+			ps.setDouble(5, center_lat);
+			ps.setDouble(6, center_lan);
+			ps.setInt(7, time_zone);
+			ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				key = rs.getInt(1);
+				System.out.println("key:" + key);
+			} else {
+				// 插入失败
+			}
+			// 获得插入数据库的编号
+			return key;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
+	private int addNewArea(LocArea area) {
+		PreparedStatement ps = null;
+		Connection conn = null;
+		int key = 0;
+		try {
+			conn = dataSource.getConnection();
+			String sqlString = "INSERT INTO interestareas (north, east, south, west) VALUES (?, ?, ?, ?);";
+			ps = conn.prepareStatement(sqlString,
+					Statement.RETURN_GENERATED_KEYS);
+			ps.setDouble(1, area.getNorth());
+			ps.setDouble(2, area.getEast());
+			ps.setDouble(3, area.getSouth());
+			ps.setDouble(4, area.getWest());
+			ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				key = rs.getInt(1);
+				System.out.println("key:" + key);
+			} else {
+				// 插入失败
+			}
+			// 获得插入数据库的编号
+			return key;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
 }

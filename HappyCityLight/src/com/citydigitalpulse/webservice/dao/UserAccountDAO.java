@@ -11,10 +11,12 @@
 package com.citydigitalpulse.webservice.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.citydigitalpulse.webservice.model.user.Role;
 import com.citydigitalpulse.webservice.model.user.UserAccount;
 import com.citydigitalpulse.webservice.model.user.UserDetail;
+import com.citydigitalpulse.webservice.model.user.UserReg;
 
 /**
  * 用户数据操作类
@@ -157,7 +159,7 @@ public interface UserAccountDAO {
 	 * @param email
 	 * @return
 	 */
-	public boolean userActive(long userID, String email);
+	public boolean userActive(long userID);
 
 	/**
 	 * 根据用户ID得到用户详细信息
@@ -166,4 +168,19 @@ public interface UserAccountDAO {
 	 * @return
 	 */
 	public UserDetail getUserDetailByUserId(long userID);
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param user_id
+	 * @return
+	 */
+	List<UserReg> getUserRegInfo(long user_id);
+
+	/**
+	 * @Author  Zhongli Li Email: lzl19920403@gmail.com
+	 * @param userID
+	 * @param reg_id
+	 * @param reg_name
+	 */
+	public void addUserRegion(long userID, int reg_id, String reg_name);
 }

@@ -40,7 +40,7 @@ public interface CollectorControllerDAO {
 	 *            0:新添加未监听的 1:正在监听的 2:被关闭的
 	 * @return
 	 */
-	public List<RegInfo> getRegInfo(int type);
+	public List<RegInfo> getPublicRegInfo(int type);
 
 	/**
 	 * 获取指定地点的所有区域快
