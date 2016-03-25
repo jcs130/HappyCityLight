@@ -16,6 +16,7 @@ import java.util.List;
 import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.collector.OfflineTask;
 import com.citydigitalpulse.webservice.model.collector.RegInfo;
+import com.citydigitalpulse.webservice.model.user.UserReg;
 
 /**
  * 用于控制数据获取程序的数据库
@@ -31,7 +32,7 @@ public interface CollectorControllerDAO {
 	 * 
 	 * @return
 	 */
-	public ArrayList<String> getListenPlaces();
+	public ArrayList<UserReg> getListenPlaces();
 
 	/**
 	 * 从数据库中获取监听区域的信息

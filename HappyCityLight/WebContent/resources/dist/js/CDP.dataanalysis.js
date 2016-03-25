@@ -33,23 +33,6 @@ function drawRegionBoundary(areas) {
 }
 
 
-function getFormattedDate(date) {
-    var year = date.getFullYear();
-    var month = (1 + date.getMonth()).toString();
-    month = month.length > 1 ? month : '0' + month;
-    var day = date.getDate().toString();
-    day = day.length > 1 ? day : '0' + day;
-    return year + '-' + month + '-' + day;
-}
-
-function getDisplayFormattedDate(date) {
-    var year = date.getFullYear();
-    var month = date.getMonth();
-    var date = date.getDate();
-    //    var day = date.getDay();
-    return monthArray[month] + ' ' + date + ', ' + year;
-}
-
 function IsValidImageUrl(url) {
     $("<img>", {
         src: url,
@@ -748,9 +731,9 @@ function getCityRanking(date) {
                     $.each(cityRankingData, function () {
 
                         if ((this.pulse.sum_num - this.pulse.unknown_num) >= 500) {
-                            tableHTMLArrray[Math.floor((this.rank - 1) / numPerTable)] += "<tr placeID='" + this.regID + "' recordID='" + this.record_id + "'><td><input type='checkbox' class='minimal'></td><td>" + this.rank + "</td><td><a class='cityName'>" + this.regName.toUpperCase() + "</a></td><td><span class='label label-warning'>" + this.pulse.sum_num.toFixed(0) + "</span></td><td><span class='label label-success'>" + this.pulse.pulse_value.toFixed(4) + "</span></td></tr>";
+                            tableHTMLArrray[Math.floor((this.rank - 1) / numPerTable)] += "<tr placeID='" + this.regID + "' recordID='" + this.record_id + "'><td><input type='checkbox' class='minimal'></td><td>" + this.rank + "</td><td><a class='cityName'>" + this.regName.toUpperCase() + "</a></td><td><span class='label label-warning'>" + this.pulse.sum_num + "</span></td><td><span class='label label-success'>" + this.pulse.pulse_value.toFixed(4) + "</span></td></tr>";
                         } else {
-                            tableHTMLArrray[Math.floor((this.rank - 1) / numPerTable)] += "<tr placeID='" + this.regID + "' recordID='" + this.record_id + "'><td><input type='checkbox' class='minimal multiplecity'></td><td>" + this.rank + "</td><td><a class='cityName'>" + this.regName.toUpperCase() + "</a></td><td><span class='label label-warning'>" + this.pulse.sum_num.toFixed(0) + "</span></td><td>undefined</td></tr>";
+                            tableHTMLArrray[Math.floor((this.rank - 1) / numPerTable)] += "<tr placeID='" + this.regID + "' recordID='" + this.record_id + "'><td><input type='checkbox' class='minimal multiplecity'></td><td>" + this.rank + "</td><td><a class='cityName'>" + this.regName.toUpperCase() + "</a></td><td><span class='label label-warning'>" + this.pulse.sum_num + "</span></td><td>undefined</td></tr>";
                         }
                     });
 
@@ -963,8 +946,8 @@ $(function () {
     //-------------
     var today = new Date();
     cityRankDate = new Date("March 13, 2016 00:00:00");
-    getCityRanking(cityRankDate);
-    //    getCityRanking(today.addDays(-1));
+    //    getCityRanking(cityRankDate);
+    getCityRanking(today.addDays(-1));
 
 
     //-------------

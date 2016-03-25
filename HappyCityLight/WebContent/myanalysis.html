@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>City Digital Pulse</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="resources/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- AdminLTE Template Style -->
+    <link rel="stylesheet" href="resources/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="resources/dist/css/skins/skin-blue.min.css">
+    <!-- CDP All Page Style Style -->
+    <link rel="stylesheet" href="resources/dist/css/CDP.all.css">
+    <!--------------------------------------------------------------------------------------------------------->
+    <!-- iCheck -->
+    <link rel="stylesheet" href="resources/plugins/iCheck/all.css">
+    <!-- toastr -->
+    <link rel="stylesheet" href="resources/plugins/toastr/toastr.min.css">
+    <!--  Owl  -->
+    <link rel="stylesheet" href="resources/plugins/owl-carousel/owl-carousel2/owl.carousel.css">
+    <link rel="stylesheet" href="resources/plugins/owl-carousel/owl-carousel2/owl.theme.css">
+    <!--  dataTables  -->
+    <link rel="stylesheet" href="resources/plugins/datatables/dataTables.bootstrap.css">
+    <!--  nailthumb  -->
+    <link rel="stylesheet" href="resources/plugins/nailthumb/jquery.nailthumb.1.1.css">
+    <!--  yoxview  -->
+    <link rel="stylesheet" href="resources/plugins/yoxview/yoxview.css">
+    <!--  amcharts-export  -->
+    <link rel="stylesheet" href="resources/plugins/amcharts/plugins/export/export.css">
+    <!-- bootstrap-datepicker -->
+    <link rel="stylesheet" href="resources/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
+
+    <!-- Style for This Page -->
+    <link rel="stylesheet" href="resources/dist/css/CDP.myanalysis.css">
+
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
+    <div class="wrapper">
+
+        <!-- Main Header -->
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="dashboard.html" class="logo inside-link" id="header-logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>CDP</b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>CityDigitalPulse</b></span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span>
+                </a>
+                <a id="titleForPhone">
+                    <span><b>CDP</b></span>
+                </a>
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Messages: style can be found in dropdown.less-->
+
+                        <!-- User Account Menu -->
+                        <li class="dropdown user user-menu">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <!-- The user image in the navbar-->
+                                <img src="resources/img/user.ico" class="user-image user_picture" alt="User Image">
+                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                <span class="hidden-xs"><b class="userfirstname">FirstName</b> <b class="userlastname">LastName</b></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- The user image in the menu -->
+                                <li class="user-header"><img src="resources/img/user.ico" class="img-circle user_picture" alt="User Image">
+                                    <p>
+                                        <span class="userfirstname">FirstName</span>
+                                        <span class="userlastname">LastName</span>
+                                        <small><span class="useremail">email@email.com</span></small>
+                                        <!-- <small>Member since <span id=membersince>time</span></small> -->
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <!--
+                                    <div class="pull-left">
+    <a href="#" class="btn btn-default btn-flat">Profile</a>
+</div>
+-->
+                                    <div class="pull-right">
+                                        <a class="btn btn-default btn-flat" id="btn-signout">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="resources/img/user.ico" class="img-circle user_picture" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p>
+                            <span class="userfirstname">FirstName</span> <span class="userlastname">LastName</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <ul class="sidebar-menu">
+                    <li><a class="inside-link" href="dashboard.html"><i class="fa fa-th-large"></i>
+							<span>Dashboard</span></a></li>
+                    <li class="header">SYSTEM</li>
+                    <li><a class="inside-link" href="msgonmap.html"><i class="fa fa-map-marker"></i>
+							<span>Message on Map</span></a></li>
+                    <li><a class="inside-link" href="dataanalysis.html"><i class="fa fa-bar-chart"></i>
+							<span>Data Analysis</span></a></li>
+                    <li><a class="inside-link" href="annotation.html"><i class="fa fa-book"></i>
+							<span>Corpus Annotation</span></a></li>
+                    <li class="header">USER</li>
+                    <li><a class="inside-link" href="myregions.html"><i class="fa  fa-map-pin"></i>
+							<span>My Region</span></a></li>
+                    <li class="active"><a class="inside-link" href="myanalysis.html"><i class="fa fa-line-chart"></i>
+							<span>My Analysis</span></a></li>
+                    <li><a class="inside-link" href="myannotation.html"><i class="fa fa-files-o"></i>
+							<span>My Annotation</span></a></li>
+                </ul>
+                <!-- /.sidebar-menu -->
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="box box-solid bg-light-blue-gradient" id="CityRanking-box">
+                            <div class="box-header">
+                                <!-- tools box -->
+                                <div class="pull-right box-tools">
+                                    <!--
+                                    <button type="button" class="btn btn-primary btn-sm" style="margin-right:5px;" id="cityRankInfo">
+                                        <i class="fa fa-info-circle"></i></button>
+-->
+                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle  pull-right" data-toggle="dropdown">
+                                        <i class="fa fa-calendar" style="margin-right:5px;"></i><span id="cityRankDateSpan" style="font-size:14px;"></span></button>
+                                    <ul class="dropdown-menu pull-right" role="menu" id="cityRankDateMenu">
+                                        <li>
+                                            <div id="cityRankDate"></div>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a class="btn" id="getCityRank" href="#" style="color:#fff;font-weight: bold;">Browse City Rank</a></li>
+                                    </ul>
+                                </div>
+                                <!-- /. tools -->
+
+                                <i class="fa fa-dashboard"></i>
+                                <h3 class="box-title"> My Region Ranking</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12" id="CityRanking-col">
+                                        <div id="owl-demo" class="owl-carousel owl-theme"></div>
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        * Regions are ranked by the sentiment value on a selected date. You can select another date and browse the rank.
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+
+                            </div>
+                            <!-- /.box-body-->
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                    <!-- /.col -->
+
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-solid">
+                                    <div class="box-header">
+                                        <!--
+                                <div class="pull-right box-tools">
+    <button type="button" class="btn btn-default btn-sm" style="margin-right:5px;" id="cityCompareInfo">
+        <i class="fa fa-info-circle"></i></button>
+</div>
+-->
+                                        <!-- /. tools -->
+                                        <i class="fa fa-bar-chart"></i>
+                                        <h3 class="box-title">Multiple City Comparison (max 6 cities)</h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12" id="selectedCity" style='margin-bottom:10px;'>
+                                            </div>
+                                            <!-- /.col -->
+                                            <div class="col-md-12">
+                                                <button class="btn btn-flat btn-default btn-sm" id="mutipleAnalysis">
+                                                    <b>See Multiple Comparison Result</b>
+                                                </button>
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
+                                        <!-- /.row -->
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-md-12">
+                                <div class="box box-solid hover-grey hover-gradient hover-pointer" onclick="window.location.href = 'myregions.html';">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="icon-transit icon-center"><i class="fa fa-edit"></i></div>
+                                                <h4 style="text-align:center;">EDIT MY REGIONS</h4>
+                                            </div>
+                                        </div>
+                                        <!-- /.row -->
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+
+
+                            </div>
+                            <!-- /.col -->
+
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+            </section>
+        </div>
+        <!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> Beta 1.1.0
+            </div>
+            <strong>Copyright (C) 2016 City Digital Pulse - <a href="http://www.mcrlab.net/">MCRLab</a> - All Rights Reserved
+			</strong>
+        </footer>
+
+
+        <div class="modal fade" id="cityInfoModal" hide>
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <div class="dropdown pull-right">
+                            <button class="btn" id="currentDateRange" data-toggle="dropdown" class="dropdown-toggle"></button>
+                            <div class='row dropdown-menu' id="selectDateRange" hidden>
+                                <div class='col-md-12' id="cityInfoDateRange">
+                                    <div class="input-daterange input-group">
+                                        <input type="text" class="input-sm form-control" name="start" id="startDate" />
+                                        <span class="input-group-addon">to</span>
+                                        <input type="text" class="input-sm form-control" name="end" id="endDate" />
+                                    </div>
+                                </div>
+                                <div class='col-md-12'>
+                                    <button class="btn" id="getCityInfo-btn"><i class='fa fa-heartbeat'></i><b>Check City Pulse for These Days</b></button>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="modal-title" id="cityInfoModalTitle"></h4>
+                    </div>
+                    <div class="modal-body" id="cityInfoModalBody">
+                        <div class='row'>
+                            <div class='col-md-6'>
+                                <div id='cityBoundary'>
+                                    <div id="map"></div>
+                                    <div style="background-color:#f4f4f4">
+                                        <div id="map-legend">
+                                            <p class="negative" style="color:black;">Negative</p>
+                                            <p class="legend"></p>
+                                            <p class="positive" style="color:black;">Positive</p>
+                                        </div>
+                                        <div id="map-legend-info" style="color:#898989;">* Digital pulse with respect to the change of sentiment during the selected date.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-md-6'>
+                                <div class="card" id="cityHotHashtagsCard">
+                                    <div id='cityHotHashtags' class="front">
+                                        <div class='row'>
+                                            <h4 class='col-md-12' style="text-align:center;margin-top:5px;color:#4D5139" id="hothashtag-title"></h4>
+                                            <!--
+                                            <ul class="col-md-12 nav nav-pills nav-stacked">
+</ul>
+-->
+                                            <table class="table table-hover" id="hasgtaglist">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Rank</th>
+                                                        <th>Hashtag</th>
+                                                        <th>Message</th>
+                                                        <th>Score</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="back">
+                                        <div class='row'>
+                                            <div class="col-md-12" id="HashtagInfo"></div>
+                                            <div class="col-md-12 yoxview" id="HashtagImg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-12 col-sm-12 col-xs-12'>
+                                <p style="text-align: center;margin-bottom:0;color:#4D5139"><b id="emotionchange-title"></b></p>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-12'>
+                                <div id='CityInfoChart'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+    <div class="modal fade" id="cityCompareModal" hide>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <div class="dropdown pull-right">
+                        <button class="btn" id="currentCompareDateRange" data-toggle="dropdown" class="dropdown-toggle"></button>
+                        <div class='row dropdown-menu' id="selectCompareDateRange" hidden>
+                            <div class='col-md-12' id="cityCompareDateRange">
+                                <div class="input-daterange input-group">
+                                    <input type="text" class="input-sm form-control" name="start" id="startDate2" />
+                                    <span class="input-group-addon">to</span>
+                                    <input type="text" class="input-sm form-control" name="end" id="endDate2" />
+                                </div>
+                            </div>
+                            <div class='col-md-12'>
+                                <button class="btn" id="getCityCompare-btn"><i class='fa fa-heartbeat'></i><b>Check City Pulse for These Days</b></button>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="modal-title" id="cityCompareModalTitle">City Comparison Analysis</h4>
+                </div>
+                <div class="modal-body" id="cityCompareModalBody">
+                    <div class='row'>
+                        <div class='col-md-12'>
+                            <div id='CityCompareChart'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+
+    </div>
+    <!-- ./wrapper -->
+
+
+
+    <!----------------- REQUIRED JS SCRIPTS --------------------->
+    <!-- jQuery 2.1.4 -->
+    <script src="resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="resources/plugins/jQuery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="resources/plugins/jQueryUI/jquery-ui.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="resources/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="resources/plugins/bootstrap/js/less-1.7.0.min.js"></script>
+    <!-- FastClick & Slimscroll -->
+    <script src="resources/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <script src="resources/plugins/fastclick/fastclick.min.js"></script>
+    <!-- AdminLTE Template Script -->
+    <script src="resources/dist/js/app.min.js"></script>
+    <script src="resources/dist/js/demo.js"></script>
+    <!-- CDP All Page Script -->
+    <script src="resources/dist/js/CDP.serverConfig.js"></script>
+    <script src="resources/dist/js/CDP.checkin.js"></script>
+    <script src="resources/dist/js/CDP.examplepage.js"></script>
+    <script src="resources/dist/js/CDP.all.js"></script>
+    <!--------------------------------------------------------------------------------------------------------->
+    <!-- iCheck -->
+    <script src="resources/plugins/iCheck/icheck.min.js"></script>
+    <!-- toastr -->
+    <script src="resources/plugins/toastr/toastr.min.js"></script>
+    <!--  Owl  -->
+    <script src="resources/plugins/owl-carousel/owl-carousel2/owl.carousel.min.js"></script>
+    <!--  dataTables  -->
+    <script src="resources/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="resources/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <!--  nailthumb  -->
+    <script type="text/javascript" src="resources/plugins/nailthumb/jquery.nailthumb.1.1.min.js"></script>
+    <!--  yoxview  -->
+    <script type="text/javascript" src="resources/plugins/yoxview/yoxview-init.js"></script>
+    <!-- amChart -->
+    <script src="resources/plugins/amcharts/amcharts.js"></script>
+    <script src="resources/plugins/amcharts/serial.js"></script>
+    <script src="resources/plugins/amcharts/pie.js"></script>
+    <script src="resources/plugins/amcharts/themes/light.js"></script>
+    <script src="resources/plugins/amcharts/plugins/export/export.js"></script>
+    <!-- flip -->
+    <script src="resources/plugins/flip/jquery.flip.js"></script>
+    <!-- sparkline -->
+    <script src="resources/plugins/jquery.sparkline.min.js"></script>
+    <!-- bootstrap-datepicker -->
+    <script src="resources/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="resources/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-GB.min.js"></script>
+    <!-- d3 -->
+    <script src="resources/plugins/d3.js"></script>
+    <!-- clipper -->
+    <script src="resources/plugins/clipper.js"></script>
+
+    <!--Script for This Page-->
+    <script src="resources/dist/js/CDP.mergePolygon.js"></script>
+    <script src="resources/dist/js/CDP.hex.general.js"></script>
+    <script src="resources/dist/js/CDP.myanalysis.js"></script>
+
+
+</body>
+
+</html>

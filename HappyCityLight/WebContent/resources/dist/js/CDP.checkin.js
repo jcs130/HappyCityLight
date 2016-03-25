@@ -20,6 +20,23 @@ function checkLogin() {
     user_firstname = localStorage.getItem("firstname");
     user_lastname = localStorage.getItem("lastname");
     user_picture = localStorage.getItem("user_picture");
+    //    alert(user_picture);
+    //更改页面上显示文字
+    if (user_firstname != "null") {
+        $(".userfirstname").html(user_firstname);
+    } else {
+        $(".userfirstname").html("");
+    }
+    if (user_lastname != "null") {
+        $(".userlastname").html(user_lastname);
+    } else {
+        $(".userlastname").html("");
+    }
+    if ((user_picture != null) && (user_picture != "null") && (user_picture != undefined)) {
+        alert(user_picture);
+        $(".user_picture").attr("src", user_picture);
+    }
+    $(".useremail").html(user_email);
     if (logintoken == null || user_id == null) {
         //通过localStorage获取登录信息
         logintoken = localStorage.getItem("token");
@@ -86,6 +103,10 @@ function checkLogin() {
                             $(".userlastname").html(user_lastname);
                         } else {
                             $(".userlastname").html("");
+                        }
+                        if ((user_picture != null) && (user_picture != "null") && (user_picture != undefined)) {
+                            alert(user_picture);
+                            $(".user_picture").attr("src", user_picture);
                         }
                         $(".useremail").html(user_email);
                         checkin_afterChencin();

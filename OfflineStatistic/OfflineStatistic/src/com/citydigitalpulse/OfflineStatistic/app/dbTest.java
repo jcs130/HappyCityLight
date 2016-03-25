@@ -11,6 +11,7 @@
 package com.citydigitalpulse.OfflineStatistic.app;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import com.citydigitalpulse.OfflineStatistic.model.HotTopic;
 import com.citydigitalpulse.OfflineStatistic.model.PulseValue;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
 import com.citydigitalpulse.OfflineStatistic.model.StatiisticsRecord;
+import com.citydigitalpulse.OfflineStatistic.tool.Tools;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,13 +31,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class dbTest {
+	private static String[] languages;
 	private MySQLHelper_Save saveDB;
 	private ObjectMapper mapper;
 
 	public static void main(String[] args) {
 		dbTest dt = new dbTest();
-		dt.init();
-		System.out.println(dt.getStatisticRecordByID(1172));
+		// dt.init();
+		// System.out.println(dt.getStatisticRecordByID(1172));
+		try {
+//			languages = new String[] { "en", "ar", "eu", "bn", "ca", "zh-cn",
+//					"zh-tw", "da", "nl", "eo", "fi", "fr", "de", "el", "gu",
+//					"he", "hi", "ga", "it", "ja", "la", "mr", "fa", "pt", "ro",
+//					"ru", "so", "es", "su", "sw", "sv", "ta", "te", "th", "tr",
+//					"uk", "ur", "vi", "cy", "yi", "zu" };
+//			for (int i = 0; i < languages.length; i++) {
+//				System.out.print(Tools.googleTranslate("en", languages[i],
+//						"not"));
+//				System.out.print("\t");
+//			}
+			 System.out.println(Tools.getEnglish("ar", "@wr_m5 انزين تراه الا بيسك ، بيور ماث عادي نستخدم"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void init() {

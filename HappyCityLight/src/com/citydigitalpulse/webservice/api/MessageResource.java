@@ -73,7 +73,8 @@ public class MessageResource {
 
 	static ObjectMapper mapper = new ObjectMapper();
 	// 监听城市列表
-	private static ArrayList<String> streamPlaceNames = new ArrayList<String>();
+	// private static ArrayList<String> streamPlaceNames = new
+	// ArrayList<String>();
 	// 保存统计查询的历史数据，以后可以存到数据库中永久保存
 	private static HashMap<QueryOption, Object> auery_history = new HashMap<QueryOption, Object>();
 	private static HashMap<String, RegStatisticInfo[]> rank_history = new HashMap<String, RegStatisticInfo[]>();
@@ -681,43 +682,45 @@ public class MessageResource {
 			res.setMessage("Date Format Error. format: yyyy-MM-dd");
 			return res;
 		}
-		if (rank_history.containsKey(userID + date_str)) {
+		// if (rank_history.containsKey(userID + date_str)) {
+		// // 返回数据
+		// res.setCode(Response.Status.OK.getStatusCode());
+		// res.setType(Response.Status.OK.name());
+		// res.setMessage("Get Record Success.");
+		// res.setObj(rank_history.get(userID + date_str));
+		// return res;
+		// } else {
+		String[] dates = date_str.split("-");
+		List<RegStatisticInfo> records = new ArrayList<RegStatisticInfo>();
+		// 获取用户收藏的城市列表
+		List<UserReg> user_reg = userAccountDAO.getUserRegInfo(userID);
+		for (int i = 0; i < user_reg.size(); i++) {
+			String record_key = "reg_" + user_reg.get(i).getReg_id() + ","
+					+ dates[0] + "_" + dates[1] + "_" + dates[2] + ",all,all";
+			StatiisticsRecord temp = msgSav.getStatisticRecordByKey(record_key);
+			if (temp != null) {
+				records.add(new RegStatisticInfo(temp));
+			}
+		}
+		if (records.size() == 0) {
+			res.setCode(Response.Status.NOT_FOUND.getStatusCode());
+			res.setType(Response.Status.NOT_FOUND.name());
+			res.setMessage("Record not found");
+			return res;
+		} else {
+			RegStatisticInfo[] infoArray = records
+					.toArray(new RegStatisticInfo[0]);
+			// 对数组进行排序
+			Arrays.sort(infoArray);
+			rank_history.put(userID + date_str, infoArray);
 			// 返回数据
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());
 			res.setMessage("Get Record Success.");
-			res.setObj(rank_history.get(date_str));
+			res.setObj(infoArray);
 			return res;
-		} else {
-			List<RegStatisticInfo> records = new ArrayList<RegStatisticInfo>();
-			// 获取用户收藏的城市列表
-			List<UserReg> user_reg = userAccountDAO.getUserRegInfo(userID);
-			for (int i = 0; i < user_reg.size(); i++) {
-				String record_key = "reg_" + user_reg.get(i).getReg_id() + ","
-						+ date_str.split("-")[0] + "_" + date_str.split("-")[1]
-						+ ",all,all";
-				records.add(new RegStatisticInfo(msgSav
-						.getStatisticRecordByKey(record_key)));
-			}
-			if (records.size() == 0) {
-				res.setCode(Response.Status.NOT_FOUND.getStatusCode());
-				res.setType(Response.Status.NOT_FOUND.name());
-				res.setMessage("Record not found");
-				return res;
-			} else {
-				RegStatisticInfo[] infoArray = records
-						.toArray(new RegStatisticInfo[0]);
-				// 对数组进行排序
-				Arrays.sort(infoArray);
-				rank_history.put(userID + date_str, infoArray);
-				// 返回数据
-				res.setCode(Response.Status.OK.getStatusCode());
-				res.setType(Response.Status.OK.name());
-				res.setMessage("Get Record Success.");
-				res.setObj(infoArray);
-				return res;
-			}
 		}
+		// }
 
 	}
 
@@ -1107,14 +1110,6 @@ public class MessageResource {
 			res.setMessage(e.getLocalizedMessage());
 			return res;
 		}
-	}
-
-	public static ArrayList<String> getStreamPlaceNames() {
-		return streamPlaceNames;
-	}
-
-	public static void setStreamPlaceNames(ArrayList<String> streamPlaceNames) {
-		MessageResource.streamPlaceNames = streamPlaceNames;
 	}
 
 }

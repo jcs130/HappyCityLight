@@ -11,7 +11,6 @@
 package com.citydigitalpulse.collector.TwitterGetter.tool;
 
 import java.io.*;
-import java.net.*;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;

@@ -1,0 +1,274 @@
+.test-border {
+    border: .5px dashed red;
+}
+
+.content {
+    padding: 0;
+}
+
+.content > .fullheight {
+    height: 100%;
+    /* Fallback for browsers that don't support the calc() function */
+    height: -moz-calc(100%);
+    height: -webkit-calc(100%);
+    height: calc(100%);
+    margin: 0;
+}
+
+@media only screen and (min-width: 990px) {
+    /* For desktop: */
+    .map-div,
+    .userreg {
+        height: 100%;
+        /* Fallback for browsers that don't support the calc() function */
+        height: -moz-calc(100%);
+        height: -webkit-calc(100%);
+        height: calc(100%);
+        padding: 0;
+    }
+    .map-div > #map {
+        height: 100%;
+        /* Fallback for browsers that don't support the calc() function */
+        height: -moz-calc(100%);
+        height: -webkit-calc(100%);
+        height: calc(100%);
+    }
+    .controlpanel {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: auto;
+        width: 100%;
+        z-index: 5;
+        border: none;
+        margin: 0;
+    }
+    .controlpanel>.list-unstyled .list-group-item {
+        padding: 1% 1%;
+        background: rgba(122, 130, 136, 0.3)!important;
+    }
+    .map-div > .reginput {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 250px;
+        position: absolute;
+        top: 2%;
+        left: 2%;
+    }
+    .map-div > #btn-adduerreg {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 2%;
+        left: 30%;
+    }
+    .map-div > #add-new-reg-button {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 2%;
+        left: 65%;
+    }
+    .map-div > #delete-button {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 2%;
+        left: 75%;
+    }
+    .map-div > #delete-all-button {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 2%;
+        left: 85%;
+    }
+    .map-div > #addregname {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 8%;
+        left: 82%;
+    }
+    .map-div > .overlay,
+    .userreg > .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 50;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 3px;
+    }
+    .map-div > .overlay > .fa-spin,
+    .userreg > .overlay> .fa-spin {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -15px;
+        margin-top: -15px;
+        color: #000;
+        font-size: 30px;
+    }
+    .map-div > .overlay >.error-content,
+    .userreg > .overlay>.error-content {
+        text-align: center;
+        position: relative;
+        top: 45%;
+        transform: translateY(-45%);
+    }
+    .userreg > .box {
+        height: 100%;
+        /* Fallback for browsers that don't support the calc() function */
+        height: -moz-calc(100%);
+        height: -webkit-calc(100%);
+        height: calc(100%);
+        padding: 0;
+        margin: 0;
+    }
+    .userreg > .box > .box-body {
+        max-height: 95%;
+        /* Fallback for browsers that don't support the calc() function */
+        max-height: -moz-calc(100% - 45px);
+        max-height: -webkit-calc(100% - 45px);
+        max-height: calc(100% - 45px);
+        overflow-y: scroll;
+    }
+}
+
+@media only screen and (max-width: 990px) {
+    /* For phones: */
+    .userreg {
+        padding: 0;
+    }
+    .userreg > .box {
+        margin: 0;
+    }
+    .controlpanel {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: auto;
+        width: 100%;
+        z-index: 5;
+        border: none;
+        margin: 0;
+    }
+    .controlpanel>.list-unstyled .list-group-item {
+        padding: 1% 1%;
+        background: rgba(122, 130, 136, 0.3)!important;
+    }
+    .map-div {
+        height: 100%;
+        /* Fallback for browsers that don't support the calc() function */
+        height: -moz-calc(90%);
+        height: -webkit-calc(90%);
+        height: calc(90%);
+        padding: 0;
+    }
+    .map-div > #map {
+        height: 100%;
+        /* Fallback for browsers that don't support the calc() function */
+        height: -moz-calc(100%);
+        height: -webkit-calc(100%);
+        height: calc(100%);
+    }
+    .map-div > .reginput {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 250px;
+        position: absolute;
+        top: 2%;
+        left: 2%;
+    }
+    .map-div > #btn-adduerreg {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 2%;
+        left: 30%;
+    }
+    .map-div > #add-new-reg-button {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 2%;
+        left: 65%;
+    }
+    .map-div > #delete-button {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 2%;
+        left: 75%;
+    }
+    .map-div > #delete-all-button {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 2%;
+        left: 85%;
+    }
+    .map-div > #addregname {
+        height: 32px;
+        margin-top: 10px;
+        position: absolute;
+        top: 8%;
+        left: 82%;
+    }
+    .map-div > .overlay,
+    {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 50;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 3px;
+    }
+    .map-div > .overlay > .fa-spin,
+    {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -15px;
+        margin-top: -15px;
+        color: #000;
+        font-size: 30px;
+    }
+    .map-div > .overlay >.error-content,
+    {
+        text-align: center;
+        position: relative;
+        top: 45%;
+        transform: translateY(-45%);
+    }
+}

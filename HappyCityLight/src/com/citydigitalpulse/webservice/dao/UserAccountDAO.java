@@ -177,10 +177,26 @@ public interface UserAccountDAO {
 	List<UserReg> getUserRegInfo(long user_id);
 
 	/**
-	 * @Author  Zhongli Li Email: lzl19920403@gmail.com
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
 	 * @param userID
 	 * @param reg_id
 	 * @param reg_name
 	 */
 	public void addUserRegion(long userID, int reg_id, String reg_name);
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param userID
+	 * @param reg_name
+	 * @return
+	 */
+	public int getUserRegRef(long userID, String reg_name);
+
+	/**
+	 * @Author  Zhongli Li Email: lzl19920403@gmail.com
+	 * @param userID
+	 * @param reg_id
+	 * @return
+	 */
+	int getUserRegionRel(long userID, int reg_id);
 }

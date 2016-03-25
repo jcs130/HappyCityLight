@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.text.ParseException;
@@ -37,7 +38,15 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+
 import com.citydigitalpulse.OfflineStatistic.app.AppConfig;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 工具类，包括加密解密以及邮件操作
@@ -47,6 +56,7 @@ import com.citydigitalpulse.OfflineStatistic.app.AppConfig;
  */
 public class Tools {
 	private static Set<String> banHashtags = null;
+	private static ObjectMapper mapper = new ObjectMapper();
 
 	public static ArrayList<String> buildListFromString(String listString) {
 		ArrayList<String> res = new ArrayList<String>();
@@ -220,4 +230,101 @@ public class Tools {
 		}
 	}
 
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param string
+	 * @param text
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String getEnglish(String source, String text)
+			throws UnsupportedEncodingException {
+		String api_url = "https://www.googleapis.com/language/translate/v2";
+		HttpClient httpClient = new HttpClient();
+		// System.out.println(URLEncoder.encode(api_url, "UTF-8"));
+		GetMethod getMethod = new GetMethod(api_url);
+		getMethod.getParams().setParameter(
+				HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
+		getMethod.setQueryString("q=" + URLEncoder.encode(text, "UTF-8")
+				+ "&source=" + URLEncoder.encode(source, "UTF-8")
+				+ "&target=en&key=AIzaSyB23J-EUTInuYwX5AYMcvfjWEX5g2KY69c");
+		try {
+			// System.out.println("URL:" + url);
+			httpClient.executeMethod(getMethod);
+		} catch (HttpException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
+			try {
+				String resp = getMethod.getResponseBodyAsString();
+				// System.out.println(resp);
+				JsonNode rootNode = mapper.readTree(resp);
+				JsonNode translateNode = rootNode.get("data").get(
+						"translations");
+				for (JsonNode node : translateNode) {
+					String restext = node.path("translatedText").asText();
+					return restext;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			return "<error>" + getMethod.getStatusCode();
+		}
+		return "<error>";
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param string
+	 * @param string2
+	 * @param string3
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String googleTranslate(String from, String to, String text)
+			throws UnsupportedEncodingException {
+		String api_url = "https://www.googleapis.com/language/translate/v2";
+		HttpClient httpClient = new HttpClient();
+		// System.out.println(URLEncoder.encode(api_url, "UTF-8"));
+		GetMethod getMethod = new GetMethod(api_url);
+		getMethod.getParams().setParameter(
+				HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
+		getMethod.setQueryString("q=" + URLEncoder.encode(text, "UTF-8")
+				+ "&source=" + URLEncoder.encode(from, "UTF-8") + "&target="
+				+ URLEncoder.encode(to, "UTF-8")
+				+ "&key=AIzaSyB23J-EUTInuYwX5AYMcvfjWEX5g2KY69c");
+		try {
+			// System.out.println("URL:" + url);
+			httpClient.executeMethod(getMethod);
+		} catch (HttpException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
+			try {
+				String resp = getMethod.getResponseBodyAsString();
+				// System.out.println(resp);
+				JsonNode rootNode = mapper.readTree(resp);
+				JsonNode translateNode = rootNode.get("data").get(
+						"translations");
+				for (JsonNode node : translateNode) {
+					String restext = node.path("translatedText").asText();
+					return restext;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			return "<error>" + getMethod.getStatusCode();
+		}
+		return "<error>";
+	}
 }

@@ -22,11 +22,11 @@ import javax.sql.DataSource;
 
 import org.glassfish.hk2.utilities.reflection.Logger;
 
-import com.citydigitalpulse.webservice.api.MessageResource;
 import com.citydigitalpulse.webservice.dao.CollectorControllerDAO;
 import com.citydigitalpulse.webservice.model.collector.LocArea;
 import com.citydigitalpulse.webservice.model.collector.OfflineTask;
 import com.citydigitalpulse.webservice.model.collector.RegInfo;
+import com.citydigitalpulse.webservice.model.user.UserReg;
 
 public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 
@@ -172,10 +172,10 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 	}
 
 	@Override
-	public ArrayList<String> getListenPlaces() {
+	public ArrayList<UserReg> getListenPlaces() {
 		// 根据type获取大区域的信息
-		String sqlString = "SELECT regname FROM regnames where streamstate =1 and private=0;";
-		ArrayList<String> result = new ArrayList<String>();
+		String sqlString = "SELECT regname,regid FROM regnames where streamstate =1 and private=0;";
+		ArrayList<UserReg> result = new ArrayList<UserReg>();
 		// 查询数据库，获取结果
 		Connection conn = null;
 		try {
@@ -183,7 +183,10 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 			PreparedStatement ps = conn.prepareStatement(sqlString);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				result.add(rs.getString("regname").toLowerCase());
+				UserReg ur = new UserReg();
+				ur.setReg_name(rs.getString("regname").toLowerCase());
+				ur.setReg_id(rs.getInt("regid"));
+				result.add(ur);
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -196,7 +199,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 				}
 			}
 		}
-		MessageResource.setStreamPlaceNames(result);
+		// MessageResource.setStreamPlaceNames(result);
 		// System.out.println(result.size());
 		return result;
 	}
@@ -285,7 +288,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public RegInfo getRegInfoByID(long regID) {
 		// 根据type获取大区域的信息
@@ -350,17 +353,18 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 		// 建立联系并且初始化状态
 		addRel(reg_id, area_ids);
 		// 更改区域状态
-		changeRegStates(reg_id,0);
+		changeRegStates(reg_id, 0);
 		return reg_id;
 	}
 
 	/**
-	 * @Author  Zhongli Li Email: lzl19920403@gmail.com
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
 	 * @param reg_id
 	 */
-	private void changeRegStates(int reg_id,int status) {
+	private void changeRegStates(int reg_id, int status) {
 		PreparedStatement ps = null;
-		String sqlString = "UPDATE regnames SET streamstate="+status+" WHERE regid="+reg_id+";";
+		String sqlString = "UPDATE regnames SET streamstate=" + status
+				+ " WHERE regid=" + reg_id + ";";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
@@ -386,8 +390,7 @@ public class CollectorControllerDAOimpl implements CollectorControllerDAO {
 				}
 			}
 		}
-	
-		
+
 	}
 
 	private void addRel(int reg_id, ArrayList<Integer> area_ids) {

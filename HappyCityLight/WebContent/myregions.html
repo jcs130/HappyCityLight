@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>City Digital Pulse</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="resources/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- AdminLTE Template Style -->
+    <link rel="stylesheet" href="resources/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="resources/dist/css/skins/skin-blue.min.css">
+    <!-- CDP All Page Style Style -->
+    <link rel="stylesheet" href="resources/dist/css/CDP.all.css">
+    <!--------------------------------------------------------------------------------------------------------->
+    <!-- toastr -->
+    <link rel="stylesheet" href="resources/plugins/toastr/toastr.min.css">
+
+    <!-- Style for This Page -->
+    <link rel="stylesheet" href="resources/dist/css/CDP.myregions.css">
+
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
+    <div class="wrapper">
+
+        <!-- Main Header -->
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="dashboard.html" class="logo inside-link" id="header-logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>CDP</b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>CityDigitalPulse</b></span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span>
+                </a>
+                <a id="titleForPhone">
+                    <span><b>CDP</b></span>
+                </a>
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Messages: style can be found in dropdown.less-->
+
+                        <!-- User Account Menu -->
+                        <li class="dropdown user user-menu">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <!-- The user image in the navbar-->
+                                <img src="resources/img/user.ico" class="user-image user_picture" alt="User Image">
+                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                <span class="hidden-xs"><b class="userfirstname">FirstName</b> <b class="userlastname">LastName</b></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- The user image in the menu -->
+                                <li class="user-header"><img src="resources/img/user.ico" class="img-circle user_picture" alt="User Image">
+                                    <p>
+                                        <span class="userfirstname">FirstName</span>
+                                        <span class="userlastname">LastName</span>
+                                        <small><span class="useremail">email@email.com</span></small>
+                                        <!-- <small>Member since <span id=membersince>time</span></small> -->
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <!--
+                                    <div class="pull-left">
+    <a href="#" class="btn btn-default btn-flat">Profile</a>
+</div>
+-->
+                                    <div class="pull-right">
+                                        <a class="btn btn-default btn-flat" id="btn-signout">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="resources/img/user.ico" class="img-circle user_picture" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p>
+                            <span class="userfirstname">FirstName</span> <span class="userlastname">LastName</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <ul class="sidebar-menu">
+                    <li><a class="inside-link" href="dashboard.html"><i class="fa fa-th-large"></i>
+							<span>Dashboard</span></a></li>
+                    <li class="header">SYSTEM</li>
+                    <li><a class="inside-link" href="msgonmap.html"><i class="fa fa-map-marker"></i>
+							<span>Message on Map</span></a></li>
+                    <li><a class="inside-link" href="dataanalysis.html"><i class="fa fa-bar-chart"></i>
+							<span>Data Analysis</span></a></li>
+                    <li><a class="inside-link" href="annotation.html"><i class="fa fa-book"></i>
+							<span>Corpus Annotation</span></a></li>
+                    <li class="header">USER</li>
+                    <li class="active"><a class="inside-link" href="myregions.html"><i class="fa fa-map-pin"></i>
+							<span>My Region</span></a></li>
+                    <li><a class="inside-link" href="myanalysis.html"><i class="fa fa-line-chart"></i>
+							<span>My Analysis</span></a></li>
+                    <li><a class="inside-link" href="myannotation.html"><i class="fa fa-files-o"></i>
+							<span>My Annotation</span></a></li>
+                </ul>
+                <!-- /.sidebar-menu -->
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="row fullheight">
+                    <div class="col-md-3 userreg">
+                        <div class="box box-solid bg-light-blue-gradient">
+                            <div class="box-header ui-sortable-handle">
+                                <!-- tools box -->
+                                <div class="pull-right box-tools">
+                                    <button type="button" id="btn-collapse" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
+                                        <i class="fa fa-minus"></i></button>
+                                </div>
+                                <!-- /. tools -->
+                                <i class="fa fa-map-pin"></i>
+                                <h3 class="box-title">My Region List</h3>
+                            </div>
+                            <div class="box-body">
+                                <table class="table table-bordered">
+                                    <tbody id="userregtbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.box-body-->
+                        </div>
+                        <div class="overlay userregerror">
+                            <div class="error-content">
+                                <h3><i class="fa fa-warning text-yellow"></i> Oops! Your region list is not loaded successfully.</h3>
+                                <i class="fa fa-refresh"></i><a class="hover-cursor refreshreg">Refresh</a>
+                            </div>
+                        </div>
+                        <div class="overlay userregloading">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-md-9 map-div">
+                        <div class="map" id="map" hidden></div>
+                        <div class="row controlpanel">
+                            <ul class="list-unstyled list-group-unbordered" id="control-panel">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-7 col-sm-7 col-xs-8">
+                                            <input class="form-control reginput" id="reginput" type="text" placeholder="Search a region......">
+                                        </div>
+                                        <div class="col-md-5 col-sm-5 col-xs-4">
+                                            <button class="btn btn-primary btn-flat btn-sm" id="btn-adduerreg" disabled><b>Add into my regions</b></button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-5 col-sm-12 col-xs-6">
+                                            <input class="form-control" id="addregname" type="text" placeholder="Add a region name..." value="">
+                                        </div>
+                                        <div class="col-md-3 col-sm-4 col-xs-6">
+                                            <button class="btn btn-primary btn-flat btn-sm" id="add-new-reg-button"><b>Add new region into my regions</b></button>
+                                        </div>
+                                        <div class="col-md-2 col-sm-4 col-xs-6">
+                                            <button class="btn btn-info btn-flat btn-sm" id="delete-button"><b>Delete selected shapes</b></button>
+                                        </div>
+                                        <div class="col-md-2 col-sm-4 col-xs-6">
+                                            <button class="btn btn-info btn-flat btn-sm" id="delete-all-button"><b>Delete all shapes</b></button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="overlay maperror" hidden>
+                            <div class="error-content">
+                                <h3><i class="fa fa-warning text-yellow"></i> Oops! GoogleMap is not loaded successfully.</h3>
+                                <i class="fa fa-refresh"></i><a class="hover-cursor refreshmap">Refresh</a>
+                            </div>
+                        </div>
+                        <div class="overlay maploading">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+        <!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> Beta 1.1.0
+            </div>
+            <strong>Copyright (C) 2016 City Digital Pulse - <a href="http://www.mcrlab.net/">MCRLab</a> - All Rights Reserved
+			</strong>
+        </footer>
+
+    </div>
+    <!-- ./wrapper -->
+
+
+
+    <!----------------- REQUIRED JS SCRIPTS --------------------->
+    <!-- jQuery 2.1.4 -->
+    <script src="resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="resources/plugins/jQuery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="resources/plugins/jQueryUI/jquery-ui.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="resources/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="resources/plugins/bootstrap/js/less-1.7.0.min.js"></script>
+    <!-- FastClick & Slimscroll -->
+    <script src="resources/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <script src="resources/plugins/fastclick/fastclick.min.js"></script>
+    <!-- AdminLTE Template Script -->
+    <script src="resources/dist/js/app.min.js"></script>
+    <script src="resources/dist/js/demo.js"></script>
+    <!-- CDP All Page Script -->
+    <script src="resources/dist/js/CDP.serverConfig.js"></script>
+    <script src="resources/dist/js/CDP.checkin.js"></script>
+    <script src="resources/dist/js/CDP.examplepage.js"></script>
+    <script src="resources/dist/js/CDP.all.js"></script>
+    <!--------------------------------------------------------------------------------------------------------->
+    <!-- toastr -->
+    <script src="resources/plugins/toastr/toastr.min.js"></script>
+    <!-- d3 -->
+    <script src="resources/plugins/d3.js"></script>
+    <!-- clipper -->
+    <script src="resources/plugins/clipper.js"></script>
+
+    <!--Script for This Page-->
+    <script src="resources/dist/js/CDP.mergePolygon.js"></script>
+    <script src="resources/dist/js/CDP.hex.general.js"></script>
+    <script src="resources/dist/js/CDP.myregions.js"></script>
+
+
+</body>
+
+</html>

@@ -170,7 +170,7 @@ public class InfoGetterDAO_MySQL implements InfoGetterDAO {
 		if (!haveSqure(row, col)) {
 
 			Connection conn = null;
-			String sqlString = "INSERT INTO earthsqure (south, north, west, east, row, col,degreepersqure) VALUES ("
+			String sqlString = "INSERT INTO earthsqure (south, north, west, east, row, col,degreepersqure,streamstate,usetimes) VALUES ("
 					+ south
 					+ ", "
 					+ north
@@ -179,7 +179,7 @@ public class InfoGetterDAO_MySQL implements InfoGetterDAO {
 					+ ", "
 					+ east
 					+ ", "
-					+ row + ", " + col + ", " + degreepersqure + ");";
+					+ row + ", " + col + ", " + degreepersqure + ",0,0);";
 			try {
 				conn = dataSource.getConnection();
 				PreparedStatement ps = conn.prepareStatement(sqlString);

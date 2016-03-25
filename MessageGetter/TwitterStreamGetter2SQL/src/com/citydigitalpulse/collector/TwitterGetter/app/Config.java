@@ -38,18 +38,17 @@ public class Config {
 	// public static String MESSAGE_SAVING_DATABASE_USER_PASSWORD = "jcsss130";
 
 	// 用于控制爬虫程序的数据库
+	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_URL = "jdbc:mysql://137.122.93.153:3306/happycityproject?useSSL=false";
+	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_USER_NAME = "jcs130";
+	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_USER_PASSWORD = "jcsss130";
+
+	// // 用于控制爬虫程序的数据库
 	// public static String MESSAGE_GETTER_CONTROLLER_DATABASE_URL =
-	// "jdbc:mysql://citypulse2.site.uottawa.ca:3306/happycityproject?useSSL=false";
+	// "jdbc:mysql://aadnpbvnceozrn.cqkitdz1e3ma.us-west-2.rds.amazonaws.com:3306/happycityproject?useSSL=false";
 	// public static String MESSAGE_GETTER_CONTROLLER_DATABASE_USER_NAME =
 	// "jcs130";
 	// public static String MESSAGE_GETTER_CONTROLLER_DATABASE_USER_PASSWORD =
 	// "jcsss130";
-	//
-
-	// 用于控制爬虫程序的数据库
-	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_URL = "jdbc:mysql://aadnpbvnceozrn.cqkitdz1e3ma.us-west-2.rds.amazonaws.com:3306/happycityproject?useSSL=false";
-	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_USER_NAME = "jcs130";
-	public static String MESSAGE_GETTER_CONTROLLER_DATABASE_USER_PASSWORD = "jcsss130";
 
 	// 用于存储原始数据的数据库
 	public static String MESSAGE_RAW_DATABASE_URL = "jdbc:mysql://citypulse2.site.uottawa.ca:3306/MsgSaving?useSSL=false";

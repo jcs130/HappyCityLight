@@ -977,8 +977,7 @@ public class userAccountDAOimpl implements UserAccountDAO {
 	@Override
 	public List<UserReg> getUserRegInfo(long user_id) {
 		// 根据type获取大区域的信息
-		String sqlString = "SELECT * FROM user_reg where user_id =" + user_id
-				+ " and private=0;";
+		String sqlString = "SELECT * FROM user_reg where user_id =" + user_id;
 		ArrayList<UserReg> result = new ArrayList<UserReg>();
 		// 查询数据库，获取结果
 		Connection conn = null;
@@ -1010,18 +1009,20 @@ public class userAccountDAOimpl implements UserAccountDAO {
 	}
 
 	@Override
-	public void addUserRegion(long userID, int reg_id, String reg_name) {
+	public int getUserRegionRel(long userID, int reg_id) {
 		PreparedStatement ps = null;
 		Connection conn = null;
+		int res = -1;
 		try {
 			conn = userDB.getConnection();
-			String sqlString = "INSERT INTO user_reg (user_id, reg_id, add_date, reg_name) VALUES (?, ?, ?, ?);";
+			String sqlString = "SELECT rel_id FROM user_reg where user_id=? and reg_id=?;";
 			ps = conn.prepareStatement(sqlString);
 			ps.setLong(1, userID);
 			ps.setInt(2, reg_id);
-			ps.setLong(3, new Date().getTime());
-			ps.setString(4, reg_name);
-			ps.execute();
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return rs.getInt("rel_id");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Logger.printThrowable(e);
@@ -1041,6 +1042,82 @@ public class userAccountDAOimpl implements UserAccountDAO {
 				}
 			}
 		}
+		return res;
+	}
+
+	@Override
+	public void addUserRegion(long userID, int reg_id, String reg_name) {
+		PreparedStatement ps = null;
+		Connection conn = null;
+		if (getUserRegionRel(userID, reg_id) != -1) {
+			// Arready have
+		} else {
+			try {
+				conn = userDB.getConnection();
+				String sqlString = "INSERT INTO user_reg (user_id, reg_id, add_date, reg_name) VALUES (?, ?, ?, ?);";
+				ps = conn.prepareStatement(sqlString);
+				ps.setLong(1, userID);
+				ps.setInt(2, reg_id);
+				ps.setLong(3, new Date().getTime());
+				ps.setString(4, reg_name);
+				ps.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+			} finally {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					Logger.printThrowable(e);
+					throw new RuntimeException(e);
+				}
+				if (conn != null) {
+					try {
+						conn.close();
+					} catch (SQLException e) {
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public int getUserRegRef(long userID, String reg_name) {
+		PreparedStatement ps = null;
+		Connection conn = null;
+		int res = -1;
+		try {
+			conn = userDB.getConnection();
+			String sqlString = "SELECT rel_id FROM user_reg where user_id=? and reg_name=?;";
+			ps = conn.prepareStatement(sqlString);
+			ps.setLong(1, userID);
+			ps.setString(2, reg_name);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return rs.getInt("rel_id");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Logger.printThrowable(e);
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Logger.printThrowable(e);
+				throw new RuntimeException(e);
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return res;
 	}
 
 }

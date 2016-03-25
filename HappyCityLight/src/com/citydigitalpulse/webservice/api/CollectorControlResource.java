@@ -82,7 +82,7 @@ public class CollectorControlResource {
 	@GET
 	@Path("/getplaceinfo")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public ResMsg getRegInfoByName(@QueryParam("userID") long userID,
+	public ResMsg getRegInfoByNameOrID(@QueryParam("userID") long userID,
 			@QueryParam("token") String token,
 			@QueryParam("reg_id") @DefaultValue("-1") int reg_id,
 			@QueryParam("reg_name") @DefaultValue("") String reg_name) {

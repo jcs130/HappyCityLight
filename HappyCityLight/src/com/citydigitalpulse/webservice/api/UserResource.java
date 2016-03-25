@@ -575,7 +575,7 @@ public class UserResource {
 			ArrayList<LocArea> location_areas = null;
 			ObjectMapper mapper = new ObjectMapper();
 			// 如果有reg_id则直接添加，如果没有则向收集器控制数据库中增加区域
-			if (reg_id == -1) {
+			if (reg_id < 0) {
 				if (reg_name.equals("") || country.equals("")
 						|| center_lat == 0 || center_lan == 0 || time_zone > 12
 						|| time_zone < -12 || location_area_json.equals("{}")) {
@@ -584,15 +584,34 @@ public class UserResource {
 					res.setMessage("Wrong inputs");
 					return res;
 				}
-				location_areas = mapper.readValue(location_area_json,
-						new TypeReference<List<LocArea>>() {
-						});
-				// 向collector数据库中添加新的区域信息
-				reg_id = collectorDAO.addNewOnlineTask(userID, reg_name,
-						country, center_lat, center_lan, time_zone,
-						location_areas);
+				if (userAccountDAO.getUserRegRef(userID, reg_name) > 0) {
+					// already have
+					res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+					res.setType(Response.Status.BAD_REQUEST.name());
+					res.setMessage("This area is aready added.");
+					return res;
+				} else {
+					location_areas = mapper.readValue(location_area_json,
+							new TypeReference<List<LocArea>>() {
+							});
+					// 向collector数据库中添加新的区域信息
+					reg_id = collectorDAO.addNewOnlineTask(userID, reg_name,
+							country, center_lat, center_lan, time_zone,
+							location_areas);
+					userAccountDAO.addUserRegion(userID, reg_id, reg_name);
+				}
+			} else {
+				if (!collectorDAO.getRegInfoByID(reg_id).getRegName()
+						.equals(reg_name)) {
+					res.setCode(Response.Status.BAD_REQUEST.getStatusCode());
+					res.setType(Response.Status.BAD_REQUEST.name());
+					res.setMessage("Wrong inputs");
+					return res;
+				} else {
+					userAccountDAO.addUserRegion(userID, reg_id, reg_name);
+				}
 			}
-			userAccountDAO.addUserRegion(userID, reg_id, reg_name);
+
 			res.setObj(collectorDAO.getRegInfoByID(reg_id));
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());

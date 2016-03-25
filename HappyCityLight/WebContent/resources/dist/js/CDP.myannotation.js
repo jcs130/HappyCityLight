@@ -40,9 +40,8 @@ function getMarkHistory() {
 
                     $("#example1").DataTable({
                         "paging": true,
-                        "lengthChange": true,
-                        "searching": false,
-                        "ordering": false,
+                        "searching": true,
+                        "ordering": true,
                         "info": true,
                         "autoWidth": true
                     });
