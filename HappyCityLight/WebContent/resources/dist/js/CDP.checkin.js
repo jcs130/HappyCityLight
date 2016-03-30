@@ -20,7 +20,7 @@ function checkLogin() {
     user_firstname = localStorage.getItem("firstname");
     user_lastname = localStorage.getItem("lastname");
     user_picture = localStorage.getItem("user_picture");
-    //    alert(user_picture);
+	    // alert(user_picture);
     //更改页面上显示文字
     if (user_firstname != "null") {
         $(".userfirstname").html(user_firstname);
@@ -33,7 +33,7 @@ function checkLogin() {
         $(".userlastname").html("");
     }
     if ((user_picture != null) && (user_picture != "null") && (user_picture != undefined)) {
-        alert(user_picture);
+        //alert(user_picture);
         $(".user_picture").attr("src", user_picture);
     }
     $(".useremail").html(user_email);
@@ -105,7 +105,7 @@ function checkLogin() {
                             $(".userlastname").html("");
                         }
                         if ((user_picture != null) && (user_picture != "null") && (user_picture != undefined)) {
-                            alert(user_picture);
+                            //alert(user_picture);
                             $(".user_picture").attr("src", user_picture);
                         }
                         $(".useremail").html(user_email);

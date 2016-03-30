@@ -10,7 +10,6 @@
  */
 package com.citydigitalpulse.OfflineStatistic.app;
 
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +21,6 @@ import com.citydigitalpulse.OfflineStatistic.model.EmotionObj;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
 import com.citydigitalpulse.OfflineStatistic.model.StatiisticsRecord;
 import com.citydigitalpulse.OfflineStatistic.model.StructuredFullMessage;
-import com.citydigitalpulse.OfflineStatistic.tool.Tools;
 import com.citydigitalpulse.OfflineStatistic.tool.senitool.SentimentClassifier;
 import com.citydigitalpulse.OfflineStatistic.tool.senitool.Translater;
 import com.citydigitalpulse.OfflineStatistic.tool.senitool.ZLSentiment_en;
@@ -44,7 +42,8 @@ public class StatisticAndUpdateThread extends Thread {
 	 * 
 	 */
 	public StatisticAndUpdateThread(StatisticDaoImpl statisticDB,
-			List<RegInfo> regList, SimpleDateFormat sdf, long date) {
+			List<RegInfo> regList, SimpleDateFormat sdf, long date,
+			Translater translater) {
 		super();
 		this.setDone(false);
 		this.sdf = sdf;
@@ -53,7 +52,7 @@ public class StatisticAndUpdateThread extends Thread {
 		this.ZLSentiment_en = new ZLSentiment_en("models/",
 				"training_data_normal_before_remove_useless_part.model");
 		this.date = date;
-		this.translater = new Translater();
+		this.translater = translater;
 	}
 
 	@Override
@@ -121,30 +120,33 @@ public class StatisticAndUpdateThread extends Thread {
 				//
 				// }
 				else {
-					String translated_text;
-					if (temp.getLang().equals("zh")) {
-						translated_text = translater.getEnglish("zh-cn",
-								temp.getText());
-						translated_text += translater.getEnglish("zh-tw",
-								temp.getText());
-					} else {
-						translated_text = translater.getEnglish(temp.getLang(),
-								temp.getText());
-					}
-					EmotionObj emo = ZLSentiment_en
-							.getTextSentiment(translated_text);
-					// System.out.println(temp.getText() + emo);
-					// 如果结果不同，则更新数据库中结果
-					if (temp.getEmotion_text() == null
-							|| temp.getEmotion_text_value() != emo.getValue()
-							|| !temp.getEmotion_text().equals(emo.getEmotion())) {
-						temp.setEmotion_text(emo.getEmotion());
-						temp.setEmotion_text_value(emo.getValue());
-						// 一次更新多条记录，新建一个列表
-						change_list.add(temp);
-						// statisticDB.insertMessage2Table(table_name,
-						// temp);
-					}
+					// String translated_text;
+					// if (temp.getLang().equals("zh")) {
+					// translated_text = translater.getEnglish("zh-cn",
+					// temp.getText());
+					// translated_text += translater.getEnglish("zh-tw",
+					// temp.getText());
+					// } else {
+					// translated_text = translater.getEnglish(temp.getLang(),
+					// temp.getText());
+					// }
+					// if (translated_text.trim().equals("")) {
+					// translated_text = "nomal";
+					// }
+					// EmotionObj emo = ZLSentiment_en
+					// .getTextSentiment(translated_text);
+					// // System.out.println(temp.getText() + emo);
+					// // 如果结果不同，则更新数据库中结果
+					// if (temp.getEmotion_text() == null
+					// || temp.getEmotion_text_value() != emo.getValue()
+					// || !temp.getEmotion_text().equals(emo.getEmotion())) {
+					// temp.setEmotion_text(emo.getEmotion());
+					// temp.setEmotion_text_value(emo.getValue());
+					// // 一次更新多条记录，新建一个列表
+					// change_list.add(temp);
+					// // statisticDB.insertMessage2Table(table_name,
+					// // temp);
+					// }
 				}
 				ArrayList<RegInfo> cotainRegs = statisticDB
 						.getRegInfoByLocation(regList,
@@ -161,6 +163,11 @@ public class StatisticAndUpdateThread extends Thread {
 						// 添加该区域的记录
 						StatiisticsRecord firstRecord = new StatiisticsRecord(
 								date_string);
+						if (tempReg.isPrivate()) {
+							firstRecord.setPrivate(true);
+						} else {
+							firstRecord.setPrivate(false);
+						}
 						firstRecord.addNewRecord(tempReg, temp);
 						oneDayRecord.put(tempReg.getRegID(), firstRecord);
 					}

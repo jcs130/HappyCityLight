@@ -20,7 +20,6 @@ import twitter4j.conf.ConfigurationBuilder;
 import com.citydigitalpulse.collector.TwitterGetter.dao.InfoGetterDAO;
 import com.citydigitalpulse.collector.TwitterGetter.dao.TwitterSaveDAO;
 import com.citydigitalpulse.collector.TwitterGetter.dao.impl.InfoGetterDAO_MySQL;
-import com.citydigitalpulse.collector.TwitterGetter.dao.impl.MessageSavingDBHelper;
 import com.citydigitalpulse.collector.TwitterGetter.dao.impl.TwitterSavingDAOimpl;
 import com.citydigitalpulse.collector.TwitterGetter.model.EarthSqure;
 import com.citydigitalpulse.collector.TwitterGetter.service.ServiceThread;
@@ -40,7 +39,8 @@ public class TwitterStreamThread extends ServiceThread {
 	private LocatedTwitterListener listener;
 
 	public TwitterStreamThread(ArrayList<EarthSqure> watchList, TwitterTools tt) {
-		this.watchList = watchList;
+		this.watchList = new ArrayList<EarthSqure>();
+		this.watchList.addAll(watchList);
 		this.tt = tt;
 		init();
 	}
@@ -115,7 +115,7 @@ public class TwitterStreamThread extends ServiceThread {
 		this.db_save = new TwitterSavingDAOimpl();
 		ConfigurationBuilder cb = tt.getConfigurationBuilder();
 		this.twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
-		this.listener = new LocatedTwitterListener(db_save);
+		this.listener = new LocatedTwitterListener(db_save, db_info);
 		this.twitterStream.addListener(listener);
 	}
 

@@ -10,6 +10,7 @@
  */
 package com.citydigitalpulse.collector.TwitterGetter.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.citydigitalpulse.collector.TwitterGetter.model.EarthSqure;
@@ -37,7 +38,7 @@ public interface InfoGetterDAO {
 	 *            0:新添加未监听的 1:正在监听的 2:被关闭的
 	 * @return
 	 */
-	public List<RegInfo> getRegInfo(int type);
+	public ArrayList<RegInfo> getRegInfo(int type);
 
 	/**
 	 * 改变大区域状态
@@ -151,5 +152,11 @@ public interface InfoGetterDAO {
 	 * @return
 	 */
 	public List<EarthSqure> getStreamSqures(RegInfo reg);
+
+	/**
+	 * @Author  Zhongli Li Email: lzl19920403@gmail.com
+	 * @return
+	 */
+	public List<RegInfo> getRegInfo();
 
 }

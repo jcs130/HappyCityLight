@@ -18,46 +18,28 @@ import com.citydigitalpulse.collector.TwitterGetter.model.EarthSqure;
 import com.citydigitalpulse.collector.TwitterGetter.service.twitter4j.TwitterStreamThread;
 import com.citydigitalpulse.collector.TwitterGetter.service.twitter4j.TwitterTools;
 
-
 /**
  * 管理Stream监视线程的管理线程，查询区块表，获取所有使用次数大于0且运行状态为0（停止）的区块，新建相应的Stream监听线程
  * 
  * @author zhonglili
  *
  */
-public class StreamsManagerThread extends ServiceThread {
-	private int time;
-	private boolean isRunning = false;
+public class StreamsManagerThread {
 	private TwitterTools tt;
 
-	public StreamsManagerThread(int time) {
-		this.settName(this.getClass().getSimpleName());
-		this.time = time;
+	public StreamsManagerThread() {
 		this.tt = new TwitterTools();
 	}
 
-	@Override
-	public void run() {
-		super.run();
-		isRunning = true;
+	public void startBuildThreads() {
 		InfoGetterDAO db = new InfoGetterDAO_MySQL();
 		ArrayList<EarthSqure> ess;
-		
-		//需要修改县城侧罗防止由于死所带来的数据丢失问题
-		while (isRunning) {
-			try {
-				// 从数据库中获取使用次数>0但是没有被监视的Stream区块
-				ess = (ArrayList<EarthSqure>) db.getReadySqure();
-				// 新建监视线程，每个监视线程监视5个区块
-				buildStreamthreads(20, ess);
-				sleep(2000);
-			} catch (InterruptedException e) {
-				isRunning = false;
-				System.out.println("Thread: " + this.gettName() + " End....");
-				// e.printStackTrace();
-			}
-		}
-
+		// 需要修改县城侧罗防止由于死所带来的数据丢失问题
+		// 从数据库中获取使用次数>0但是没有被监视的Stream区块
+		ess = (ArrayList<EarthSqure>) db.getReadySqure();
+		System.out.println("Squares: " + ess.size());
+		// 新建监视线程，每个监视线程监视N个区块
+		buildStreamthreads(20, ess);
 	}
 
 	// 将多个区块合并为个线程
@@ -72,13 +54,8 @@ public class StreamsManagerThread extends ServiceThread {
 					TwitterStreamThread tst = new TwitterStreamThread(
 							smallList, tt);
 					ThreadsPool.addTwitterStreamThread(tst);
-					try {
-						sleep(time);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					smallList = new ArrayList<EarthSqure>();
+					smallList.clear();
+					smallList.add(ess.get(i));
 				}
 
 			}
@@ -90,34 +67,11 @@ public class StreamsManagerThread extends ServiceThread {
 
 	}
 
+	// 插入方法暂未实现
 	private boolean insert2Thread(EarthSqure earthSqure) {
-		for (int j = 0; j < ThreadsPool.getTwitterStreamThreadsNum(); j++) {
-
-		}
+		// for (int j = 0; j < ThreadsPool.getTwitterStreamThreadsNum(); j++) {
+		//
+		// }
 		return false;
 	}
-
-	/**
-	 * 终止线程的方法
-	 */
-	@Override
-	public void stopMe() {
-		isRunning = false;
-		if (this.isAlive()) {
-			super.interrupt();
-		}
-	}
-
-	public int getTime() {
-		return time;
-	}
-
-	public void setTime(int time) {
-		this.time = time;
-	}
-
-	public boolean isRunning() {
-		return isRunning;
-	}
-
 }

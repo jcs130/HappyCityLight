@@ -11,8 +11,6 @@
 package com.citydigitalpulse.collector.TwitterGetter.app;
 
 import com.citydigitalpulse.collector.TwitterGetter.service.ScanRegsThread;
-import com.citydigitalpulse.collector.TwitterGetter.service.StartRegThreads;
-import com.citydigitalpulse.collector.TwitterGetter.service.StreamsManagerThread;
 import com.citydigitalpulse.collector.TwitterGetter.service.ThreadsPool;
 
 /**
@@ -27,7 +25,7 @@ public class getterMain {
 		// System.out.println(tm.getClass().getSimpleName());
 		// tm.doSth();
 		// tm.reSetDB();
-		tm.startThreads(5000, 5000, 5000);
+		tm.startThreads(10000);
 		while (true) {
 			try {
 				Thread.sleep(1000);
@@ -38,13 +36,13 @@ public class getterMain {
 		}
 	}
 
-	private void startThreads(int time1, int time2, int time3) {
-		ScanRegsThread sRegThread = new ScanRegsThread(time1);
+	private void startThreads(int time) {
+		ScanRegsThread sRegThread = new ScanRegsThread(time);
 		ThreadsPool.addThread(sRegThread);
-		StartRegThreads sSqureThread = new StartRegThreads(time2);
-		ThreadsPool.addThread(sSqureThread);
-		StreamsManagerThread smt = new StreamsManagerThread(time3);
-		ThreadsPool.addThread(smt);
+		// StartRegThreads sSqureThread = new StartRegThreads(time2);
+		// ThreadsPool.addThread(sSqureThread);
+		// StreamsManagerThread smt = new StreamsManagerThread(time3);
+		// ThreadsPool.addThread(smt);
 
 	}
 

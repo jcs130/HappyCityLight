@@ -33,6 +33,7 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 	private String message_from;
 	private String language;
 	private HashMap<String, HotTopic> temp_topics;
+	private boolean isPrivate;
 
 	/**
 	 * 
@@ -190,6 +191,14 @@ public class StatiisticsRecord implements Comparable<StatiisticsRecord> {
 				+ Arrays.toString(hot_topics) + ", message_from="
 				+ message_from + ", language=" + language + ", temp_topics="
 				+ temp_topics + "]";
+	}
+
+	public boolean isPrivate() {
+		return isPrivate;
+	}
+
+	public void setPrivate(boolean isPrivate) {
+		this.isPrivate = isPrivate;
 	}
 
 }

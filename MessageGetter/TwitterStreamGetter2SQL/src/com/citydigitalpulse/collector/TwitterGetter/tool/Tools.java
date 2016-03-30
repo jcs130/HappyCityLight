@@ -353,7 +353,7 @@ public class Tools {
 		if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
 			try {
 				String resp = postMethod.getResponseBodyAsString();
-				System.out.println(resp);
+//				System.out.println(resp);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

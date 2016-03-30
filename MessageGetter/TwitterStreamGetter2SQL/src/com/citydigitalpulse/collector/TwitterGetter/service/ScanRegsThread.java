@@ -17,7 +17,6 @@ import com.citydigitalpulse.collector.TwitterGetter.dao.impl.InfoGetterDAO_MySQL
 import com.citydigitalpulse.collector.TwitterGetter.model.EarthSqure;
 import com.citydigitalpulse.collector.TwitterGetter.model.RegInfo;
 
-
 /**
  * 扫描地区表并建立区块表的线程
  * 
@@ -39,12 +38,11 @@ public class ScanRegsThread extends ServiceThread {
 	public void run() {
 		super.run();
 		isRunning = true;
-
 		ArrayList<RegInfo> regs;
 		// 循环扫描
 		while (isRunning) {
 			// 1.扫描reg数据库，获取所有状态为0的区域并将所有的reg区域的小区域添加
-			regs = (ArrayList<RegInfo>) db.getRegInfo(0);
+			regs = db.getRegInfo(0);
 			// 2.根据小区域的坐标向数据库中添加Stream区块
 			for (int i = 0; i < regs.size(); i++) {
 				ArrayList<EarthSqure> ess = (ArrayList<EarthSqure>) db
@@ -56,14 +54,20 @@ public class ScanRegsThread extends ServiceThread {
 				// 修改大区域状态为待监听状态（3）
 				db.changeRegState(regs.get(i).getRegID(), 3);
 			}
+			// 如果有新增区域则开始处理线程
+			if (regs.size() > 0) {
+				StartRegThreads sSqureThread = new StartRegThreads();
+				sSqureThread.start();
+				System.out.println(sSqureThread.gettName() + " Begining..");
+			}
 			try {
 				sleep(time);
 			} catch (InterruptedException e) {
 				isRunning = false;
-				System.out.println("Thread:" + this.gettName() + " End...");
 				// e.printStackTrace();
 			}
 		}
+		System.out.println("Thread:" + this.gettName() + " End...");
 	}
 
 	/**

@@ -11,7 +11,6 @@
 package com.citydigitalpulse.collector.TwitterGetter.service.twitter4j;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import twitter4j.JSONArray;
 import twitter4j.JSONException;
@@ -19,8 +18,12 @@ import twitter4j.JSONObject;
 import twitter4j.RawStreamListener;
 
 import com.citydigitalpulse.collector.TwitterGetter.app.Config;
+import com.citydigitalpulse.collector.TwitterGetter.dao.InfoGetterDAO;
 import com.citydigitalpulse.collector.TwitterGetter.dao.TwitterSaveDAO;
+import com.citydigitalpulse.collector.TwitterGetter.dao.impl.InfoGetterDAO_MySQL;
+import com.citydigitalpulse.collector.TwitterGetter.dao.impl.SplitDataSavingDAO;
 import com.citydigitalpulse.collector.TwitterGetter.model.StructuredFullMessage;
+import com.citydigitalpulse.collector.TwitterGetter.service.InsertIntoDB;
 import com.citydigitalpulse.collector.TwitterGetter.tool.Tools;
 
 /**
@@ -32,13 +35,15 @@ import com.citydigitalpulse.collector.TwitterGetter.tool.Tools;
 public class LocatedTwitterListener implements RawStreamListener {
 
 	private TwitterSaveDAO db;
-	private HashMap<Long, StructuredFullMessage> cacheMessages;
+	private SplitDataSavingDAO statisticDB;
+	private InfoGetterDAO infoDB;
 	private ArrayList<StructuredFullMessage> writeList;
-	private int CACHE_NUM = 1000;
+	private int CACHE_NUM = 500;
 
-	public LocatedTwitterListener(TwitterSaveDAO db) {
+	public LocatedTwitterListener(TwitterSaveDAO db, InfoGetterDAO infoDB) {
 		this.db = db;
-		this.cacheMessages = new HashMap<Long, StructuredFullMessage>();
+		this.statisticDB = new SplitDataSavingDAO();
+		this.infoDB = infoDB;
 		this.writeList = new ArrayList<StructuredFullMessage>();
 	}
 
@@ -69,26 +74,34 @@ public class LocatedTwitterListener implements RawStreamListener {
 				Tools.cacheUpdateMessages.put(
 						Long.parseLong(msg.getRaw_id_str()), msg);
 				if (Tools.cacheUpdateMessages.size() > CACHE_NUM) {
+					writeList.addAll(Tools.cacheUpdateMessages.values());
 					Tools.cacheUpdateMessages.clear();
+					InsertIntoDB insertThread = new InsertIntoDB(writeList,
+							statisticDB, infoDB);
+					insertThread.start();
+					// // 一次性插入缓存中数据
+					// db.insert(writeList);
+					writeList.clear();
 				}
 				// 插入数据库并获得ID
-				long num_id = db.insert(msg);
-				if (num_id != 0) {
-					msg.setNum_id(num_id);
-					if (msg.isReal_location()) {
-						System.out.println(msg.getText());
-						// 发送有具体坐标的数据
-						Tools.sendNewMessage(Config.DCI_SERVER_URL
-								+ "message/uploadnewmessage",
-								Config.UPLOAD_TOKEN, msg);
-//						//发送数据到亚马逊云服务器
-//						Tools.sendNewMessage(Config.DCI_SERVER_URL_AMAZON
-//								+ "message/uploadnewmessage",
-//								Config.UPLOAD_TOKEN, msg);
-					}
-				} else {
-					System.out.println("Error with the num_id:" + num_id);
+				// long num_id = db.insert(msg);
+				// if (num_id != 0) {
+				// msg.setNum_id(num_id);
+				msg.setNum_id(0);
+				if (msg.isReal_location()) {
+					// System.out.println(msg.getText());
+					// 发送有具体坐标的数据
+					Tools.sendNewMessage(Config.DCI_SERVER_URL
+							+ "message/uploadnewmessage", Config.UPLOAD_TOKEN,
+							msg);
+					// //发送数据到亚马逊云服务器
+					// Tools.sendNewMessage(Config.DCI_SERVER_URL_AMAZON
+					// + "message/uploadnewmessage",
+					// Config.UPLOAD_TOKEN, msg);
 				}
+				// } else {
+				// System.out.println("Error with the num_id:" + num_id);
+				// }
 			}
 
 		} catch (JSONException e) {
@@ -241,8 +254,8 @@ public class LocatedTwitterListener implements RawStreamListener {
 									media.getString("media_url"))) {
 								msg.getMedia_urls().add(
 										media.getString("media_url"));
-								msg.getMedia_types()
-										.add(media.getString("type"));
+								msg.getMedia_types().add(
+										media.getString("type"));
 							}
 						}
 					}

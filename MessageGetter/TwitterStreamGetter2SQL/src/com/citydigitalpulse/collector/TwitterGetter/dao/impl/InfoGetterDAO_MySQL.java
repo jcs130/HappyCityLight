@@ -75,8 +75,103 @@ public class InfoGetterDAO_MySQL implements InfoGetterDAO {
 		return result;
 	}
 
+	public List<RegInfo> getRegInfo() {
+		// 根据type获取大区域的信息
+		String sqlString = "SELECT * FROM regnames ;";
+		ArrayList<RegInfo> result = new ArrayList<RegInfo>();
+		// 查询数据库，获取结果
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			RegInfo reg = null;
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				reg = new RegInfo(rs.getString("regname"));
+				reg.setRegID(rs.getInt("regid"));
+				reg.setCountry(rs.getString("country"));
+				reg.setBox_points(rs.getString("box_points"));
+				reg.setCenter_lat(rs.getDouble("center_lat"));
+				reg.setCenter_lan(rs.getDouble("center_lan"));
+				reg.setTime_zone(rs.getInt("time_zone"));
+				reg.setPrivate(rs.getBoolean("private"));
+				reg.setAreas(getAreasByReg(reg));
+				// System.out.println(reg);
+				if (reg.getCenter_lat() == 0 || reg.getCenter_lan() == 0) {
+					LocPoint center = getCenterPoint(reg.getAreas());
+					reg.setCenter_lat(center.getLat());
+					reg.setCenter_lan(center.getLng());
+					updateRegCenter(reg.getRegID(), center);
+				}
+				result.add(reg);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		// System.out.println(result.size());
+		return result;
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param regID
+	 * @param center
+	 */
+	private void updateRegCenter(int regID, LocPoint center) {
+		String sqlString = "UPDATE regnames SET center_lat= ? , center_lan = ? WHERE regID=?";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ps.setDouble(1, center.getLat());
+			ps.setDouble(2, center.getLng());
+			ps.setInt(3, regID);
+			ps.executeUpdate();
+
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param arrayList
+	 * @return
+	 */
+	private LocPoint getCenterPoint(ArrayList<LocArea> areaList) {
+		LocPoint res = new LocPoint();
+		double lan_sum = 0;
+		double lat_sum = 0;
+		for (int i = 0; i < areaList.size(); i++) {
+			LocArea area = areaList.get(i);
+			lat_sum += (area.getNorth() + area.getSouth()) / 2.0;
+			lan_sum += (area.getWest() + area.getEast()) / 2.0;
+		}
+		res.setLat(lat_sum / (double) areaList.size());
+		res.setLng(lan_sum / (double) areaList.size());
+		return res;
+	}
+
 	@Override
-	public List<RegInfo> getRegInfo(int type) {
+	public ArrayList<RegInfo> getRegInfo(int type) {
 		// 根据type获取大区域的信息
 		String sqlString = "SELECT regname, regid FROM regnames where streamstate ="
 				+ type + ";";
@@ -91,7 +186,7 @@ public class InfoGetterDAO_MySQL implements InfoGetterDAO {
 			while (rs.next()) {
 				reg = new RegInfo(rs.getString("regname"));
 				reg.setRegID(rs.getInt("regid"));
-				getAreasByReg(reg);
+				reg.setAreas(getAreasByReg(reg));
 				// System.out.println(reg);
 				result.add(reg);
 			}
@@ -111,56 +206,55 @@ public class InfoGetterDAO_MySQL implements InfoGetterDAO {
 	}
 
 	// 读取大小区域关系表添加大区域下的小区域
-	private void getAreasByReg(RegInfo reg) {
-		// 如果列表不为空则清空列表
-		if (reg.getAreas().size() != 0) {
-			reg.getAreas().clear();
-		} else {
-
-			// 先查询regandarea表得到大区域下面的小区与编号
-			ArrayList<Integer> areaIDs = new ArrayList<Integer>();
-			String sqlString = "SELECT * FROM regandarea where regid="
-					+ reg.getRegID() + ";";
-			// 查询数据库，获取结果
-			Connection conn = null;
-			try {
-				conn = dataSource.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sqlString);
-				ResultSet rs = ps.executeQuery();
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param reg
+	 */
+	private ArrayList<LocArea> getAreasByReg(RegInfo reg) {
+		ArrayList<LocArea> areas = new ArrayList<LocArea>();
+		// 先查询regandarea表得到大区域下面的小区与编号
+		ArrayList<Integer> areaIDs = new ArrayList<Integer>();
+		String sqlString = "SELECT * FROM regandarea where regid="
+				+ reg.getRegID() + ";";
+		// 查询数据库，获取结果
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sqlString);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				areaIDs.add(rs.getInt("areaid"));
+			}
+			// 根据编号添加具体的对象
+			for (int i = 0; i < areaIDs.size(); i++) {
+				sqlString = "SELECT * FROM interestareas where areaid="
+						+ areaIDs.get(i) + ";";
+				ps = conn.prepareStatement(sqlString);
+				rs = ps.executeQuery();
 				while (rs.next()) {
-					areaIDs.add(rs.getInt("areaid"));
-				}
-				// 根据编号添加具体的对象
-				for (int i = 0; i < areaIDs.size(); i++) {
-					sqlString = "SELECT * FROM interestareas where areaid="
-							+ areaIDs.get(i) + ";";
-					ps = conn.prepareStatement(sqlString);
-					rs = ps.executeQuery();
-					while (rs.next()) {
-						LocArea loc = new LocArea(areaIDs.get(i),
-								rs.getDouble("north"), rs.getDouble("west"),
-								rs.getDouble("south"), rs.getDouble("east"));
-						loc.setCenterAndRange(
-								new LocPoint(rs.getDouble("center_lat"), rs
-										.getDouble("center_lon")), rs
-										.getInt("range"));
-						reg.getAreas().add(loc);
-					}
-				}
-
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-
-			} finally {
-				if (conn != null) {
-					try {
-						conn.close();
-					} catch (SQLException e) {
-					}
+					LocArea loc = new LocArea(areaIDs.get(i),
+							rs.getDouble("north"), rs.getDouble("west"),
+							rs.getDouble("south"), rs.getDouble("east"));
+					// loc.setCenterAndRange(
+					// new LocPoint(rs.getDouble("center_lat"), rs
+					// .getDouble("center_lon")), rs
+					// .getInt("range"));
+					areas.add(loc);
 				}
 			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
+		return areas;
+
 	}
 
 	@Override

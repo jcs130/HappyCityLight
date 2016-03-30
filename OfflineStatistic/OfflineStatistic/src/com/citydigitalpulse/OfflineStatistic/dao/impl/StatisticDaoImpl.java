@@ -98,6 +98,7 @@ public class StatisticDaoImpl {
 				reg.setCenter_lat(rs.getDouble("center_lat"));
 				reg.setCenter_lan(rs.getDouble("center_lan"));
 				reg.setTime_zone(rs.getInt("time_zone"));
+				reg.setPrivate(rs.getBoolean("private"));
 				reg.setAreas(getAreasByReg(reg));
 				// System.out.println(reg);
 				if (reg.getCenter_lat() == 0 || reg.getCenter_lan() == 0) {
@@ -563,7 +564,7 @@ public class StatisticDaoImpl {
 				record = resultArray[i];
 				record.sortHotTopics();
 				record.setRank(start_rank + i + 1);
-				String sqlString = "INSERT INTO statiistics_record (record_key, date_timestamp_ms, local_date, place_id, place_name, place_obj, pulse_value, pulse_obj, rank, hot_topics, message_from, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE pulse_value=?,pulse_obj=?,rank=?,hot_topics=?;";
+				String sqlString = "INSERT INTO statiistics_record (record_key, date_timestamp_ms, local_date, place_id, place_name, place_obj, pulse_value, pulse_obj, rank, hot_topics, message_from, language, private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE pulse_value=?,pulse_obj=?,rank=?,hot_topics=?;";
 				PreparedStatement ps = conn.prepareStatement(sqlString);
 				ps.setString(1, "reg_" + record.getRegInfo().getRegID() + ","
 						+ record.getLocal_date() + "," + record.getLanguage()
@@ -581,10 +582,11 @@ public class StatisticDaoImpl {
 						mapper.writeValueAsString(record.getHot_topics()));
 				ps.setString(11, record.getMessage_from());
 				ps.setString(12, record.getLanguage());
-				ps.setDouble(13, record.getPulse().getPulse_value());
-				ps.setString(14, mapper.writeValueAsString(record.getPulse()));
-				ps.setInt(15, record.getRank());
-				ps.setString(16,
+				ps.setBoolean(13, record.isPrivate());
+				ps.setDouble(14, record.getPulse().getPulse_value());
+				ps.setString(15, mapper.writeValueAsString(record.getPulse()));
+				ps.setInt(16, record.getRank());
+				ps.setString(17,
 						mapper.writeValueAsString(record.getHot_topics()));
 				ps.executeUpdate();
 			}
@@ -626,7 +628,7 @@ public class StatisticDaoImpl {
 					record = resultArray[i];
 					record.sortHotTopics();
 					record.setRank(start_rank + i + 1);
-					String sqlString = "INSERT INTO statiistics_record (record_key, date_timestamp_ms, local_date, place_id, place_name, place_obj, pulse_value, pulse_obj, rank, hot_topics, message_from, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE pulse_value=?,pulse_obj=?,rank=?,hot_topics=?;";
+					String sqlString = "INSERT INTO statiistics_record (record_key, date_timestamp_ms, local_date, place_id, place_name, place_obj, pulse_value, pulse_obj, rank, hot_topics, message_from, language, private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE pulse_value=?,pulse_obj=?,rank=?,hot_topics=?;";
 					PreparedStatement ps = conn.prepareStatement(sqlString);
 					ps.setString(
 							1,
@@ -651,11 +653,12 @@ public class StatisticDaoImpl {
 							mapper.writeValueAsString(record.getHot_topics()));
 					ps.setString(11, record.getMessage_from());
 					ps.setString(12, record.getLanguage());
-					ps.setDouble(13, record.getPulse().getPulse_value());
-					ps.setString(14,
+					ps.setBoolean(13, record.isPrivate());
+					ps.setDouble(14, record.getPulse().getPulse_value());
+					ps.setString(15,
 							mapper.writeValueAsString(record.getPulse()));
-					ps.setInt(15, record.getRank());
-					ps.setString(16,
+					ps.setInt(16, record.getRank());
+					ps.setString(17,
 							mapper.writeValueAsString(record.getHot_topics()));
 					ps.executeUpdate();
 				}

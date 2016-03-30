@@ -24,6 +24,7 @@ import com.citydigitalpulse.webservice.dao.impl.MarkingMessageDAOimpl;
 import com.citydigitalpulse.webservice.dao.impl.userAccountDAOimpl;
 import com.citydigitalpulse.webservice.model.message.*;
 import com.citydigitalpulse.webservice.model.user.Role;
+import com.citydigitalpulse.webservice.tool.Tools;
 
 /**
  * 用于语料标注界面
@@ -73,6 +74,14 @@ public class MarkPageResource {
 
 			// 连接数据库获得数据
 			MarkMsg2Web ma = msgDAO.getOneNewMsg();
+			// 检查图片是否存在
+			while (true) {
+				if (!Tools.checkURL(ma.getMedias().get(0).getMedia_url())) {
+					ma = msgDAO.getOneNewMsg();
+				} else {
+					break;
+				}
+			}
 			System.out.println("return:" + ma);
 			res.setCode(Response.Status.OK.getStatusCode());
 			res.setType(Response.Status.OK.name());

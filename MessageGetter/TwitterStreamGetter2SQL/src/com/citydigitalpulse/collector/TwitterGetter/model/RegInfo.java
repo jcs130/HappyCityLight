@@ -27,6 +27,7 @@ public class RegInfo {
 	private ArrayList<LocArea> areas;
 	private String box_points;
 	private int time_zone;
+	private boolean isPrivate=false;
 
 	public RegInfo(String regName) {
 		this();
@@ -128,6 +129,14 @@ public class RegInfo {
 				+ ", center_lat=" + center_lat + ", center_lan=" + center_lan
 				+ ", areas=" + areas + ", box_points=" + box_points
 				+ ", time_zone=" + time_zone + "]";
+	}
+
+	public boolean isPrivate() {
+		return isPrivate;
+	}
+
+	public void setPrivate(boolean isPrivate) {
+		this.isPrivate = isPrivate;
 	}
 
 }

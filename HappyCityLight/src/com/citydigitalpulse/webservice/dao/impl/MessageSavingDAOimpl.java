@@ -393,7 +393,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 	 * @return
 	 */
 	public ArrayList<RegStatisticInfo> getStatisticRecordsByDate(String date_str) {
-		String sqlString = "SELECT * FROM statiistics_record where local_date = ? ;";
+		String sqlString = "SELECT * FROM statiistics_record where local_date = ? and private=0;";
 		ArrayList<RegStatisticInfo> res = new ArrayList<RegStatisticInfo>();
 		Connection conn = null;
 		StatiisticsRecord rec;
@@ -460,7 +460,7 @@ public class MessageSavingDAOimpl implements MessageSavingDAO {
 	public ArrayList<RegStatisticInfo> getPlaceHistoryInfos(int place_id,
 			String date_start, String date_end) {
 		// 解析开始日期和结束日期，如果缓存中存在该日期则不用查询数据库，如果没有改日期则直接使用==查询
-		String sqlString = "SELECT * FROM statiistics_record where place_id = ? and (local_date between ? and ? ) order by local_date ASC;";
+		String sqlString = "SELECT * FROM statiistics_record where place_id = ? and private=0 and (local_date between ? and ? ) order by local_date ASC;";
 		ArrayList<RegStatisticInfo> res = new ArrayList<RegStatisticInfo>();
 		Connection conn = null;
 		StatiisticsRecord rec;

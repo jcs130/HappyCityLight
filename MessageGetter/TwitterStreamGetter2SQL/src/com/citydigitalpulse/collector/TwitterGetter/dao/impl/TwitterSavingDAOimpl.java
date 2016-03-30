@@ -94,6 +94,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 		Connection conn = null;
 		Statement statement = null;
 		StructuredFullMessage msg;
+		System.out.println("Start insert new data. Size: " + msgs.size());
 		try {
 			conn = savingDB.getConnection();
 			// 指定在事物中提交
@@ -101,6 +102,7 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 			statement = conn.createStatement();
 			// 循环添加新消息
 			for (int i = 0; i < msgs.size(); i++) {
+				System.out.println(i);
 				msg = msgs.get(i);
 				String sqlString = "INSERT INTO full_message (raw_id_str, user_name, creat_at, text, media_types, media_urls, media_urls_local, place_type, place_name, place_fullname, country, province, city, query_location_latitude, query_location_langtitude, hashtags, replay_to, lang, message_from,is_real_location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 				PreparedStatement ps = conn.prepareStatement(sqlString);
@@ -113,7 +115,11 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 				ps.setString(7,
 						Tools.buildStringFromList(msg.getMedia_urls_local()));
 				ps.setString(8, msg.getPlace_type());
-				ps.setString(9, msg.getPlace_name());
+				if (msg.getPlace_name().length() > 45) {
+					ps.setString(9, msg.getPlace_name().substring(0, 45));
+				} else {
+					ps.setString(9, msg.getPlace_name());
+				}
 				ps.setString(10, msg.getPlace_fullname());
 				ps.setString(11, msg.getCountry());
 				ps.setString(12, msg.getProvince());
@@ -125,8 +131,10 @@ public class TwitterSavingDAOimpl implements TwitterSaveDAO {
 				ps.setString(18, msg.getLang());
 				ps.setString(19, msg.getMessage_from());
 				ps.setString(20, Boolean.toString(msg.isReal_location()));
+				System.out.println("executeUpdate");
 				ps.executeUpdate();
 			}
+			System.out.println("commit");
 			// 提交更改
 			conn.commit();
 		} catch (SQLException e) {

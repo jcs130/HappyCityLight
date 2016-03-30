@@ -10,7 +10,9 @@
  */
 package com.citydigitalpulse.webservice.tool;
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -288,5 +290,21 @@ public class Tools {
 								+ "resetPassword.html?token="
 								+ token
 								+ "\n token: " + token);
+	}
+
+	/**
+	 * @Author Zhongli Li Email: lzl19920403@gmail.com
+	 * @param media_url
+	 * @return
+	 */
+	public static boolean checkURL(String media_url) {
+		URL url;
+		try {
+			url = new URL(media_url);
+			url.openStream();
+			return true;
+		} catch (Exception e1) {
+			return false;
+		}
 	}
 }

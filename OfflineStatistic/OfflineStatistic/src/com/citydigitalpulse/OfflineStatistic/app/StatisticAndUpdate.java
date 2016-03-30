@@ -17,6 +17,7 @@ import java.util.List;
 import com.citydigitalpulse.OfflineStatistic.dao.impl.StatisticDaoImpl;
 import com.citydigitalpulse.OfflineStatistic.model.RegInfo;
 import com.citydigitalpulse.OfflineStatistic.tool.Tools;
+import com.citydigitalpulse.OfflineStatistic.tool.senitool.Translater;
 
 /**
  * 用于统计数据和更新信息
@@ -28,6 +29,7 @@ public class StatisticAndUpdate {
 	private StatisticDaoImpl statisticDB;
 	// private String date_start, date_end;
 	private SimpleDateFormat sdf;
+	private Translater translater;
 
 	// private SentimentClassifier ZLSentiment_en;
 
@@ -38,6 +40,7 @@ public class StatisticAndUpdate {
 		// sentiStrength_en = new SentiStrengthNLP_en("SentStrength_Data/");
 		// ZLSentiment_en = new ZLSentiment_en("models/",
 		// "libSVM_(Saima Aman Data Set).model");
+		translater = new Translater();
 
 	}
 
@@ -64,7 +67,7 @@ public class StatisticAndUpdate {
 			int work_num = 0;
 			System.out.println(i);
 			StatisticAndUpdateThread t = new StatisticAndUpdateThread(
-					statisticDB, regList, sdf, i);
+					statisticDB, regList, sdf, i, translater);
 			threads.add(t);
 			t.start();
 			while (true) {
