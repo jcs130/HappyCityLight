@@ -10,7 +10,9 @@
  */
 package com.citydigitalpulse.collector.TwitterGetter.service.twitter4j;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import twitter4j.JSONArray;
 import twitter4j.JSONException;
@@ -33,20 +35,6 @@ import com.citydigitalpulse.collector.TwitterGetter.tool.Tools;
  *
  */
 public class LocatedTwitterListener implements RawStreamListener {
-
-	private TwitterSaveDAO db;
-	private SplitDataSavingDAO statisticDB;
-	private InfoGetterDAO infoDB;
-	private ArrayList<StructuredFullMessage> writeList;
-	private int CACHE_NUM = 500;
-
-	public LocatedTwitterListener(TwitterSaveDAO db, InfoGetterDAO infoDB) {
-		this.db = db;
-		this.statisticDB = new SplitDataSavingDAO();
-		this.infoDB = infoDB;
-		this.writeList = new ArrayList<StructuredFullMessage>();
-	}
-
 	@Override
 	public void onException(Exception arg0) {
 		// TODO Auto-generated method stub
@@ -73,16 +61,13 @@ public class LocatedTwitterListener implements RawStreamListener {
 					.getRaw_id_str()))) {
 				Tools.cacheUpdateMessages.put(
 						Long.parseLong(msg.getRaw_id_str()), msg);
-				if (Tools.cacheUpdateMessages.size() > CACHE_NUM) {
-					writeList.addAll(Tools.cacheUpdateMessages.values());
-					Tools.cacheUpdateMessages.clear();
-					InsertIntoDB insertThread = new InsertIntoDB(writeList,
-							statisticDB, infoDB);
-					insertThread.start();
-					// // 一次性插入缓存中数据
-					// db.insert(writeList);
-					writeList.clear();
-				}
+				// if (Tools.cacheUpdateMessages.size() > CACHE_NUM) {
+				// System.out.println("write into memory..");
+				// writeList.addAll(Tools.cacheUpdateMessages.values());
+				// Tools.cacheUpdateMessages.clear();
+				// // // 一次性插入缓存中数据
+				// // db.insert(writeList);
+				// }
 				// 插入数据库并获得ID
 				// long num_id = db.insert(msg);
 				// if (num_id != 0) {

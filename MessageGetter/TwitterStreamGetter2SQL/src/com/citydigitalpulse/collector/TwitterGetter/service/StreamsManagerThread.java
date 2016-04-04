@@ -56,6 +56,12 @@ public class StreamsManagerThread {
 					ThreadsPool.addTwitterStreamThread(tst);
 					smallList.clear();
 					smallList.add(ess.get(i));
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 
 			}
