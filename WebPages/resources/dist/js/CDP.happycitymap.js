@@ -428,7 +428,7 @@ function init_map_after_load() {
         signInControl: false,
     });
     proj = map.getProjection();
-    $.getScript("http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js");
+    $.getScript("https://cdn.rawgit.com/googlemaps/v3-utility-library/master/infobox/src/infobox.js");
 
     //init autocomplete
     var input = (document.getElementById('pac-input'));

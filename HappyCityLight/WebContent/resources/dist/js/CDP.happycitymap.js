@@ -97,7 +97,7 @@ function getListenPlaceList() {
                     console.log("success in getListenPlaceList(): " + JSON.stringify(data));
 
                     $.each(data.obj, function () {
-                        listenPlaceList.push(this.reg_name.toString());
+                        listenPlaceList.push(this.toString());
                         //                        console.log(this.toString());
                     });
                     //alert(listenPlaceList.toString());
@@ -129,8 +129,7 @@ function getPlaceEdge(place) {
             data: {
                 userID: user_id,
                 token: logintoken,
-                //                place_name: place,
-                reg_name: place,
+                place_name: place,
             },
             dataType: "json",
             success: function (data, textStatus) {
@@ -160,50 +159,50 @@ function getPlaceEdge(place) {
                     });
 
 
-                    //                    if ((data.obj.box_points != null) && (data.obj.box_points != [])) {
-                    //                        console.log("box_points exists.");
-                    //
-                    //                        if (regionBoundary != null) {
-                    //                            regionBoundary.setMap(null);
-                    //                        }
-                    //
-                    //                        regionBoundary = new google.maps.Polyline({
-                    //                            path: $.parseJSON(data.obj.box_points),
-                    //                            map: map,
-                    //                            strokeColor: "#9F353A",
-                    //                            strokeOpacity: 0.6,
-                    //                            strokeWeight: 1
-                    //                        });
-                    //
-                    //
-                    //                    } else {
-                    //
-                    //                        drawRegionBoundary(data.obj.areas);
-                    //
-                    //                        //alert(resultRegion.getPath().getArray().toString());
-                    //
-                    //                        $.ajax({
-                    //                            type: "PUT",
-                    //                            crossDomain: true,
-                    //                            url: serverURL + "collector/updateareabox",
-                    //                            data: {
-                    //                                userID: user_id,
-                    //                                token: logintoken,
-                    //                                place_id: data.obj.regID,
-                    //                                box_points: JSON.stringify(regionBoundary.getPath().getArray())
-                    //                            },
-                    //                            dataType: "json",
-                    //                            success: function (data, textStatus) {
-                    //                                //alert(JSON.stringify(data));
-                    //                                console.log("Update Area Box successfully......" + data.obj.box_points);
-                    //
-                    //                            },
-                    //                            error: function (jqXHR, textStatus, errorThrown) {
-                    //                                console.log("error: " + JSON.stringify(data));
-                    //                            }
-                    //                        });
-                    //
-                    //                    }
+//                    if ((data.obj.box_points != null) && (data.obj.box_points != [])) {
+    //                        console.log("box_points exists.");
+    //
+    //                        if (regionBoundary != null) {
+    //                            regionBoundary.setMap(null);
+    //                        }
+    //
+    //                        regionBoundary = new google.maps.Polyline({
+    //                            path: $.parseJSON(data.obj.box_points),
+    //                            map: map,
+    //                            strokeColor: "#9F353A",
+    //                            strokeOpacity: 0.6,
+    //                            strokeWeight: 1
+    //                        });
+    //
+    //
+    //                    } else {
+    //
+    //                        drawRegionBoundary(data.obj.areas);
+    //
+    //                        //alert(resultRegion.getPath().getArray().toString());
+    //
+    //                        $.ajax({
+    //                            type: "PUT",
+    //                            crossDomain: true,
+    //                            url: serverURL + "collector/updateareabox",
+    //                            data: {
+    //                                userID: user_id,
+    //                                token: logintoken,
+    //                                place_id: data.obj.regID,
+    //                                box_points: JSON.stringify(regionBoundary.getPath().getArray())
+    //                            },
+    //                            dataType: "json",
+    //                            success: function (data, textStatus) {
+    //                                //alert(JSON.stringify(data));
+    //                                console.log("Update Area Box successfully......" + data.obj.box_points);
+    //
+    //                            },
+    //                            error: function (jqXHR, textStatus, errorThrown) {
+    //                                console.log("error: " + JSON.stringify(data));
+    //                            }
+    //                        });
+    //
+    //                    }
 
 
                 } else {
@@ -320,8 +319,8 @@ function getLatestData() {
 
 
                         content += "alt='User Image'><span class='username'><a href='#'>" + msgData.user_name + "</a></span><span class='description'>" + placeName + " - " + createAt.getFullYear() + "/" + (createAt.getMonth() + 1) + "/" + createAt.getDate() + "</span></div><div class='box-tools'><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button><button type='button' class='btn btn-box-tool btn-close' data-widget='remove'><i class='fa fa-times'></i></button></div></div><div class='box-body'>";
-                        if ((msgData.media_types != null) && (msgData.media_types != []) && (msgData.media_types[0] == 'photo') && (msgData.media_urls[0] != null)) {
-                            content += "<img class='img-responsive' src='" + msgData.media_urls[0] + "' alt='Photo' style='width:120px;'>";
+                        if ((msgData.media_type != null) && (msgData.media_type != []) && (msgData.media_type[0] == 'photo') && (msgData.media_urls[0] != null)) {
+                            content += "<img class='img-responsive' src='" + msgData.media_urls[0] + "' alt='Photo' style='width:120px;'>"
                         }
 
                         content += "<p>" + msgData.text + "</p></div></div>";
@@ -429,7 +428,7 @@ function init_map_after_load() {
         signInControl: false,
     });
     proj = map.getProjection();
-    $.getScript("http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js");
+    $.getScript("https://cdn.rawgit.com/googlemaps/v3-utility-library/master/infobox/src/infobox.js");
 
     //init autocomplete
     var input = (document.getElementById('pac-input'));

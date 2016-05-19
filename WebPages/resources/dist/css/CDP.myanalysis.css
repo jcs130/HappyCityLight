@@ -1,0 +1,423 @@
+/*City Ranking*/
+
+#CityRanking-col tbody tr:hover {
+    background-color: #8bbdda;
+}
+
+#CityRanking-col tbody .selected {
+    background-color: #8bbdda;
+}
+
+.cityName {
+    color: aliceblue;
+}
+
+.cityName:hover {
+    cursor: pointer;
+}
+
+.datepicker-inline,
+.datepicker table {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#cityRankDateMenu {
+    background-color: #f56954;
+}
+
+.label-lightblue {
+    background-color: #67a8ce;
+}
+
+.btn-lightblue {
+    background-color: #67a8ce;
+    color: aliceblue;
+}
+
+.btn-lightblue:hover {
+    background-color: #3c8dbc;
+    color: aliceblue;
+}
+
+.label-city {
+    background-color: #f56954;
+    margin-bottom: 10px;
+}
+
+.label-date {
+    margin-left: 5px;
+    border-radius: 3px;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 5px 10px;
+    background-color: #3c8dbc;
+}
+
+.hover-grey:hover {
+    background-color: #d3d3d3;
+}
+
+.hover-pointer:hover {
+    cursor: pointer;
+}
+
+.hover-gradient {
+    -o-transition: .5s;
+    -ms-transition: .5s;
+    -moz-transition: .5s;
+    -webkit-transition: .5s;
+    transition: .5s;
+}
+
+.icon-transit {}
+
+.icon-center {
+    display: block;
+    height: 40px;
+    text-align: center;
+    font-size: 40px;
+    line-height: 50px;
+}
+
+
+/*City Info Modal - header*/
+
+#currentDateRange,
+#currentCompareDateRange {
+    margin-right: 10px;
+    background: #f4f4f4;
+    color: #255359;
+    padding: 8px;
+    line-height: 18px;
+    -o-transition: .5s;
+    -ms-transition: .5s;
+    -moz-transition: .5s;
+    -webkit-transition: .5s;
+    transition: .5s;
+}
+
+#currentDateRange:hover,
+#currentCompareDateRange:hover {
+    background: #caccc7;
+}
+
+#currentDateRange i,
+#currentCompareDateRange i {
+    padding-right: 5px;
+}
+
+#selectDateRange,
+#selectCompareDateRange {
+    min-width: 200px;
+    margin-top: 0;
+}
+
+#selectDateRange .col-md-12,
+#selectCompareDateRange .col-md-12 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-width: 250px;
+}
+
+#selectDateRange .col-md-12 input,
+#selectCompareDateRange .col-md-12 input {
+    border: 1px solid #dedfdc;
+    font-size: 14px;
+    color: #255359;
+}
+
+#selectDateRange .col-md-12 .input-group-addon,
+#selectCompareDateRange .col-md-12 .input-group-addon {
+    background-color: #dedfdc;
+    border-width: 1px 0 1px 0;
+}
+
+#getCityInfo-btn,
+#getCityCompare-btn {
+    margin-right: 10px;
+    background: #dedfdc;
+    color: #255359;
+    padding: 4px 10px;
+    margin-right: 0;
+    line-height: 20px;
+    border: 1px solid #caccc7;
+    border-radius: 4px;
+    border-width: 0 0 4px 0;
+    -o-transition: .5s;
+    -ms-transition: .5s;
+    -moz-transition: .5s;
+    -webkit-transition: .5s;
+    transition: .5s;
+}
+
+#getCityInfo-btn:hover,
+#getCityCompare-btn:hover {
+    background: #caccc7;
+    display: block;
+}
+
+#getCityInfo-btn i,
+#getCityCompare-btn i {
+    margin-right: 6px;
+}
+
+
+/*City Info Modal - body*/
+
+@media only screen and (max-width: 768px) {
+    /* For phones: */
+    #cityBoundary {
+        min-height: 200px;
+        margin: 0;
+    }
+    #map {
+        min-height: 150px;
+    }
+    #map-legend {
+        min-height: 30px;
+    }
+    #cityHotHashtagsCard {
+        margin-top: 5px;
+        min-height: 340px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    /* For tablets: */
+    .main-header .navbar-custom-menu,
+    .main-header .navbar-custom-menu .navbar-nav,
+    .main-header .navbar-custom-menu .navbar-nav .user-menu,
+    .main-header .navbar-custom-menu .navbar-nav .user-menu .dropdown-toggle {
+        height: 50px;
+    }
+    .main-header .navbar-custom-menu ul .user-menu .dropdown-toggle {
+        padding-bottom: 15px;
+        padding-top: 15px;
+    }
+    #cityBoundary {
+        min-height: 250px;
+        margin: 0;
+    }
+    #map {
+        min-height: 200px;
+    }
+    #map-legend {
+        min-height: 30px;
+    }
+    #cityHotHashtagsCard {
+        margin-top: 10px;
+        min-height: 340px;
+    }
+}
+
+@media only screen and (min-width: 990px) {
+    /* For desktop: */
+    #cityBoundary {
+        min-height: 340px;
+        margin: 0;
+    }
+    #map {
+        min-height: 270px;
+    }
+    #map-legend {
+        min-height: 30px;
+    }
+    #cityHotHashtagsCard {
+        margin-top: 0px;
+        min-height: 340px;
+    }
+}
+
+#map-legend .legend {
+    min-height: 20px;
+    width: 65%;
+    opacity: 0.7;
+    display: inline-block;
+    background: rgb(225, 107, 140);
+    /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(right, rgb(225, 107, 140), rgb(0, 92, 175));
+    /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, rgb(225, 107, 140), rgb(0, 92, 175));
+    /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, rgb(225, 107, 140), rgb(0, 92, 175));
+    /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to left, rgb(225, 107, 140), rgb(0, 92, 175));
+    /* Standard syntax */
+    margin: 4px 5px 0px 5px;
+}
+
+#map-legend .positive,
+#map-legend .negative {
+    font-size: 18px;
+    color: grey;
+    min-height: 30px;
+    width: 10%;
+    display: inline;
+    margin: 0px 0px -5px 0px;
+}
+
+
+/*City Info Modal - body - Hashtags*/
+
+#cityHotHashtagsCard .front,
+#cityHotHashtagsCard .back {
+    min-height: 330px;
+}
+
+#cityHotHashtagsCard .front {
+    background-color: #f4f4f4;
+    margin-left: 0px;
+}
+
+#cityHotHashtagsCard .back {
+    background-color: #dbdbdb;
+    margin-left: 0px;
+}
+
+#cityHotHashtagsCard .front .row,
+#cityHotHashtagsCard .back .row {
+    margin-left: 0px;
+    margin-right: 0px;
+    max-height: 335px;
+}
+
+#cityHotHashtagsCard .back #HashtagImg {
+    margin-top: 10px;
+    max-height: 250px;
+    overflow-y: scroll;
+}
+
+#cityHotHashtagsCard .back #HashtagImg::-webkit-scrollbar {
+    width: 8px;
+    background-color: #dbdbdb;
+}
+
+#cityHotHashtagsCard .back #HashtagImg::-webkit-scrollbar-thumb {
+    background-color: #f4f4f4;
+    border-radius: 10px;
+}
+
+
+/*
+#cityHotHashtagsCard .back #HashtagImg::-webkit-scrollbar-track {
+    background-color: #dbdbdb;
+    color: #dbdbdb;
+}
+*/
+
+#cityHotHashtagsCard .back #HashtagInfo {
+    cursor: pointer;
+}
+
+#cityHotHashtagsCard .back #HashtagInfo:hover {
+    background-color: #EEEEEE;
+}
+
+#cityHotHashtagsCard .back .nailthumb-container {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#hasgtaglist {
+    max-height: 300px;
+    margin-bottom: 0;
+}
+
+#hasgtaglist thead {
+    color: #888;
+    font-size: 14px;
+    border-bottom: 2px;
+    border-bottom-color: dimgray;
+}
+
+#hasgtaglist tbody tr:hover {
+    border: none;
+    background-color: #f7f7f7;
+}
+
+.hashtaglist-rank {
+    width: 15px;
+    text-align: center;
+    color: dimgray;
+}
+
+.hashtaglist-text {
+    font-size: 15px;
+    font-family: ‘Trebuchet MS’, Helvetica, sans-serif;
+    color: #4D5139;
+}
+
+.hashtaglist-msg {
+    width: 30px;
+    text-align: center;
+    color: #f35741;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+}
+
+.hashtaglist-score {
+    width: 30px;
+    text-align: center;
+    color: #f3b041;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+}
+
+.hashtaglist-google {
+    width: 20px;
+    color: #4184F3;
+}
+
+.hashtaglist-twitter {
+    width: 20px;
+    color: #1da1f2;
+}
+
+.hashtaglist-text:hover,
+.hashtaglist-google:hover,
+.hashtaglist-twitter:hover {
+    cursor: pointer;
+}
+
+
+/*
+#cityHotHashtags li .label-number {
+    background-color: #EB7A77;
+}
+
+#cityHotHashtags li .label-score {
+    background-color: #89916B;
+}
+
+#cityHotHashtags .nav-pills {
+    padding: 0px 0px;
+}
+
+#cityHotHashtags .nav-pills li a {
+    padding: 5px 5px;
+}
+*/
+
+.btn-search-google,
+.btn-search-twitter {
+    padding: 0px 3px;
+}
+
+#emotionchange-title {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 20px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+
+/*City Compare Modal*/
+
+#CityInfoChart,
+#CityCompareChart {
+    width: 100%;
+    height: 400px;
+}
