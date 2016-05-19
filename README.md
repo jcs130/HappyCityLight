@@ -1,13 +1,16 @@
-# HappyCityLight
+# City digital Pulse
 
 本项目包括以下几个部分：
+
 - 数据获取模块 (MessageGetter)
 - 使用Weka的独立情绪分析模块 (NLPPart) 以及打包好的项目文件 (ZLNLPLibs)
 - 数据分析模块 (OfflineStatistic)
 - 后台服务器模块 (HappyCityLight)
 - 前台网页部分 (WebPages)
+- 部署或初始化要用到的脚本(script file)
+- 部署用的文件(Deploy)
 
-## 1.开发环境搭建
+## 1.开发环境
 
 1.安装java8 sdk
 
@@ -61,5 +64,13 @@ http://tomcat.apache.org/download-80.cgi
 - - 后台服务器： /HappyCityLight/src/com/citydigitalpulse/webservice/app/ServerConfig.java
 - - 统计模块： /OfflineStatistic/src/com/citydigitalpulse/OfflineStatistic/app/AppConfig.java
 - - 数据采集模块： /TwitterStreamGetter2SQL/src/com/citydigitalpulse/collector/TwitterGetter/app/Config.java
-- 7.改变数据采集模块上传的目标地址 (public static String DCI_SERVER_URL = "http://localhost:8080/HappyCityLight/api/";)
-- 8. 在本机运行
+- 7.改变数据采集模块上传的目标地址，以本地为例： (public static String DCI_SERVER_URL = "http://localhost:8080/HappyCityLight/api/";)
+
+
+## 2.部署环境
+
+部署环境为部署在服务上长时间运行的环境，可以是本地服务器也可以是云服务器。部署环境要与开发环境一致但是要更改某些设置。
+
+- 可以只安装JRE不安装JDK
+- Tomecat 服务器端口设置为80/443, 并设置服务器防火墙打开这个端口, 加入系统服务并开机自动运行
+- MySQL 安装时选择服务器设置并开机自动运行，设置防火墙打开MySQL的网络端口（默认为3306）
