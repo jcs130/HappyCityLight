@@ -55,16 +55,16 @@ http://tomcat.apache.org/download-80.cgi
 
 ## 2.导入项目
 
-- 1.下载项目的源代码，解压缩至文件夹
-- 2.打开Eclipse，导入所有工程项目 (File -> Import -> General -> Existing Projects into Workspace)
-- 3.选择源代码文件夹中的所有项目（如果不想对线上版本做出任何改动，选择 Copy projects into workspace）
-- 4.设置Eclipse的服务器环境为Tomcat8 (Properties -> Server -> Runtime Enviroments -> add Tomecat 8.0)
-- 5.导入数据库表结构 (MySQLWorkbench -> Data Import/Restore -> Import from Self-Contained File Choose"DatabaseInit.sql" -> Dump Structure and Data -> Start Import)
-- 6.设置项目数据库地址、用户名、密码为本机的数据库
-- - 后台服务器： /HappyCityLight/src/com/citydigitalpulse/webservice/app/ServerConfig.java
-- - 统计模块： /OfflineStatistic/src/com/citydigitalpulse/OfflineStatistic/app/AppConfig.java
-- - 数据采集模块： /TwitterStreamGetter2SQL/src/com/citydigitalpulse/collector/TwitterGetter/app/Config.java
-- 7.改变数据采集模块上传的目标地址，以本地为例： (public static String DCI_SERVER_URL = "http://localhost:8080/HappyCityLight/api/";)
+- 下载项目的源代码，解压缩至文件夹
+- 打开Eclipse，导入所有工程项目 (File -> Import -> General -> Existing Projects into Workspace)
+- 选择源代码文件夹中的所有项目（如果不想对线上版本做出任何改动，选择 Copy projects into workspace）
+- 设置Eclipse的服务器环境为Tomcat8 (Properties -> Server -> Runtime Enviroments -> add Tomecat 8.0)
+- 导入数据库表结构 (MySQLWorkbench -> Data Import/Restore -> Import from Self-Contained File Choose"DatabaseInit.sql" -> Dump Structure and Data -> Start Import)
+- 设置项目数据库地址、用户名、密码为本机的数据库
+  - 后台服务器： /HappyCityLight/src/com/citydigitalpulse/webservice/app/ServerConfig.java
+  - 统计模块： /OfflineStatistic/src/com/citydigitalpulse/OfflineStatistic/app/AppConfig.java
+  - 数据采集模块： /TwitterStreamGetter2SQL/src/com/citydigitalpulse/collector/TwitterGetter/app/Config.java
+- 改变数据采集模块上传的目标地址，以本地为例： (public static String DCI_SERVER_URL = "http://localhost:8080/HappyCityLight/api/";)
 
 
 ## 2.部署环境
