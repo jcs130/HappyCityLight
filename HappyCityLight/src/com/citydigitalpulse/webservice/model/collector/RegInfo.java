@@ -32,7 +32,7 @@ public class RegInfo {
 	public RegInfo(String regName) {
 		this();
 		this.regName = regName;
-		areas = new ArrayList<LocArea>();
+		this.areas = new ArrayList<LocArea>();
 	}
 
 	/**

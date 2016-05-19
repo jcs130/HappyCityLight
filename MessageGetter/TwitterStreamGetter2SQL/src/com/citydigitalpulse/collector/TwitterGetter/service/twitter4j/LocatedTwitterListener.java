@@ -10,9 +10,7 @@
  */
 package com.citydigitalpulse.collector.TwitterGetter.service.twitter4j;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import twitter4j.JSONArray;
 import twitter4j.JSONException;
@@ -20,12 +18,7 @@ import twitter4j.JSONObject;
 import twitter4j.RawStreamListener;
 
 import com.citydigitalpulse.collector.TwitterGetter.app.Config;
-import com.citydigitalpulse.collector.TwitterGetter.dao.InfoGetterDAO;
-import com.citydigitalpulse.collector.TwitterGetter.dao.TwitterSaveDAO;
-import com.citydigitalpulse.collector.TwitterGetter.dao.impl.InfoGetterDAO_MySQL;
-import com.citydigitalpulse.collector.TwitterGetter.dao.impl.SplitDataSavingDAO;
 import com.citydigitalpulse.collector.TwitterGetter.model.StructuredFullMessage;
-import com.citydigitalpulse.collector.TwitterGetter.service.InsertIntoDB;
 import com.citydigitalpulse.collector.TwitterGetter.tool.Tools;
 
 /**
@@ -72,7 +65,7 @@ public class LocatedTwitterListener implements RawStreamListener {
 				// long num_id = db.insert(msg);
 				// if (num_id != 0) {
 				// msg.setNum_id(num_id);
-				msg.setNum_id(0);
+				msg.setNum_id(Long.parseLong(msg.getRaw_id_str().substring(5)));
 				if (msg.isReal_location()) {
 					// System.out.println(msg.getText());
 					// 发送有具体坐标的数据
@@ -90,8 +83,8 @@ public class LocatedTwitterListener implements RawStreamListener {
 			}
 
 		} catch (JSONException e) {
-			System.out.println("String:" + rawString);
-			e.printStackTrace();
+			// System.out.println("String:" + rawString);
+			// e.printStackTrace();
 		}
 	}
 

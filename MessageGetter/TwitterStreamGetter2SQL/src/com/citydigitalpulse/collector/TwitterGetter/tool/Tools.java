@@ -16,6 +16,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +45,8 @@ import com.citydigitalpulse.collector.TwitterGetter.model.StructuredFullMessage;
 public class Tools {
 	private static final String MAC_NAME = "HmacSHA256";
 	private static final String ENCODING = "UTF-8";
-	public static HashMap<Long, StructuredFullMessage> cacheUpdateMessages = new HashMap<Long, StructuredFullMessage>();
+	public static ConcurrentHashMap<Long, StructuredFullMessage> cacheUpdateMessages = new ConcurrentHashMap<Long, StructuredFullMessage>();
+	private static HttpClient httpClient = new HttpClient();
 
 	public static ArrayList<String> buildListFromString(String listString) {
 		String[] temp = listString.split(",");
@@ -272,7 +274,7 @@ public class Tools {
 	public static void sendNewMessage(String url, String token,
 			StructuredFullMessage msg) {
 		// System.out.println("Send to " + url);
-		HttpClient httpClient = new HttpClient();
+
 		// System.out.println("1");
 		PostMethod postMethod = new PostMethod(url);
 		// System.out.println("2");
@@ -353,7 +355,7 @@ public class Tools {
 		if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
 			try {
 				String resp = postMethod.getResponseBodyAsString();
-//				System.out.println(resp);
+				// System.out.println(resp);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

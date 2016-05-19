@@ -13,8 +13,11 @@ package com.citydigitalpulse.collector.TwitterGetter.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.citydigitalpulse.collector.TwitterGetter.dao.InfoGetterDAO;
 import com.citydigitalpulse.collector.TwitterGetter.dao.impl.InfoGetterDAO_MySQL;
@@ -58,17 +61,33 @@ public class InsertIntoDB extends Thread {
 		List<RegInfo> regList = regDB.getRegInfo();
 		// ArrayList<String> inMemeryRecordKey = new ArrayList<String>();
 		String date_string = "";
+		String table_name = "";
+		StructuredFullMessage temp = null;
+		ArrayList<RegInfo> cotainRegs = null;
+		Iterator<StructuredFullMessage> it;
+		ConcurrentHashMap<Long, StructuredFullMessage> temp_map = null;
+		ConcurrentHashMap<Long, StructuredFullMessage> temp_map2 = new ConcurrentHashMap<Long, StructuredFullMessage>();
+		int i = 0;
 		while (true) {
 			System.out.println(Tools.cacheUpdateMessages.size());
 			if (Tools.cacheUpdateMessages.size() > 200) {
+				// Add all values into writelist.
+				temp_map = Tools.cacheUpdateMessages;
+				Tools.cacheUpdateMessages = temp_map2;
+				temp_map2 = temp_map;
+				it = temp_map.values().iterator();
+				while (it.hasNext()) {
+					writelist.add(it.next());
+				}
+				// writelist.addAll(Tools.cacheUpdateMessages.values());
+				temp_map.clear();
 				System.out.println("Write into database...");
-				writelist.addAll(Tools.cacheUpdateMessages.values());
-				Tools.cacheUpdateMessages.clear();
-				for (int i = 0; i < writelist.size(); i++) {
+				System.out.println(writelist.size());
+				for (i = 0; i < writelist.size(); i++) {
 					// 判断时区以及时间，实时的加入到分库中
-					StructuredFullMessage temp = writelist.get(i);
-					ArrayList<RegInfo> cotainRegs = getRegInfoByLocation(
-							regList, temp.getQuery_location_latitude(),
+					temp = writelist.get(i);
+					cotainRegs = getRegInfoByLocation(regList,
+							temp.getQuery_location_latitude(),
 							temp.getQuery_location_langtitude());
 					// 根据经纬度找到所在区城市并且获得区域信息
 					if (cotainRegs.size() > 0) {
@@ -79,15 +98,14 @@ public class InsertIntoDB extends Thread {
 						if (timestamp < Long.parseLong("10000000000")) {
 							timestamp = timestamp * 1000;
 						}
-						Date time = new Date(timestamp);
-						date_string = isoFormat.format(time);
-						String table_name = "part_message_" + date_string;
+						date_string = isoFormat.format(new Date(timestamp));
+						table_name = "part_message_" + date_string;
 						// System.out.println(table_name);
 						// 将数据插入到指定数据库，如果目标数据库不存在则创建
 						if (inMemeryRecordKey.contains(date_string)) {
 							statisticDB.insertMessage2Table(table_name, temp);
 						} else {
-							if (inMemeryRecordKey.size() > 5000) {
+							if (inMemeryRecordKey.size() > 100) {
 								inMemeryRecordKey.clear();
 							}
 							statisticDB.createNewSubTable(table_name);
@@ -144,5 +162,4 @@ public class InsertIntoDB extends Thread {
 		}
 		return res;
 	}
-
 }
