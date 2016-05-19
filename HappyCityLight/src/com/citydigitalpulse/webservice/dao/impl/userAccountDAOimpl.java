@@ -858,8 +858,9 @@ public class userAccountDAOimpl implements UserAccountDAO {
 
 			long time = new Date().getTime();
 			UserAccount user = getUserAccountByUserID(userID);
+			System.out.println(user.getRoles());
 			// 测试账户
-			if (user.getRoles().contains("ROLE_GUEST")) {
+			if (user.getRoles().contains(new Role("ROLE_GUEST"))) {
 				return true;
 			} else {
 				if (user.getLogin_token().equals(token)
