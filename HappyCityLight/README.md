@@ -11,6 +11,7 @@
 - com.citydigitalpulse.webservice.app
   - APIApplication.java: 应用程序的设置文件，在添加一个新的API文件时需要在APIApplication.java中注册
   - jersey文档：https://jersey.java.net/documentation/latest/index.html
+  - jersey 例子: https://afsinka.wordpress.com/2015/12/27/restful-web-service-example-with-jersey-2-and-tomcat-8/
   - CORSFilter.java: 由于前后端分离，需要设置跨域访问 http://www.codingpedia.org/ama/how-to-add-cors-support-on-the-server-side-in-java-with-jersey/
   - ServerConfig.java: 用于设置服务器连接数据库的地址（重要）
 - com.citydigitalpulse.webservice.dao
