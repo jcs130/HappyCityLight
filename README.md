@@ -65,3 +65,5 @@ http://tomcat.apache.org/download-80.cgi
 - - 后台服务器： /HappyCityLight/src/com/citydigitalpulse/webservice/app/ServerConfig.java
 - - 统计模块： /OfflineStatistic/src/com/citydigitalpulse/OfflineStatistic/app/AppConfig.java
 - - 数据采集模块： /TwitterStreamGetter2SQL/src/com/citydigitalpulse/collector/TwitterGetter/app/Config.java
+- 7.改变数据采集模块上传的目标地址 (public static String DCI_SERVER_URL = "http://localhost:8080/HappyCityLight/api/";)
+- 8. 在本机运行
