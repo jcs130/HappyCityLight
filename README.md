@@ -31,7 +31,7 @@ http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/mars2
 
 3.MySQL 5.7
 
-本项目使用MySQL作为结构化数据存储数据库，可以不使用MySQL5.7，用其他的版本也可以。但是MySQL5.7原生支持直接存储JSON格式的数据或许对以后的扩展更方便。
+本项目使用MySQL作为结构化数据存储数据库，可以不使用MySQL5.7，用其他的版本也可以。但是MySQL5.7原生支持直接存储JSON格式的数据或许对以后的扩展更方便。推荐使用MySQLWorkbench作为数据库操作软件
 
 http://dev.mysql.com/downloads/mysql/
 
@@ -60,7 +60,8 @@ http://tomcat.apache.org/download-80.cgi
 - 2.打开Eclipse，导入所有工程项目 (File -> Import -> General -> Existing Projects into Workspace)
 - 3.选择源代码文件夹中的所有项目（如果不想对线上版本做出任何改动，选择 Copy projects into workspace）
 - 4.设置Eclipse的服务器环境为Tomcat8 (Properties -> Server -> Runtime Enviroments -> add Tomecat 8.0)
-- 5.导入数据库表结构
-
-## 3.设置参数
-- 1.
+- 5.导入数据库表结构 (MySQLWorkbench -> Data Import/Restore -> Import from Self-Contained File Choose"DatabaseInit.sql" -> Dump Structure and Data -> Start Import)
+- 6.设置项目数据库地址、用户名、密码为本机的数据库
+- - 后台服务器： /HappyCityLight/src/com/citydigitalpulse/webservice/app/ServerConfig.java
+- - 统计模块： /OfflineStatistic/src/com/citydigitalpulse/OfflineStatistic/app/AppConfig.java
+- - 数据采集模块： /TwitterStreamGetter2SQL/src/com/citydigitalpulse/collector/TwitterGetter/app/Config.java
