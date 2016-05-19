@@ -8,7 +8,7 @@
 - 后台服务器模块 (HappyCityLight)
 - 前台网页部分 (WebPages)
 - 部署或初始化要用到的脚本(script file)
-- 部署用的文件(Deploy)
+- 部署用的文件(Develop)
 
 ## 1.开发环境
 
