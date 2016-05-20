@@ -95,5 +95,6 @@ http://tomcat.apache.org/download-80.cgi
 
 ### 自动运行脚本:
 可以编写自动运行脚本来实现一些自动化的操作，以Windows为例，可以在管理工具中的计划任务中设定自动运行的程序或脚本。目前本项目中有两个脚本：
+
 - TwitterStreamCollector_start.bat 用于在开机的时候自动启动数据抓取模块
 - YesterdayStatiisticAndUpdate.bat 用于运行前一天的数据统计（目前服务器上是每天凌晨2：00进行）
