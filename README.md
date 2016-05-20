@@ -67,7 +67,13 @@ http://tomcat.apache.org/download-80.cgi
 - 打开Eclipse，导入所有工程项目 (File -> Import -> General -> Existing Projects into Workspace)
 - 选择源代码文件夹中的所有项目（如果不想对线上版本做出任何改动，选择 Copy projects into workspace）
 - 设置Eclipse的服务器环境为Tomcat8 (Properties -> Server -> Runtime Enviroments -> add Tomecat 8.0)
-- 导入数据库表结构 (MySQLWorkbench -> Data Import/Restore -> Import from Self-Contained File Choose"DatabaseInit.sql" -> Dump Structure and Data -> Start Import)
+- 导入数据库表结构 (MySQLWorkbench -> Data Import/Restore -> Import from Self-Contained File Choose -> Dump Structure and Data -> Start Import)
+- 数据库初始化文件在Deploy/script file/文件夹中
+    - cdpsavingstructure.sql 为数据存储数据库表结构
+    - cdpwebserverdatabase.sql 为网站后台服务器数据库表结构以及数据
+    - controllerdb.sql 为数据获取模块控制数据库表结构及数据
+    - DatabaseInit.sql 为三个数据库表结构以及少量数据
+
 - 设置项目数据库地址、用户名、密码为本机的数据库
   - 后台服务器： /HappyCityLight/src/com/citydigitalpulse/webservice/app/ServerConfig.java
   - 统计模块： /OfflineStatistic/src/com/citydigitalpulse/OfflineStatistic/app/AppConfig.java
