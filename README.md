@@ -53,7 +53,15 @@ http://tomcat.apache.org/download-80.cgi
 
 直接解压缩至文件夹
 
-## 2.导入项目
+## 2.部署环境
+
+部署环境为部署在服务上长时间运行的环境，可以是本地服务器也可以是云服务器。部署环境要与开发环境一致但是要更改某些设置。
+
+- 可以只安装JRE不安装JDK
+- Tomecat 服务器端口设置为80/443, 并设置服务器防火墙打开这个端口, 加入系统服务并开机自动运行
+- MySQL 安装时选择服务器设置并开机自动运行，设置防火墙打开MySQL的网络端口（默认为3306）
+
+## 3.导入项目
 
 - 下载项目的源代码，解压缩至文件夹
 - 打开Eclipse，导入所有工程项目 (File -> Import -> General -> Existing Projects into Workspace)
@@ -66,11 +74,26 @@ http://tomcat.apache.org/download-80.cgi
   - 数据采集模块： /TwitterStreamGetter2SQL/src/com/citydigitalpulse/collector/TwitterGetter/app/Config.java
 - 改变数据采集模块上传的目标地址，以本地为例： (public static String DCI_SERVER_URL = "http://localhost:8080/HappyCityLight/api/";)
 
+## 4.部署到服务器
 
-## 2.部署环境
+### 网站服务器
 
-部署环境为部署在服务上长时间运行的环境，可以是本地服务器也可以是云服务器。部署环境要与开发环境一致但是要更改某些设置。
+本项目网站后台服务器使用Tomcat8.0作为服务器但是也可以使用更加轻便的Jetty(https://en.wikipedia.org/wiki/Jetty_(web_server)).
 
-- 可以只安装JRE不安装JDK
-- Tomecat 服务器端口设置为80/443, 并设置服务器防火墙打开这个端口, 加入系统服务并开机自动运行
-- MySQL 安装时选择服务器设置并开机自动运行，设置防火墙打开MySQL的网络端口（默认为3306）
+将后台服务器通过Eclipse打包成war文件，直接拷贝到Tomcat文件夹中的Webapp文件夹中即可，若Tomcat服务器正在运行则会自动解压缩，若不在运行则需要手动启动Tomcat服务器。建议每次更新版本的时候重新启动Tomcat。
+
+部署到服务器之后服务器上输入 http://localhost/(WAR_FILE_NAME) 即可访问，若将war文件命名为ROOT则可以直接输入http://localhost进行访问
+
+### 数据获取服务器
+
+将Deploy文件夹中的GetterServer文件夹拷贝到数据获取服务器中即可
+
+- MessageGetter4Twitter_lab_split.jar 是Twitter实时抓取程序，在抓取数据的同时会将数据直接存储到数据存储数据库并进行日期的分库操作
+- init.sql 用来初始化Twitter获取程序，每当重新打开Twitter抓取程序的时候需要运行该SQL脚本重置状态数据库
+- YesterdayStatiisticAndUpdate2days.jar 用来统计前一天的获取的数据，进行情绪判断并分区域统计，最后将统计结果存到数据库中
+- StatiisticAndUpdate.jar 用于手动指定分析与统计的时间段，可以通过修改statistic_settings.txt文件来指定不同的日期
+
+### 自动运行脚本:
+可以编写自动运行脚本来实现一些自动化的操作，以Windows为例，可以在管理工具中的计划任务中设定自动运行的程序或脚本。目前本项目中有两个脚本：
+- TwitterStreamCollector_start.bat 用于在开机的时候自动启动数据抓取模块
+- YesterdayStatiisticAndUpdate.bat 用于运行前一天的数据统计（目前服务器上是每天凌晨2：00进行）
