@@ -10,7 +10,7 @@
  */
 package com.citydigitalpulse.collector.TwitterGetter.app;
 
-import com.citydigitalpulse.collector.TwitterGetter.service.InsertIntoDB;
+import com.citydigitalpulse.collector.TwitterGetter.service.InsertIntoDBThread;
 import com.citydigitalpulse.collector.TwitterGetter.service.ScanRegsThread;
 import com.citydigitalpulse.collector.TwitterGetter.service.ThreadsPool;
 
@@ -37,12 +37,10 @@ public class getterMain {
 		}
 	}
 
-	
-
 	private void startThreads(int time) {
 		ScanRegsThread sRegThread = new ScanRegsThread(time);
 		ThreadsPool.addThread(sRegThread);
-		InsertIntoDB insertThread;insertThread = new InsertIntoDB();
+		InsertIntoDBThread insertThread = new InsertIntoDBThread();
 		insertThread.start();
 		// StartRegThreads sSqureThread = new StartRegThreads(time2);
 		// ThreadsPool.addThread(sSqureThread);

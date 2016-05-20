@@ -31,17 +31,18 @@ import com.citydigitalpulse.collector.TwitterGetter.tool.Tools;
  * @author Zhongli Li
  *
  */
-public class InsertIntoDB extends Thread {
+public class InsertIntoDBThread extends ServiceThread {
 	private SimpleDateFormat isoFormat;
 	private List<StructuredFullMessage> writelist;
 	private InfoGetterDAO regDB;
 	private SplitDataSavingDAO statisticDB;
 	private List<String> inMemeryRecordKey;
+	private boolean isRunning = false;
 
 	/**
 	 * 
 	 */
-	public InsertIntoDB() {
+	public InsertIntoDBThread() {
 		isoFormat = new SimpleDateFormat("yyyy_MM_dd");
 		this.statisticDB = new SplitDataSavingDAO();
 		this.regDB = new InfoGetterDAO_MySQL();
@@ -58,6 +59,7 @@ public class InsertIntoDB extends Thread {
 	public void run() {
 		super.run();
 		System.out.println("Insert thread running....");
+		isRunning = true;
 		List<RegInfo> regList = regDB.getRegInfo();
 		// ArrayList<String> inMemeryRecordKey = new ArrayList<String>();
 		String date_string = "";
@@ -162,4 +164,21 @@ public class InsertIntoDB extends Thread {
 		}
 		return res;
 	}
+
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+
+	@Override
+	public void stopMe() {
+		setRunning(false);
+		if (this.isAlive()) {
+			super.interrupt();
+		}
+	}
+
 }

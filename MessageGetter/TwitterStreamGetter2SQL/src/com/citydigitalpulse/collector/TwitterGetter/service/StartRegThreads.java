@@ -51,7 +51,7 @@ public class StartRegThreads extends ServiceThread {
 			db.changeRegState(regs.get(i).getRegID(), 1);
 		}
 		// 执行新增监听线程操作
-		StreamsManagerThread smt = new StreamsManagerThread();
+		StreamsManager smt = new StreamsManager();
 		smt.startBuildThreads();
 	}
 

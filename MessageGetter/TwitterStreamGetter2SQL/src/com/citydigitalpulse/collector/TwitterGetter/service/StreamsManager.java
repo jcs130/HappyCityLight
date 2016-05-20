@@ -24,10 +24,10 @@ import com.citydigitalpulse.collector.TwitterGetter.service.twitter4j.TwitterToo
  * @author zhonglili
  *
  */
-public class StreamsManagerThread {
+public class StreamsManager {
 	private TwitterTools tt;
 
-	public StreamsManagerThread() {
+	public StreamsManager() {
 		this.tt = new TwitterTools();
 	}
 
