@@ -1,2 +1,0 @@
-limit 5000
-start_id 77228

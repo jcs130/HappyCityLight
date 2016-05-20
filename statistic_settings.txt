@@ -1,3 +1,0 @@
-limit 5000
-start_date 2016_01_21
-end_date 2016_01_28
