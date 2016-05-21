@@ -36,6 +36,9 @@ http://dev.mysql.com/downloads/mysql/
 
 默认路径安装,安装时选择安装为开发环境 设置用户名和密码
 
+设置数据库的默认字符集为utf8mb4
+https://mathiasbynens.be/notes/mysql-utf8mb4
+
 4.Redis 3.0
 
 本项目使用Redis作为内存缓存数据库，Redis不是使用Java开发所以不同平台需要不同的客户端。
